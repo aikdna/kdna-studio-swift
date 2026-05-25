@@ -2,6 +2,8 @@
 
 Native Swift authoring kernel for turning human judgment into valid, testable, packageable KDNA domains — for macOS and iOS apps.
 
+This is the foundation for native Apple apps that create and manage personal or professional KDNA cognitive assets locally.
+
 **KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. AI can propose judgment candidates. Humans confirm judgment. Only human-locked judgment can be compiled into KDNA.
 
 This is the Swift counterpart to [`@aikdna/kdna-studio`](https://github.com/aikdna/kdna-studio-core) (JavaScript/npm).
