@@ -1,6 +1,6 @@
 # KDNA Studio Swift
 
-Native Swift authoring kernel for turning human judgment into valid, testable, packageable KDNA domains — for macOS and iOS apps.
+Native Swift authoring kernel for turning human judgment into valid, testable `.kdna` cognition assets — for macOS and iOS apps.
 
 This is the foundation for native Apple apps that create and manage personal or professional KDNA cognitive assets locally.
 
@@ -24,8 +24,8 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
 - **Human Lock** — AI proposes, human confirms. Only locked cards compile.
 - **Fingerprint Detection** — SHA256 hash catches post-lock content changes
 - **Evidence Import** — text, markdown, interview records
-- **Compiler** — locked cards → KDNA_Core.json + KDNA_Patterns.json
-- **Export** — write compiled domain to filesystem
+- **Compiler** — locked cards → internal KDNA asset entries
+- **Export** — write a canonical `.kdna` asset; directory export is dev-only
 
 ## Install
 
@@ -61,7 +61,8 @@ var card = KDNStudioCards.createCard(
     ]
 )
 
-// 3. Human Lock
+// 3. Revise, then Human Lock
+card = try KDNStudioCards.transitionCard(card, to: .revised, by: "writer_001")
 card = try KDNStudioCards.lockCard(card,
     by: "writer_001",
     statement: "This represents my professional judgment.",
@@ -74,7 +75,7 @@ let gate = KDNStudioHumanLockGate.check(project)
 if !gate.blocked {
     // 5. Compile
     let result = try KDNStudioCompiler.compile(project)
-    try KDNStudioCompiler.exportToDirectory(result, at: outputURL)
+    let assetURL = try KDNStudioCompiler.exportAsset(result, to: outputURL)
 }
 ```
 
