@@ -1,10 +1,10 @@
-//  KDNaStudioCore — Compiler: locked cards → KDNA JSON files
+//  KDNaStudioCore — Compiler: locked cards → .kdna asset entries
 
 import Foundation
 
 public class KDNStudioCompiler {
 
-    /// Compile locked judgment cards into KDNA_Core.json and KDNA_Patterns.json.
+    /// Compile locked judgment cards into the internal entries of a .kdna asset.
     public static func compile(_ project: KDNStudioProject) throws -> KDNCompileResult {
         let domainName = project.name
         let lockedCards = KDNStudioCards.getLockedCards(project)
@@ -125,9 +125,38 @@ public class KDNStudioCompiler {
     }
 }
 
-// Extension to help export domain to filesystem
+// MARK: - Asset export
+
 extension KDNStudioCompiler {
-    public static func exportToDirectory(_ compileResult: KDNCompileResult, at path: URL) throws {
+    /// Export the compiled result as a canonical `.kdna` asset.
+    ///
+    /// If `url` ends with `.kdna`, the asset is written to that exact file. Otherwise
+    /// the method writes `<domain>.kdna` inside the target directory. The generated
+    /// asset is a ZIP container with stored entries and no persistent extraction.
+    @discardableResult
+    public static func exportAsset(_ compileResult: KDNCompileResult, to url: URL) throws -> URL {
+        let assetURL: URL
+        if url.pathExtension == "kdna" {
+            assetURL = url
+            let parent = assetURL.deletingLastPathComponent()
+            try FileManager.default.createDirectory(at: parent, withIntermediateDirectories: true)
+        } else {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+            assetURL = url.appendingPathComponent("\(compileResult.domain).kdna")
+        }
+
+        var entries = compileResult.files
+        if entries["kdna.json"] == nil {
+            entries["kdna.json"] = try buildAssetManifest(compileResult)
+        }
+
+        let archive = try buildStoredZip(entries: entries)
+        try archive.write(to: assetURL, options: [.atomic])
+        return assetURL
+    }
+
+    /// Developer-only source export. Canonical user-facing output is `.kdna`.
+    public static func exportDevSourceDirectory(_ compileResult: KDNCompileResult, at path: URL) throws {
         let domainDir = path.appendingPathComponent(compileResult.domain)
         try FileManager.default.createDirectory(at: domainDir, withIntermediateDirectories: true)
 
@@ -135,5 +164,145 @@ extension KDNStudioCompiler {
             let fileURL = domainDir.appendingPathComponent(filename)
             try content.write(to: fileURL, atomically: true, encoding: .utf8)
         }
+    }
+
+    private static func buildAssetManifest(_ compileResult: KDNCompileResult) throws -> String {
+        let version = extractVersion(from: compileResult.files["KDNA_Core.json"]) ?? "0.1.0"
+        let manifest: [String: Any] = [
+            "kdna_spec": "1.0-rc",
+            "name": compileResult.domain,
+            "version": version,
+            "judgment_version": version,
+            "description": "KDNA asset exported by KDNaStudioCore.",
+            "author": [
+                "name": "KDNA Studio",
+                "id": "kdna-studio"
+            ],
+            "license": [
+                "type": "UNSPECIFIED"
+            ],
+            "status": "draft",
+            "quality_badge": "untested",
+            "access": "open",
+            "language": "en",
+            "file_count": compileResult.files.count
+        ]
+        let data = try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys])
+        return String(data: data, encoding: .utf8) ?? "{}"
+    }
+
+    private static func extractVersion(from json: String?) -> String? {
+        guard
+            let json,
+            let data = json.data(using: .utf8),
+            let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let meta = object["meta"] as? [String: Any],
+            let version = meta["version"] as? String
+        else {
+            return nil
+        }
+        return version
+    }
+
+    private static func buildStoredZip(entries: [String: String]) throws -> Data {
+        var archive = Data()
+        var centralEntries: [ZipCentralEntry] = []
+
+        for name in entries.keys.sorted() {
+            let payload = Data((entries[name] ?? "").utf8)
+            let nameData = Data(name.utf8)
+            let offset = UInt32(archive.count)
+            let crc = crc32(payload)
+
+            appendUInt32(0x04034b50, to: &archive)
+            appendUInt16(20, to: &archive) // version needed
+            appendUInt16(0x0800, to: &archive) // UTF-8 filenames
+            appendUInt16(0, to: &archive) // no compression
+            appendUInt16(0, to: &archive) // mod time
+            appendUInt16(0, to: &archive) // mod date
+            appendUInt32(crc, to: &archive)
+            appendUInt32(UInt32(payload.count), to: &archive)
+            appendUInt32(UInt32(payload.count), to: &archive)
+            appendUInt16(UInt16(nameData.count), to: &archive)
+            appendUInt16(0, to: &archive) // extra length
+            archive.append(nameData)
+            archive.append(payload)
+
+            centralEntries.append(ZipCentralEntry(
+                nameData: nameData,
+                crc32: crc,
+                size: UInt32(payload.count),
+                localHeaderOffset: offset
+            ))
+        }
+
+        let centralStart = UInt32(archive.count)
+        for entry in centralEntries {
+            appendUInt32(0x02014b50, to: &archive)
+            appendUInt16(20, to: &archive) // version made by
+            appendUInt16(20, to: &archive) // version needed
+            appendUInt16(0x0800, to: &archive)
+            appendUInt16(0, to: &archive)
+            appendUInt16(0, to: &archive)
+            appendUInt16(0, to: &archive)
+            appendUInt32(entry.crc32, to: &archive)
+            appendUInt32(entry.size, to: &archive)
+            appendUInt32(entry.size, to: &archive)
+            appendUInt16(UInt16(entry.nameData.count), to: &archive)
+            appendUInt16(0, to: &archive) // extra length
+            appendUInt16(0, to: &archive) // comment length
+            appendUInt16(0, to: &archive) // disk number
+            appendUInt16(0, to: &archive) // internal attrs
+            appendUInt32(0, to: &archive) // external attrs
+            appendUInt32(entry.localHeaderOffset, to: &archive)
+            archive.append(entry.nameData)
+        }
+
+        let centralSize = UInt32(archive.count) - centralStart
+        appendUInt32(0x06054b50, to: &archive)
+        appendUInt16(0, to: &archive)
+        appendUInt16(0, to: &archive)
+        appendUInt16(UInt16(centralEntries.count), to: &archive)
+        appendUInt16(UInt16(centralEntries.count), to: &archive)
+        appendUInt32(centralSize, to: &archive)
+        appendUInt32(centralStart, to: &archive)
+        appendUInt16(0, to: &archive)
+
+        return archive
+    }
+
+    private struct ZipCentralEntry {
+        let nameData: Data
+        let crc32: UInt32
+        let size: UInt32
+        let localHeaderOffset: UInt32
+    }
+
+    private static func appendUInt16(_ value: UInt16, to data: inout Data) {
+        data.append(UInt8(value & 0xff))
+        data.append(UInt8((value >> 8) & 0xff))
+    }
+
+    private static func appendUInt32(_ value: UInt32, to data: inout Data) {
+        data.append(UInt8(value & 0xff))
+        data.append(UInt8((value >> 8) & 0xff))
+        data.append(UInt8((value >> 16) & 0xff))
+        data.append(UInt8((value >> 24) & 0xff))
+    }
+
+    private static func crc32(_ data: Data) -> UInt32 {
+        var crc: UInt32 = 0xffffffff
+        for byte in data {
+            var current = (crc ^ UInt32(byte)) & 0xff
+            for _ in 0..<8 {
+                if current & 1 == 1 {
+                    current = (current >> 1) ^ 0xedb88320
+                } else {
+                    current >>= 1
+                }
+            }
+            crc = (crc >> 8) ^ current
+        }
+        return crc ^ 0xffffffff
     }
 }
