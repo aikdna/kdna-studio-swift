@@ -9,7 +9,11 @@ public class KDNStudioProjectManager {
     // MARK: - Create
 
     public func createProject(name: String, type: String = "domain",
-                               author: KDNStudioAuthor = KDNStudioAuthor(name: "", id: "")) -> KDNStudioProject {
+                                author: KDNStudioAuthor = KDNStudioAuthor(name: "", id: ""),
+                                sourceMode: KDNSourceMode = .blank,
+                                creatorIdentity: KDNCreatorIdentity? = nil,
+                                lineage: KDNLineage? = nil,
+                                sourcePath: String? = nil) -> KDNStudioProject {
         let now = ISO8601DateFormatter().string(from: Date()).prefix(10)
         return KDNStudioProject(
             studioVersion: "0.1.0",
@@ -20,6 +24,10 @@ public class KDNStudioProjectManager {
             updated: String(now),
             author: author,
             status: .drafting,
+            sourceMode: sourceMode,
+            creatorIdentity: creatorIdentity,
+            lineage: lineage,
+            importedSourceFolder: sourcePath,
             cards: [],
             evidence: [],
             tests: [],

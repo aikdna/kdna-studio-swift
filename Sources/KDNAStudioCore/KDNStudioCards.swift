@@ -59,7 +59,8 @@ public class KDNStudioCards {
 
     @discardableResult
     public static func lockCard(_ card: KDNJudgmentCard, by: String, statement: String,
-                                 appliesWhen: Bool, doesNotApplyWhen: Bool, failureRisk: Bool) throws -> KDNJudgmentCard {
+                                 appliesWhen: Bool, doesNotApplyWhen: Bool, failureRisk: Bool,
+                                 creatorID: String? = nil, signature: String? = nil) throws -> KDNJudgmentCard {
         guard appliesWhen else { throw KDNStudioError.cardStateError("Must confirm applies_when reviewed") }
         guard doesNotApplyWhen else { throw KDNStudioError.cardStateError("Must confirm does_not_apply_when reviewed") }
         guard failureRisk else { throw KDNStudioError.cardStateError("Must confirm failure_risk reviewed") }
@@ -70,6 +71,8 @@ public class KDNStudioCards {
             at: ISO8601DateFormatter().string(from: Date()),
             statement: statement,
             checked: KDNLockChecks(appliesWhen: true, doesNotApplyWhen: true, failureRisk: true),
+            creatorId: creatorID,
+            signature: signature,
             judgmentFingerprint: cardJudgmentFingerprint(c)
         )
         return try transitionCard(c, to: .locked, by: by)
