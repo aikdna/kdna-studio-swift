@@ -9,18 +9,18 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "KDNaStudioCore",
-            targets: ["KDNaStudioCore"]
+            name: "KDNAStudioCore",
+            targets: ["KDNAStudioCore"]
         ),
     ],
     targets: [
         .target(
-            name: "KDNaStudioCore",
+            name: "KDNAStudioCore",
             dependencies: []
         ),
         .testTarget(
-            name: "KDNaStudioCoreTests",
-            dependencies: ["KDNaStudioCore"]
+            name: "KDNAStudioCoreTests",
+            dependencies: ["KDNAStudioCore"]
         ),
     ]
 )

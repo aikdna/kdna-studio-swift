@@ -1,4 +1,4 @@
-//  KDNaStudioCore — Human Lock Gate enforcement
+//  KDNAStudioCore — Human Lock Gate enforcement
 
 import Foundation
 

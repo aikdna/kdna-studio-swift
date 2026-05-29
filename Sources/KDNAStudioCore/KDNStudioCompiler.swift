@@ -1,4 +1,4 @@
-//  KDNaStudioCore — Compiler: locked cards → .kdna asset entries
+//  KDNAStudioCore — Compiler: locked cards → .kdna asset entries
 
 import Foundation
 import CryptoKit
@@ -189,7 +189,7 @@ extension KDNStudioCompiler {
             "version": version,
             "judgment_version": version,
             "content_digest": contentDigest,
-            "description": "KDNA asset exported by KDNaStudioCore.",
+            "description": "KDNA asset exported by KDNAStudioCore.",
             "author": [
                 "name": "KDNA Studio",
                 "id": "kdna-studio"

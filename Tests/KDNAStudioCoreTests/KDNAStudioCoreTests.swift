@@ -1,8 +1,8 @@
 import XCTest
 import Foundation
-@testable import KDNaStudioCore
+@testable import KDNAStudioCore
 
-final class KDNaStudioCoreTests: XCTestCase {
+final class KDNAStudioCoreTests: XCTestCase {
     func testPackageVersion() {
         XCTAssertTrue(true)
     }
