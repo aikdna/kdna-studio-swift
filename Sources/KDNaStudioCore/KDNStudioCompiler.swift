@@ -1,6 +1,7 @@
 //  KDNaStudioCore — Compiler: locked cards → .kdna asset entries
 
 import Foundation
+import CryptoKit
 
 public class KDNStudioCompiler {
 
@@ -168,8 +169,11 @@ extension KDNStudioCompiler {
 
     private static func buildAssetManifest(_ compileResult: KDNCompileResult) throws -> String {
         let version = extractVersion(from: compileResult.files["KDNA_Core.json"]) ?? "0.1.0"
+        let projectDigest = sha256(compileResult.files.keys.sorted().joined(separator: "\n"))
         let manifest: [String: Any] = [
-            "kdna_spec": "1.0-rc",
+            "format": "kdna",
+            "format_version": "1.0",
+            "spec_version": "1.0-rc",
             "name": compileResult.domain,
             "version": version,
             "judgment_version": version,
@@ -184,8 +188,22 @@ extension KDNStudioCompiler {
             "status": "draft",
             "quality_badge": "untested",
             "access": "open",
-            "language": "en",
-            "file_count": compileResult.files.count
+            "languages": ["en"],
+            "default_language": "en",
+            "file_count": compileResult.files.count,
+            "authoring": [
+                "created_by": "kdna-studio-sdk",
+                "authoring_tool": "KDNA Studio Swift",
+                "authoring_tool_version": "0.1.0",
+                "compiler": "kdna-studio-swift",
+                "compiler_version": "0.1.0",
+                "studio_project_digest": "sha256:\(projectDigest)",
+                "human_lock_required": true,
+                "human_lock_count": compileResult.stats.lockedCards,
+                "ai_assisted": true,
+                "human_confirmed": compileResult.stats.lockedCards > 0,
+                "compiled_at": ISO8601DateFormatter().string(from: Date())
+            ]
         ]
         let data = try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys])
         return String(data: data, encoding: .utf8) ?? "{}"
@@ -202,6 +220,11 @@ extension KDNStudioCompiler {
             return nil
         }
         return version
+    }
+
+    private static func sha256(_ string: String) -> String {
+        let digest = SHA256.hash(data: Data(string.utf8))
+        return digest.map { String(format: "%02x", $0) }.joined()
     }
 
     private static func buildStoredZip(entries: [String: String]) throws -> Data {
