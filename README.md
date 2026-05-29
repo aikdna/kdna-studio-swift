@@ -11,7 +11,7 @@ Studio-compatible authoring pipeline that performs human confirmation,
 validation, canonicalization, identity generation, digest computation, signing,
 optional encryption, and provenance recording.
 
-This is the Swift counterpart to [`@aikdna/kdna-studio`](https://github.com/aikdna/kdna-studio-core) (JavaScript/npm).
+This is the Swift counterpart to [`@aikdna/kdna-studio-core`](https://github.com/aikdna/kdna-studio-core) (JavaScript/npm).
 
 ## Apple Ecosystem Pair
 
@@ -46,7 +46,7 @@ Add via Swift Package Manager:
 ## Quick Start
 
 ```swift
-import KDNaStudioCore
+import KDNAStudioCore
 
 let manager = KDNStudioProjectManager()
 

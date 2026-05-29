@@ -1,4 +1,4 @@
-//  KDNaStudioCore — Judgment Cards with state machine and Human Lock
+//  KDNAStudioCore — Judgment Cards with state machine and Human Lock
 
 import Foundation
 import CryptoKit

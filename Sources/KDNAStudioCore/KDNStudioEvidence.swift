@@ -1,4 +1,4 @@
-//  KDNaStudioCore — Evidence import
+//  KDNAStudioCore — Evidence import
 
 import Foundation
 import CryptoKit

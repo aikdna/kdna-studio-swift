@@ -1,4 +1,4 @@
-//  KDNaStudioCore — Swift native KDNA authoring kernel
+//  KDNAStudioCore — Swift native KDNA authoring kernel
 //  Ported from @aikdna/kdna-studio-core (JS)
 
 import Foundation

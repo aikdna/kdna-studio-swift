@@ -1,4 +1,4 @@
-//  KDNaStudioCore — Project lifecycle
+//  KDNAStudioCore — Project lifecycle
 
 import Foundation
 
