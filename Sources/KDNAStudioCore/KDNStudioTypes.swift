@@ -14,6 +14,10 @@ public struct KDNStudioProject: Codable {
     public var updated: String
     public var author: KDNStudioAuthor
     public var status: KDNStudioProjectStatus
+    public var sourceMode: KDNSourceMode
+    public var creatorIdentity: KDNCreatorIdentity?
+    public var lineage: KDNLineage?
+    public var importedSourceFolder: String?
     public var cards: [KDNJudgmentCard]
     public var evidence: [KDNEvidenceEntry]
     public var tests: [KDNTestCase]
@@ -23,7 +27,12 @@ public struct KDNStudioProject: Codable {
     enum CodingKeys: String, CodingKey {
         case studioVersion = "studio_version"
         case projectId = "project_id"
-        case name, type, created, updated, author, status, cards, evidence, tests, stages, release
+        case name, type, created, updated, author, status
+        case sourceMode = "source_mode"
+        case creatorIdentity = "creator_identity"
+        case lineage
+        case importedSourceFolder = "imported_source_folder"
+        case cards, evidence, tests, stages, release
     }
 }
 
@@ -31,6 +40,46 @@ public struct KDNStudioAuthor: Codable {
     public var name: String
     public var id: String
     public init(name: String = "", id: String = "") { self.name = name; self.id = id }
+}
+
+// MARK: - Source Mode & Identity
+
+public enum KDNSourceMode: String, Codable {
+    case blank
+    case kdnaAsset = "kdna_asset"
+    case sourceFolder = "source_folder"
+}
+
+public struct KDNCreatorIdentity: Codable {
+    public var creatorId: String       // "kdna:creator:ed25519:<sha256-of-pubkey>"
+    public var displayName: String
+    public var publicKey: String       // PEM
+    public var verified: Bool
+    public var createdAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case creatorId = "creator_id"
+        case displayName = "display_name"
+        case publicKey = "public_key"
+        case verified
+        case createdAt = "created_at"
+    }
+}
+
+public struct KDNLineage: Codable {
+    public var type: String            // "original" | "fork" | "adapt" | "migrated"
+    public var parentName: String?
+    public var parentAssetUID: String?
+    public var parentVersion: String?
+    public var parentAssetDigest: String?
+
+    enum CodingKeys: String, CodingKey {
+        case type
+        case parentName = "parent_name"
+        case parentAssetUID = "parent_asset_uid"
+        case parentVersion = "parent_version"
+        case parentAssetDigest = "parent_asset_digest"
+    }
 }
 
 public enum KDNStudioProjectStatus: String, Codable {
@@ -158,10 +207,14 @@ public struct KDNHumanLockRecord: Codable {
     public var at: String
     public var statement: String
     public var checked: KDNLockChecks?
+    public var creatorId: String?
+    public var signature: String?
     public var judgmentFingerprint: String?
 
     enum CodingKeys: String, CodingKey {
         case by, at, statement, checked
+        case creatorId = "creator_id"
+        case signature
         case judgmentFingerprint = "judgment_fingerprint"
     }
 }
