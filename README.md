@@ -22,6 +22,8 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
 - **Project Model** — create, load, save, validate Studio projects
 - **Judgment Cards** — 9 card types with 6-state machine
 - **Human Lock** — AI proposes, human confirms. Only locked cards compile.
+- **Authoring Provenance** — exported assets carry Studio-compatible compiler
+  metadata, Human Lock count, confirmation status, and project digest.
 - **Fingerprint Detection** — SHA256 hash catches post-lock content changes
 - **Evidence Import** — text, markdown, interview records
 - **Compiler** — locked cards → internal KDNA asset entries
