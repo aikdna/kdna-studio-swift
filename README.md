@@ -6,6 +6,11 @@ This is the foundation for native Apple apps that create and manage personal or 
 
 **KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. AI can propose judgment candidates. Humans confirm judgment. Only human-locked judgment can be compiled into KDNA.
 
+A `.kdna` asset is not created by writing JSON files. It is compiled by a
+Studio-compatible authoring pipeline that performs human confirmation,
+validation, canonicalization, identity generation, digest computation, signing,
+optional encryption, and provenance recording.
+
 This is the Swift counterpart to [`@aikdna/kdna-studio`](https://github.com/aikdna/kdna-studio-core) (JavaScript/npm).
 
 ## Apple Ecosystem Pair
@@ -23,7 +28,8 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
 - **Judgment Cards** — 9 card types with 6-state machine
 - **Human Lock** — AI proposes, human confirms. Only locked cards compile.
 - **Authoring Provenance** — exported assets carry Studio-compatible compiler
-  metadata, Human Lock count, confirmation status, and project digest.
+  metadata, asset/project/build identity, Human Lock count, confirmation status,
+  content digest, and project digest.
 - **Fingerprint Detection** — SHA256 hash catches post-lock content changes
 - **Evidence Import** — text, markdown, interview records
 - **Compiler** — locked cards → internal KDNA asset entries

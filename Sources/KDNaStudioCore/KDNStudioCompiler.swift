@@ -170,13 +170,25 @@ extension KDNStudioCompiler {
     private static func buildAssetManifest(_ compileResult: KDNCompileResult) throws -> String {
         let version = extractVersion(from: compileResult.files["KDNA_Core.json"]) ?? "0.1.0"
         let projectDigest = sha256(compileResult.files.keys.sorted().joined(separator: "\n"))
-        let manifest: [String: Any] = [
+        let assetUID = UUID().uuidString.lowercased()
+        let projectUID = UUID().uuidString.lowercased()
+        let buildID = "build_\(UUID().uuidString.lowercased())"
+        let domainID = normalizedDomainID(compileResult.domain)
+        let registryName = compileResult.domain.hasPrefix("@") ? compileResult.domain : nil
+        let contentDigest = "sha256:\(sha256(compileResult.files.keys.sorted().map { key in "\(key)\n\(compileResult.files[key] ?? "")" }.joined(separator: "\n---entry---\n")))"
+        let compiledAt = ISO8601DateFormatter().string(from: Date())
+        var manifest: [String: Any] = [
             "format": "kdna",
             "format_version": "1.0",
             "spec_version": "1.0-rc",
             "name": compileResult.domain,
+            "domain_id": domainID,
+            "asset_uid": assetUID,
+            "project_uid": projectUID,
+            "build_id": buildID,
             "version": version,
             "judgment_version": version,
+            "content_digest": contentDigest,
             "description": "KDNA asset exported by KDNaStudioCore.",
             "author": [
                 "name": "KDNA Studio",
@@ -197,16 +209,42 @@ extension KDNStudioCompiler {
                 "authoring_tool_version": "0.1.0",
                 "compiler": "kdna-studio-swift",
                 "compiler_version": "0.1.0",
+                "asset_uid": assetUID,
+                "project_uid": projectUID,
+                "build_id": buildID,
+                "domain_id": domainID,
+                "content_digest": contentDigest,
                 "studio_project_digest": "sha256:\(projectDigest)",
                 "human_lock_required": true,
                 "human_lock_count": compileResult.stats.lockedCards,
                 "ai_assisted": true,
                 "human_confirmed": compileResult.stats.lockedCards > 0,
-                "compiled_at": ISO8601DateFormatter().string(from: Date())
+                "compiled_at": compiledAt
             ]
         ]
+        if let registryName {
+            manifest["registry_name"] = registryName
+            if var authoring = manifest["authoring"] as? [String: Any] {
+                authoring["registry_name"] = registryName
+                manifest["authoring"] = authoring
+            }
+        }
         let data = try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys])
         return String(data: data, encoding: .utf8) ?? "{}"
+    }
+
+    private static func normalizedDomainID(_ domain: String) -> String {
+        let base = domain.split(separator: "/").last.map(String.init) ?? domain
+        let lowered = base.lowercased()
+        let mapped = lowered.map { ch -> Character in
+            if ch.isLetter || ch.isNumber || ch == "_" { return ch }
+            return "_"
+        }
+        let collapsed = String(mapped).trimmingCharacters(in: CharacterSet(charactersIn: "_"))
+        if let first = collapsed.first, first.isLetter {
+            return collapsed
+        }
+        return "domain_\(collapsed.isEmpty ? "untitled" : collapsed)"
     }
 
     private static func extractVersion(from json: String?) -> String? {
