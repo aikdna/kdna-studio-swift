@@ -2,6 +2,7 @@
 
 import Foundation
 import CryptoKit
+import KDNACore
 
 public class KDNStudioCompiler {
 
@@ -153,6 +154,21 @@ extension KDNStudioCompiler {
 
         let archive = try buildStoredZip(entries: entries)
         try archive.write(to: assetURL, options: [.atomic])
+
+        // P0-4: Verify exported asset digest consistency using KDNACore
+        let reader = KDNAAssetReader()
+        let asset = try reader.open(url: assetURL)
+        let runtimeDigest = KDNAContentDigest.compute(asset: asset, reader: reader)
+        guard let manifestData = try? reader.readEntry(asset: asset, name: "kdna.json"),
+              let manifest = try? JSONSerialization.jsonObject(with: manifestData) as? [String: Any],
+              let manifestDigest = manifest["content_digest"] as? String
+        else { return assetURL }
+        guard runtimeDigest == manifestDigest else {
+            throw KDNStudioError.compileError(
+                "Export verification failed: manifest.content_digest (\(manifestDigest.prefix(20))…) != runtime content_digest (\(runtimeDigest.prefix(20))…)"
+            )
+        }
+
         return assetURL
     }
 
@@ -175,31 +191,11 @@ extension KDNStudioCompiler {
         let buildID = "build_\(UUID().uuidString.lowercased())"
         let domainID = normalizedDomainID(compileResult.domain)
         let registryName = compileResult.domain.hasPrefix("@") ? compileResult.domain : nil
-        let contentDigest = computeContentDigest(files: compileResult.files)
         let compiledAt = ISO8601DateFormatter().string(from: Date())
         let sourceMode = project?.sourceMode ?? .blank
 
-        // Creator identity
-        var creator: [String: Any]? = nil
-        if let ci = project?.creatorIdentity {
-            creator = [
-                "creator_id": ci.creatorId,
-                "display_name": ci.displayName,
-                "public_key": ci.publicKey,
-                "verified": ci.verified,
-            ]
-        }
-
-        // Lineage
-        var lineage: [String: Any] = ["type": "original"]
-        if let lin = project?.lineage {
-            lineage["type"] = lin.type
-            if let pn = lin.parentName { lineage["parent_name"] = pn }
-            if let pu = lin.parentAssetUID { lineage["parent_asset_uid"] = pu }
-            if let pv = lin.parentVersion { lineage["parent_version"] = pv }
-            if let pd = lin.parentAssetDigest { lineage["parent_asset_digest"] = pd }
-        }
-
+        // Build complete manifest without content_digest first,
+        // then compute digest on the full file set including the manifest.
         var manifest: [String: Any] = [
             "format": "kdna",
             "format_version": "1.0",
@@ -211,12 +207,8 @@ extension KDNStudioCompiler {
             "build_id": buildID,
             "version": version,
             "judgment_version": version,
-            "content_digest": contentDigest,
             "description": "KDNA asset exported by KDNAStudioCore.",
-            "author": [
-                "name": "KDNA Studio",
-                "id": "kdna-studio"
-            ],
+            "author": ["name": "KDNA Studio", "id": "kdna-studio"],
             "license": ["type": "UNSPECIFIED"],
             "status": "draft",
             "quality_badge": "untested",
@@ -224,6 +216,7 @@ extension KDNStudioCompiler {
             "languages": ["en"],
             "default_language": "en",
             "file_count": compileResult.files.count,
+            "lineage": lineageFor(project),
             "authoring": [
                 "created_by": "kdna-studio-sdk",
                 "authoring_tool": "KDNA Studio Swift",
@@ -235,67 +228,66 @@ extension KDNStudioCompiler {
                 "project_uid": projectUID,
                 "build_id": buildID,
                 "domain_id": domainID,
-                "content_digest": contentDigest,
                 "studio_project_digest": "sha256:\(projectDigest)",
                 "human_lock_required": true,
                 "human_lock_count": compileResult.stats.lockedCards,
                 "ai_assisted": true,
                 "human_confirmed": compileResult.stats.lockedCards > 0,
-                "compiled_at": compiledAt
+                "compiled_at": compiledAt,
             ],
-            "lineage": lineage
         ]
-        if let c = creator { manifest["creator"] = c }
-        if let registryName {
-            manifest["registry_name"] = registryName
-            if var authoring = manifest["authoring"] as? [String: Any] {
-                authoring["registry_name"] = registryName
-                manifest["authoring"] = authoring
-            }
+        // Creator
+        if let ci = project?.creatorIdentity {
+            manifest["creator"] = [
+                "creator_id": ci.creatorId, "display_name": ci.displayName,
+                "public_key": ci.publicKey, "verified": ci.verified,
+            ]
         }
+        if let registryName { manifest["registry_name"] = registryName }
+
+        // Build manifest JSON, add to files, compute digest on full set
+        let manifestJSON = String(data: try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys]), encoding: .utf8) ?? "{}"
+        var allFiles = compileResult.files
+        allFiles["kdna.json"] = manifestJSON
+
+        let contentDigest = KDNAContentDigest.compute(files: allFiles)
+
+        // Set digest and finalize
+        manifest["content_digest"] = contentDigest
+        if var auth = manifest["authoring"] as? [String: Any] {
+            auth["content_digest"] = contentDigest
+            manifest["authoring"] = auth
+        }
+
         let data = try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys])
         return String(data: data, encoding: .utf8) ?? "{}"
     }
 
-    /// Canonical content digest — path:sha256 format, aligned with JS canonicalization spec.
-    private static func computeContentDigest(files: [String: String]) -> String {
-        let excluded: Set<String> = ["signature.json", ".DS_Store"]
-        let payload = files.keys
-            .filter { !excluded.contains($0) }
-            .sorted()
-            .map { name -> String in
-                var content = files[name] ?? ""
-                if name == "mimetype" { content = "application/vnd.aikdna.kdna+zip" }
-                let buf: Data
-                if name.hasSuffix(".json") {
-                    let canonical = canonicalizeJSON(name: name, content: content)
-                    buf = Data(canonical.utf8)
-                } else {
-                    buf = Data(content.utf8)
-                }
-                let hash = SHA256.hash(data: buf).compactMap { String(format: "%02x", $0) }.joined()
-                return "\(name):\(hash)"
-            }
-            .joined(separator: "\n")
-        let digestHash = SHA256.hash(data: Data(payload.utf8)).compactMap { String(format: "%02x", $0) }.joined()
-        return "sha256:\(digestHash)"
+    private static func lineageFor(_ project: KDNStudioProject?) -> [String: Any] {
+        if let lin = project?.lineage {
+            var d: [String: Any] = ["type": lin.type]
+            if let pn = lin.parentName { d["parent_name"] = pn }
+            if let pu = lin.parentAssetUID { d["parent_asset_uid"] = pu }
+            if let pv = lin.parentVersion { d["parent_version"] = pv }
+            if let pd = lin.parentAssetDigest { d["parent_asset_digest"] = pd }
+            return d
+        }
+        return ["type": "original"]
     }
 
-    /// Canonicalize JSON content for digest: stable-sorted keys, remove self-referencing fields from kdna.json.
-    private static func canonicalizeJSON(name: String, content: String) -> String {
-        guard let data = content.data(using: .utf8),
-              let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-        else { return content }
+    /// Canonical content digest — delegates to KDNACore for single source of truth.
+    private static func computeContentDigest(files: [String: String]) -> String {
+        KDNAContentDigest.compute(files: files)
+    }
 
-        if name == "kdna.json" {
-            var copy = obj
-            copy.removeValue(forKey: "signature")
-            copy.removeValue(forKey: "asset_digest")
-            copy.removeValue(forKey: "container_sha256")
-            copy.removeValue(forKey: "content_digest")
-            return stableStringify(copy)
-        }
-        return stableStringify(obj)
+    /// Canonicalize JSON — delegates to KDNACore.
+    private static func canonicalizeJSON(name: String, content: String) -> String {
+        KDNAContentDigest.canonicalizeJSON(name: name, content: content)
+    }
+
+    /// Stable-sort JSON — delegates to KDNACore.
+    private static func stableStringify(_ value: Any) -> String {
+        KDNAContentDigest.stableStringify(value)
     }
 
     private static func normalizedDomainID(_ domain: String) -> String {
@@ -328,34 +320,6 @@ extension KDNStudioCompiler {
     private static func sha256(_ string: String) -> String {
         let digest = SHA256.hash(data: Data(string.utf8))
         return digest.map { String(format: "%02x", $0) }.joined()
-    }
-
-    /// Stable-sort JSON object keys for canonical output.
-    /// Matches the JS stableStringify behavior: `{key1:val1,key2:val2,...}`
-    private static func stableStringify(_ value: Any) -> String {
-        if let arr = value as? [Any] {
-            return "[" + arr.map { stableStringify($0) }.joined(separator: ",") + "]"
-        }
-        if let dict = value as? [String: Any] {
-            let inner = dict.keys.sorted().map { key in
-                let val = dict[key]!
-                return "\"\(key)\":" + stableStringify(val)
-            }.joined(separator: ",")
-            return "{" + inner + "}"
-        }
-        if let str = value as? String {
-            return "\"\(str.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\""
-        }
-        if let num = value as? NSNumber {
-            return num.stringValue
-        }
-        if let bool = value as? Bool {
-            return bool ? "true" : "false"
-        }
-        if value is NSNull {
-            return "null"
-        }
-        return "\"\(value)\""
     }
 
     private static func buildStoredZip(entries: [String: String]) throws -> Data {
