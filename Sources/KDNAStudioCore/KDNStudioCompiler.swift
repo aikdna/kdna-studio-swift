@@ -19,14 +19,13 @@ public class KDNStudioCompiler {
         // Build KDNA_Core.json
         var axioms: [[String: Any]] = []
         var ontology: [[String: Any]] = []
-        var frameworks: [[String: Any]] = []
         var stances: [String] = []
+        var scenariosList: [[String: Any]] = []
+        var caseList: [[String: Any]] = []
 
         // Build KDNA_Patterns.json
         var misunderstandings: [[String: Any]] = []
         var selfChecks: [String] = []
-        var bannedTerms: [[String: Any]] = []
-        var terminology: [[String: Any]] = []
 
         for card in lockedCards {
             switch card.type {
@@ -38,13 +37,14 @@ public class KDNStudioCompiler {
                 misunderstandings.append(buildMisunderstanding(card))
             case .self_check:
                 if let q = KDNStudioCards.field(card, "question") { selfChecks.append(q) }
+            case .scenario:
+                scenariosList.append(buildGenericCard(card))
+            case .case:
+                caseList.append(buildGenericCard(card))
             case .boundary, .risk, .aesthetic:
-                // These compile to stances or specialized sections
                 if let st = KDNStudioCards.field(card, "out_of_scope") ?? KDNStudioCards.field(card, "failure_risk") {
                     stances.append(st)
                 }
-            default:
-                break
             }
         }
 
@@ -53,40 +53,154 @@ public class KDNStudioCompiler {
             "version": project.release?.version ?? "0.1.0",
             "domain": domainName,
             "created": project.created,
-            "purpose": "Domain judgment compiled by KDNA Studio Core",
+            "purpose": "Domain judgment compiled by KDNA Studio",
             "load_condition": "always"
         ]
 
         var coreData: [String: Any] = ["meta": meta]
         if !axioms.isEmpty { coreData["axioms"] = axioms }
         if !ontology.isEmpty { coreData["ontology"] = ontology }
-        if !frameworks.isEmpty { coreData["frameworks"] = frameworks }
         if !stances.isEmpty { coreData["stances"] = stances }
 
         var patternData: [String: Any] = ["meta": meta]
         if !misunderstandings.isEmpty { patternData["misunderstandings"] = misunderstandings }
         if !selfChecks.isEmpty { patternData["self_check"] = selfChecks }
-        if !bannedTerms.isEmpty { patternData["terminology"] = ["banned_terms": bannedTerms] }
-        if !terminology.isEmpty { patternData["terminology"] = (patternData["terminology"] as? [String: Any] ?? [:]).merging(["standard_terms": terminology]) { $1 } }
 
-        // Serialize
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        var files: [String: String] = [:]
+        files["KDNA_Core.json"] = try jsonString(coreData)
+        files["KDNA_Patterns.json"] = try jsonString(patternData)
 
-        let coreJSON = try JSONSerialization.data(withJSONObject: coreData, options: [.prettyPrinted, .sortedKeys])
-        let patJSON = try JSONSerialization.data(withJSONObject: patternData, options: [.prettyPrinted, .sortedKeys])
+        // Optional files
+        if !scenariosList.isEmpty {
+            files["KDNA_Scenarios.json"] = try jsonString(["meta": meta, "scenes": scenariosList])
+        }
+        if !caseList.isEmpty {
+            files["KDNA_Cases.json"] = try jsonString(["meta": meta, "cases": caseList])
+        }
 
-        let files: [String: String] = [
-            "KDNA_Core.json": String(data: coreJSON, encoding: .utf8) ?? "{}",
-            "KDNA_Patterns.json": String(data: patJSON, encoding: .utf8) ?? "{}",
-        ]
+        // Reasoning from axioms
+        if !axioms.isEmpty {
+            let chains = axioms.map { ax in
+                ["id": "chain_\(ax["id"] ?? "")",
+                 "one_sentence": ax["one_sentence"] ?? "",
+                 "logic": [ax["full_statement"] ?? ""],
+                 "so_what": ax["why"] ?? "Agent judgment changes when this axiom is loaded."] as [String: Any]
+            }
+            files["KDNA_Reasoning.json"] = try jsonString(["meta": meta, "reasoning_chains": chains])
+        }
+
+        // Evolution from audit logs
+        let stages = lockedCards.compactMap { card -> [String: Any]? in
+            guard let log = card.auditLog.last(where: { $0.event == "locked" }) else { return nil }
+            return ["id": "stage_\(card.id)", "name": KDNStudioCards.field(card, "one_sentence") ?? card.id,
+                    "description": "Card \(card.id) locked by \(log.by) at \(log.at)."]
+        }
+        if !stages.isEmpty {
+            files["KDNA_Evolution.json"] = try jsonString([
+                "meta": meta, "stages": stages,
+                "evolution_layers": [["id": "layer_1", "name": "Foundation", "capability": "Core axioms established",
+                                       "from_stage": stages.first?["id"] ?? "", "to_stage": stages.last?["id"] ?? ""]],
+                "measurement": [["id": "meas_axioms", "what": "locked_axioms", "how": "Count of locked axiom cards",
+                                  "threshold": "\(lockedCards.filter { $0.type == .axiom }.count)"]]
+            ])
+        }
+
+        // ── Reports ──────────────────────────────────────────
+        let buildId = "build_\(UUID().uuidString.lowercased())"
+        let assetUID = UUID().uuidString.lowercased()
+        let projectUID = project.projectId
+        let domainId = domainName.components(separatedBy: "/").last ?? domainName
+        let compiledAt = ISO8601DateFormatter().string(from: Date())
+        let ratedTests = project.tests.filter { $0.result != nil }
+
+        // Provenance
+        let provenance = KDNStudioProvenance.build(
+            project: project,
+            identity: (buildId, projectUID, assetUID, domainId, compiledAt)
+        )
+        files["reports/provenance-report.json"] = try jsonString(provenance)
+
+        // KDNA_CARD
+        let kdnaCard = KDNStudioGovernance.generateCard(project: project, provenance: provenance)
+        files["KDNA_CARD.json"] = try jsonString(kdnaCard)
+
+        // Build report
+        files["reports/build-report.json"] = try jsonString([
+            "schema_version": "studio-build-report-v1",
+            "build_id": buildId, "asset_uid": assetUID, "project_uid": projectUID, "domain_id": domainId,
+            "compiler": "kdna-studio-swift", "compiler_version": "0.2.0", "compiled_at": compiledAt,
+            "stats": ["total_cards": project.cards.count, "locked_cards": lockedCards.count,
+                       "excluded_cards": excludedCards, "kdna_files": files.filter { $0.key.hasPrefix("KDNA_") }.count]
+        ])
+
+        // Human Lock report
+        let lockedList = lockedCards.map { c -> [String: Any] in
+            ["id": c.id, "type": c.type.rawValue, "locked": true,
+             "locked_by": c.humanLock?.by ?? "", "locked_at": c.humanLock?.at ?? ""]
+        }
+        files["reports/human-lock-report.json"] = try jsonString([
+            "schema_version": "human-lock-report-v1", "build_id": buildId,
+            "human_lock_required": true, "human_lock_count": lockedCards.count,
+            "judgment_card_count": project.cards.filter { KDNStudioCards.judgmentCardTypes.contains($0.type) }.count,
+            "cards": lockedList
+        ])
+
+        // Quality gate report
+        let readiness = KDNStudioQuality.computeReadiness(project)
+        files["reports/quality-gate-report.json"] = try jsonString([
+            "schema_version": "quality-gate-report-v1", "build_id": buildId,
+            "quality_badge": readiness.grade == "publishable_grade" ? "tested" : "untested",
+            "eval_count": project.tests.count, "rated_eval_count": ratedTests.count,
+            "gates": ["untested": ["passed": true], "tested": ["passed": ratedTests.count >= 10],
+                       "validated": ["passed": false, "required": "automated scoring + registry validation"]]
+        ])
+
+        // Eval report
+        files["reports/eval-report.json"] = try jsonString([
+            "schema_version": "eval-report-v1", "build_id": buildId,
+            "total": project.tests.count, "rated": ratedTests.count,
+            "cases": project.tests.map { t in
+                ["id": t.id, "title": t.notes, "result": t.result ?? "", "linked_cards": t.linkedCards] as [String: Any]
+            }
+        ])
+
+        // Build receipt
+        files["build-receipt.json"] = try jsonString([
+            "schema_version": "studio-build-receipt-v1",
+            "asset_uid": assetUID, "project_uid": projectUID, "build_id": buildId, "domain_id": domainId,
+            "version": project.release?.version ?? "0.1.0",
+            "compiler": "kdna-studio-swift", "compiler_version": "0.2.0",
+            "signature_status": "pending_export_sign",
+            "built_at": compiledAt
+        ])
+
+        let kdnaCount = files.keys.filter { $0.hasPrefix("KDNA_") }.count
 
         return KDNCompileResult(
             success: true,
             domain: domainName,
             files: files,
-            stats: KDNCompileStats(lockedCards: lockedCards.count, excludedCards: excludedCards, kdnaFiles: files.count)
+            stats: KDNCompileStats(lockedCards: lockedCards.count, excludedCards: excludedCards, kdnaFiles: kdnaCount)
         )
+    }
+
+    // MARK: - Helpers
+
+    private static func jsonString(_ obj: [String: Any]) throws -> String {
+        let data = try JSONSerialization.data(withJSONObject: obj, options: [.prettyPrinted, .sortedKeys])
+        return String(data: data, encoding: .utf8) ?? "{}"
+    }
+
+    private static func buildGenericCard(_ card: KDNJudgmentCard) -> [String: Any] {
+        var obj: [String: Any] = ["id": card.id, "type": card.type.rawValue]
+        for (key, val) in card.fields {
+            switch val {
+            case .string(let s): obj[key] = s
+            case .array(let a): obj[key] = a
+            case .null: break
+            }
+        }
+        return obj
     }
 
     // MARK: - Card → JSON builders
