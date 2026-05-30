@@ -13,10 +13,15 @@ let package = Package(
             targets: ["KDNAStudioCore"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/aikdna/kdna-core-swift.git", branch: "main"),
+    ],
     targets: [
         .target(
             name: "KDNAStudioCore",
-            dependencies: []
+            dependencies: [
+                .product(name: "KDNACore", package: "kdna-core-swift"),
+            ]
         ),
         .testTarget(
             name: "KDNAStudioCoreTests",
