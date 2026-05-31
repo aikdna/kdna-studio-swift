@@ -2,7 +2,7 @@
 
 Native Swift authoring kernel for turning scattered notes, documents, works, and feedback into valid, testable `.kdna` judgment assets — for macOS and iOS apps.
 
-KDNA Studio Swift is the judgment asset refinery for Apple platforms. It supports both interview-first authoring (express your standards directly) and distillation-first authoring (provide your content, find the patterns, confirm what's really you). Both end with Human Judgment Lock.
+KDNA Studio Swift is the judgment asset refinery for Apple platforms. It provides the native authoring primitives for Studio-compatible apps: project model, evidence import, judgment cards, Human Lock, compile, and export. Full Domain-First distillation UI and candidate review currently live in the KDNA Studio Mac app; this package is the reusable Swift authoring kernel.
 
 **KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. AI can propose judgment candidates. Humans confirm judgment. Only human-locked judgment can be compiled into KDNA.
 
@@ -32,6 +32,7 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
   content digest, and project digest.
 - **Fingerprint Detection** — SHA256 hash catches post-lock content changes
 - **Evidence Import** — text, markdown, interview records
+- **Domain-Scoped Authoring Boundary** — one exported `.kdna` should represent one clear judgment domain; complex work should compose multiple assets through KDNA Clusters rather than broadening a single file
 - **Compiler** — locked cards → internal KDNA asset entries
 - **Export** — write a canonical `.kdna` asset; directory export is dev-only
 
