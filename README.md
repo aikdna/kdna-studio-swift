@@ -1,8 +1,8 @@
 # KDNA Studio Swift
 
-Native Swift authoring kernel for turning human judgment into valid, testable `.kdna` cognition assets — for macOS and iOS apps.
+Native Swift authoring kernel for turning scattered notes, documents, works, and feedback into valid, testable `.kdna` judgment assets — for macOS and iOS apps.
 
-This is the foundation for native Apple apps that create and manage personal or professional KDNA cognitive assets locally.
+KDNA Studio Swift is the judgment asset refinery for Apple platforms. It supports both interview-first authoring (express your standards directly) and distillation-first authoring (provide your content, find the patterns, confirm what's really you). Both end with Human Judgment Lock.
 
 **KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. AI can propose judgment candidates. Humans confirm judgment. Only human-locked judgment can be compiled into KDNA.
 
