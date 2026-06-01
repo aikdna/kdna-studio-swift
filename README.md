@@ -11,6 +11,11 @@ Studio-compatible authoring pipeline that performs human confirmation,
 validation, canonicalization, identity generation, digest computation, signing,
 optional encryption, and provenance recording.
 
+**Hard boundary:** Optional encryption, when supported, MUST be represented as
+protected entries inside the `.kdna` container (RFC-0008). App-private encrypted
+envelopes or transfer wrappers that cannot be opened by KDNA Core are NOT
+conforming KDNA runtime assets.
+
 This is the Swift counterpart to [`@aikdna/kdna-studio-core`](https://github.com/aikdna/kdna-studio-core) (JavaScript/npm).
 
 ## Apple Ecosystem Pair
