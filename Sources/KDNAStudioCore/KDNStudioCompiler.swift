@@ -25,7 +25,10 @@ public class KDNStudioCompiler {
 
         // Build KDNA_Patterns.json
         var misunderstandings: [[String: Any]] = []
-        var selfChecks: [String] = []
+        var selfChecks: [[String: Any]] = []
+        var boundaries: [[String: Any]] = []
+        var risks: [[String: Any]] = []
+        var aesthetics: [[String: Any]] = []
 
         for card in lockedCards {
             switch card.type {
@@ -36,15 +39,17 @@ public class KDNStudioCompiler {
             case .misunderstanding:
                 misunderstandings.append(buildMisunderstanding(card))
             case .self_check:
-                if let q = KDNStudioCards.field(card, "question") { selfChecks.append(q) }
+                selfChecks.append(buildSelfCheck(card))
             case .scenario:
                 scenariosList.append(buildGenericCard(card))
             case .case:
                 caseList.append(buildGenericCard(card))
-            case .boundary, .risk, .aesthetic:
-                if let st = KDNStudioCards.field(card, "out_of_scope") ?? KDNStudioCards.field(card, "failure_risk") {
-                    stances.append(st)
-                }
+            case .boundary:
+                boundaries.append(buildGenericCard(card))
+            case .risk:
+                risks.append(buildGenericCard(card))
+            case .aesthetic:
+                aesthetics.append(buildGenericCard(card))
             }
         }
 
@@ -65,6 +70,9 @@ public class KDNStudioCompiler {
         var patternData: [String: Any] = ["meta": meta]
         if !misunderstandings.isEmpty { patternData["misunderstandings"] = misunderstandings }
         if !selfChecks.isEmpty { patternData["self_check"] = selfChecks }
+        if !boundaries.isEmpty { patternData["boundaries"] = boundaries }
+        if !risks.isEmpty { patternData["risk_model"] = risks }
+        if !aesthetics.isEmpty { patternData["aesthetic_preferences"] = aesthetics }
 
         var files: [String: String] = [:]
         files["KDNA_Core.json"] = try jsonString(coreData)
@@ -237,6 +245,15 @@ public class KDNStudioCompiler {
             "correct": KDNStudioCards.field(card, "correct") ?? "",
             "key_distinction": KDNStudioCards.field(card, "key_distinction") ?? "",
             "why": KDNStudioCards.field(card, "why") ?? "",
+        ]
+    }
+
+    private static func buildSelfCheck(_ card: KDNJudgmentCard) -> [String: Any] {
+        [
+            "id": card.id,
+            "question": KDNStudioCards.field(card, "question") ?? "",
+            "what_to_look_for": KDNStudioCards.field(card, "what_to_look_for") ?? "",
+            "how_to_verify": KDNStudioCards.field(card, "how_to_verify") ?? "",
         ]
     }
 }
