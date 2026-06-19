@@ -41,7 +41,28 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
 - **Evidence Import** — text, markdown, interview records
 - **Domain-Scoped Authoring Boundary** — one exported `.kdna` should represent one clear judgment domain; complex work should compose multiple assets through KDNA Clusters rather than broadening a single file
 - **Compiler** — locked cards → internal KDNA asset entries
-- **Export** — write a canonical `.kdna` asset; directory export is dev-only
+- **Runtime Export** — write a canonical KDNA Core v1 `.kdna` runtime asset; directory export is dev-only
+
+## Runtime Export Contract
+
+`KDNStudioCompiler.compile(_:)` is an authoring compile step. It may produce
+source/audit entries such as `KDNA_Core.json`, `KDNA_Patterns.json`, reports,
+and build receipts for review.
+
+`KDNStudioCompiler.exportAsset(_:to:project:)` is the user-facing runtime export
+step. It must emit only the canonical KDNA Core v1 runtime container entries:
+
+```text
+mimetype
+kdna.json
+payload.kdnab
+checksums.json
+```
+
+Top-level source entries such as `KDNA_Core.json`, `KDNA_Patterns.json`,
+`KDNA_CARD.json`, reports, and `source_cards` are not runtime distribution
+entries. Apple Studio apps must use this runtime export path and must not create
+app-private `.kdna` envelopes that KDNA Core, CLI, or Chat cannot inspect.
 
 ## Install
 
@@ -91,6 +112,7 @@ let gate = KDNStudioHumanLockGate.check(project)
 if !gate.blocked {
     // 5. Compile
     let result = try KDNStudioCompiler.compile(project)
+    // 6. Export canonical runtime .kdna
     let assetURL = try KDNStudioCompiler.exportAsset(result, to: outputURL)
 }
 ```

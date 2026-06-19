@@ -19,7 +19,7 @@ public class KDNStudioCompiler {
         // Build KDNA_Core.json
         var axioms: [[String: Any]] = []
         var ontology: [[String: Any]] = []
-        var stances: [String] = []
+        let stances: [String] = []
         var scenariosList: [[String: Any]] = []
         var caseList: [[String: Any]] = []
 
@@ -261,11 +261,17 @@ public class KDNStudioCompiler {
 // MARK: - Asset export
 
 extension KDNStudioCompiler {
-    /// Export the compiled result as a canonical `.kdna` asset.
+    private static let runtimeMimeType = "application/vnd.kdna.asset"
+
+    /// Export the compiled result as a canonical KDNA Core v1 runtime `.kdna` asset.
     ///
     /// If `url` ends with `.kdna`, the asset is written to that exact file. Otherwise
     /// the method writes `<domain>.kdna` inside the target directory. The generated
     /// asset is a ZIP container with stored entries and no persistent extraction.
+    ///
+    /// Runtime export is intentionally narrower than `compile(_:)`: source entries
+    /// such as `KDNA_Core.json`, `KDNA_Patterns.json`, and reports remain authoring
+    /// artifacts and are not top-level runtime distribution entries.
     @discardableResult
     public static func exportAsset(_ compileResult: KDNCompileResult, to url: URL, project: KDNStudioProject? = nil) throws -> URL {
         let assetURL: URL
@@ -278,26 +284,20 @@ extension KDNStudioCompiler {
             assetURL = url.appendingPathComponent("\(compileResult.domain).kdna")
         }
 
-        var entries = compileResult.files
-        if entries["kdna.json"] == nil {
-            entries["kdna.json"] = try buildAssetManifest(compileResult, project: project)
-        }
-
+        let entries = try buildRuntimeAssetFiles(compileResult, project: project)
         let archive = try buildStoredZip(entries: entries)
         try archive.write(to: assetURL, options: [.atomic])
 
-        // P0-4: Verify exported asset digest consistency using KDNACore
         let reader = KDNAAssetReader()
         let asset = try reader.open(url: assetURL)
-        let runtimeDigest = KDNAContentDigest.compute(asset: asset, reader: reader)
-        guard let manifestData = try? reader.readEntry(asset: asset, name: "kdna.json"),
-              let manifest = try? JSONSerialization.jsonObject(with: manifestData) as? [String: Any],
-              let manifestDigest = manifest["content_digest"] as? String
-        else { return assetURL }
-        guard runtimeDigest == manifestDigest else {
-            throw KDNStudioError.compileError(
-                "Export verification failed: manifest.content_digest (\(manifestDigest.prefix(20))…) != runtime content_digest (\(runtimeDigest.prefix(20))…)"
-            )
+        let exportedEntries = Set(reader.listEntries(asset: asset))
+        let expectedEntries: Set<String> = ["mimetype", "kdna.json", "payload.kdnab", "checksums.json"]
+        guard exportedEntries == expectedEntries else {
+            throw KDNStudioError.compileError("Export verification failed: unexpected runtime entries \(exportedEntries.sorted())")
+        }
+        guard let mediaType = try? reader.readString(asset: asset, name: "mimetype"),
+              mediaType == runtimeMimeType else {
+            throw KDNStudioError.compileError("Export verification failed: invalid runtime mimetype")
         }
 
         return assetURL
@@ -312,6 +312,143 @@ extension KDNStudioCompiler {
             let fileURL = domainDir.appendingPathComponent(filename)
             try content.write(to: fileURL, atomically: true, encoding: .utf8)
         }
+    }
+
+    public static func buildRuntimeAssetFiles(_ compileResult: KDNCompileResult, project: KDNStudioProject? = nil) throws -> [String: String] {
+        let payload = try buildRuntimePayload(compileResult)
+        let payloadJSON = try jsonString(payload)
+        let manifest = try buildRuntimeManifest(compileResult, project: project, payloadJSON: payloadJSON)
+        let manifestJSON = try jsonString(manifest)
+
+        var files: [String: String] = [
+            "mimetype": runtimeMimeType,
+            "kdna.json": manifestJSON,
+            "payload.kdnab": payloadJSON,
+        ]
+        files["checksums.json"] = try jsonString(buildRuntimeChecksums(files: files))
+        return files
+    }
+
+    private static func buildRuntimePayload(_ compileResult: KDNCompileResult) throws -> [String: Any] {
+        let core = try parseJSONFile(compileResult.files["KDNA_Core.json"]) ?? [:]
+        let patterns = try parseJSONFile(compileResult.files["KDNA_Patterns.json"]) ?? [:]
+        let scenarios = try parseJSONFile(compileResult.files["KDNA_Scenarios.json"]) ?? [:]
+        let cases = try parseJSONFile(compileResult.files["KDNA_Cases.json"]) ?? [:]
+        let reasoning = try parseJSONFile(compileResult.files["KDNA_Reasoning.json"]) ?? [:]
+        let evolution = try parseJSONFile(compileResult.files["KDNA_Evolution.json"]) ?? [:]
+
+        let meta = core["meta"] as? [String: Any] ?? [:]
+        let axioms = core["axioms"] as? [[String: Any]] ?? []
+        let firstAxiom = axioms.first
+
+        return [
+            "profile": "judgment-profile-v1",
+            "core": [
+                "highest_question": meta["load_condition"] as? String
+                    ?? firstAxiom?["one_sentence"] as? String
+                    ?? "What judgment should be loaded for \(compileResult.domain)?",
+                "axioms": axioms,
+                "boundaries": patterns["boundaries"] as? [[String: Any]] ?? core["boundaries"] as? [[String: Any]] ?? [],
+                "risk_model": [
+                    "risks": patterns["risk_model"] as? [[String: Any]] ?? core["risks"] as? [[String: Any]] ?? []
+                ],
+            ],
+            "patterns": patterns["misunderstandings"] as? [[String: Any]] ?? [],
+            "scenarios": scenarios["scenes"] as? [[String: Any]] ?? [],
+            "cases": cases["cases"] as? [[String: Any]] ?? [],
+            "reasoning": [
+                "self_checks": patterns["self_check"] as? [[String: Any]] ?? [],
+                "failure_modes": reasoning["reasoning_chains"] as? [[String: Any]] ?? [],
+                "reasoning_chains": reasoning["reasoning_chains"] as? [[String: Any]] ?? [],
+            ],
+            "evolution": [
+                "stages": evolution["stages"] as? [[String: Any]] ?? [],
+                "evolution_layers": evolution["evolution_layers"] as? [[String: Any]] ?? [],
+                "measurement": evolution["measurement"] as? [[String: Any]] ?? [],
+            ],
+        ]
+    }
+
+    private static func buildRuntimeManifest(
+        _ compileResult: KDNCompileResult,
+        project: KDNStudioProject?,
+        payloadJSON: String
+    ) throws -> [String: Any] {
+        let version = semverValue(project?.release?.version ?? extractVersion(from: compileResult.files["KDNA_Core.json"]) ?? "0.1.0")
+        let assetUID = UUID().uuidString.lowercased()
+        let domainID = normalizedDomainID(compileResult.domain)
+        let now = ISO8601DateFormatter().string(from: Date())
+        let author = project?.author ?? KDNStudioAuthor(name: "KDNA Studio", id: "kdna-studio")
+        let payloadDigest = "sha256:\(sha256(payloadJSON))"
+
+        return [
+            "kdna_version": "1.0",
+            "name": project?.name ?? compileResult.domain,
+            "asset_id": assetID(from: project?.name ?? compileResult.domain),
+            "asset_uid": "urn:uuid:\(assetUID)",
+            "asset_type": project?.type == "cluster" ? "cluster" : "domain",
+            "title": title(from: project?.name ?? compileResult.domain),
+            "version": version,
+            "judgment_version": version,
+            "created_at": isoDateTime(project?.created),
+            "updated_at": now,
+            "author": ["name": author.name, "id": author.id],
+            "creator": ["name": author.name, "id": author.id],
+            "compatibility": [
+                "min_loader_version": "1.0.0",
+                "profile": "judgment-profile-v1",
+            ],
+            "payload": [
+                "path": "payload.kdnab",
+                "encoding": "json",
+                "encrypted": false,
+                "digest": payloadDigest,
+            ],
+            "access": "public",
+            "summary": project?.release?.version == nil ? "KDNA asset exported by KDNAStudioCore." : "KDNA Studio runtime export.",
+            "languages": ["en"],
+            "license": ["type": "CC-BY-4.0"],
+            "keywords": [],
+            "lineage": canonicalLineage(project?.lineage),
+            "load_contract": [
+                "default_profile": "compact",
+                "profiles": [
+                    "index": ["requires_decryption": false, "max_tokens_hint": 200],
+                    "compact": ["requires_decryption": false, "max_tokens_hint": 500],
+                    "scenario": ["requires_decryption": false, "selection": "triggered_sections_only"],
+                    "full": ["requires_decryption": false, "intended_for": ["audit", "reference"]],
+                ],
+            ],
+            "authoring": [
+                "compiler": "kdna-studio-swift",
+                "compiler_version": "0.2.0",
+                "domain_id": domainID,
+                "human_lock_required": true,
+                "human_lock_count": compileResult.stats.lockedCards,
+            ],
+        ]
+    }
+
+    private static func buildRuntimeChecksums(files: [String: String]) -> [String: Any] {
+        let manifestHash = sha256(files["kdna.json"] ?? "")
+        let payloadHash = sha256(files["payload.kdnab"] ?? "")
+        let combined = "kdna.json:\(manifestHash)\npayload.kdnab:\(payloadHash)"
+        return [
+            "algorithm": "sha256",
+            "manifest_digest": "sha256:\(manifestHash)",
+            "payload_digest": "sha256:\(payloadHash)",
+            "asset_digest": "sha256:\(sha256(combined))",
+            "entries": [
+                "kdna.json": ["algorithm": "sha256", "value": manifestHash],
+                "payload.kdnab": ["algorithm": "sha256", "value": payloadHash],
+            ],
+        ]
+    }
+
+    private static func parseJSONFile(_ json: String?) throws -> [String: Any]? {
+        guard let json else { return nil }
+        let data = Data(json.utf8)
+        return try JSONSerialization.jsonObject(with: data) as? [String: Any]
     }
 
     private static func buildAssetManifest(_ compileResult: KDNCompileResult, project: KDNStudioProject? = nil) throws -> String {
@@ -406,6 +543,78 @@ extension KDNStudioCompiler {
         return ["type": "original"]
     }
 
+    private static func canonicalLineage(_ lineage: KDNLineage?) -> [String: Any] {
+        guard let lineage else { return ["type": "original"] }
+        let allowed: Set<String> = [
+            "original",
+            "fork",
+            "adaptation",
+            "translation",
+            "private_variant",
+            "organization_variant",
+            "course_variant",
+        ]
+        let rawType = lineage.type
+        let type = allowed.contains(rawType) ? rawType : (rawType == "adapt" ? "adaptation" : "adaptation")
+        var result: [String: Any] = ["type": type]
+        if !allowed.contains(rawType) {
+            result["source_lineage_type"] = rawType
+        }
+        if let parentName = lineage.parentName { result["parent_name"] = parentName }
+        if let parentAssetUID = lineage.parentAssetUID { result["parent_asset_uid"] = parentAssetUID }
+        if let parentVersion = lineage.parentVersion { result["parent_version"] = parentVersion }
+        if let parentAssetDigest = lineage.parentAssetDigest { result["parent_asset_digest"] = parentAssetDigest }
+        return result
+    }
+
+    private static func semverValue(_ value: String, fallback: String = "0.1.0") -> String {
+        if value.range(of: #"^[0-9]+\.[0-9]+\.[0-9]+([+-].+)?$"#, options: .regularExpression) != nil {
+            return value
+        }
+        if let match = value.range(of: #"^[0-9]+\.[0-9]+$"#, options: .regularExpression),
+           match.lowerBound == value.startIndex,
+           match.upperBound == value.endIndex {
+            return "\(value).0"
+        }
+        return fallback
+    }
+
+    private static func isoDateTime(_ value: String?) -> String {
+        guard let value, !value.isEmpty else {
+            return ISO8601DateFormatter().string(from: Date())
+        }
+        if value.range(of: #"^\d{4}-\d{2}-\d{2}$"#, options: .regularExpression) != nil {
+            return "\(value)T00:00:00Z"
+        }
+        return value
+    }
+
+    private static func assetID(from name: String) -> String {
+        let raw = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parts = raw.replacingOccurrences(of: "@", with: "").split(separator: "/").map(String.init)
+        if parts.count == 2 {
+            return "kdna:\(slugSegment(parts[0], fallback: "scope")):\(slugSegment(parts[1], fallback: "asset"))"
+        }
+        return "kdna:studio:\(normalizedDomainID(raw))"
+    }
+
+    private static func title(from name: String) -> String {
+        let raw = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        if raw.isEmpty { return "KDNA Studio Export" }
+        return raw.replacingOccurrences(of: "@", with: "").replacingOccurrences(of: "/", with: " / ")
+    }
+
+    private static func slugSegment(_ value: String, fallback: String) -> String {
+        let normalized = value
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .map { ch -> Character in
+                if ch.isLetter || ch.isNumber || ch == "_" || ch == "." || ch == "-" { return ch }
+                return "_"
+            }
+        let result = String(normalized).trimmingCharacters(in: CharacterSet(charactersIn: "_"))
+        return result.isEmpty ? fallback : result
+    }
+
     /// Canonical content digest — delegates to KDNACore for single source of truth.
     private static func computeContentDigest(files: [String: String]) -> String {
         KDNAContentDigest.compute(files: files)
@@ -457,7 +666,8 @@ extension KDNStudioCompiler {
         var archive = Data()
         var centralEntries: [ZipCentralEntry] = []
 
-        for name in entries.keys.sorted() {
+        let orderedNames = ["mimetype"] + entries.keys.filter { $0 != "mimetype" }.sorted()
+        for name in orderedNames {
             let payload = Data((entries[name] ?? "").utf8)
             let nameData = Data(name.utf8)
             let offset = UInt32(archive.count)
