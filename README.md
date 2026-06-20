@@ -4,14 +4,14 @@
 
 Native Swift authoring kernel for turning scattered notes, documents, works, and feedback into valid, testable `.kdna` judgment assets — for macOS and iOS apps.
 
-KDNA Studio Swift is the judgment asset refinery for Apple platforms. It provides the native authoring primitives for Studio-compatible apps: project model, evidence import, judgment cards, Human Lock, compile, and export. Full Domain-First distillation UI and candidate review currently live in the KDNA Studio Mac app; this package is the reusable Swift authoring kernel.
+KDNA Studio Swift is the authoring kernel for Apple platforms. It provides the native primitives for Studio-compatible apps: project model, evidence import, judgment cards, optional Human Lock provenance, compile, and export. Full Domain-First distillation UI and candidate review currently live in the KDNA Studio Mac app; this package is the reusable Swift authoring kernel.
 
-**KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. AI can propose judgment candidates. Humans confirm judgment. Only human-locked judgment can be compiled into KDNA.
+**KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. Humans, agents, tools, and hybrid workflows can create judgment candidates through Studio-compatible authoring paths. Human confirmation and Human Lock are provenance signals for reviewed or high-risk publishing flows, not KDNA Core v1 format-validity requirements.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
-Studio-compatible authoring pipeline that performs human confirmation,
-validation, canonicalization, identity generation, digest computation, signing,
-optional encryption, and provenance recording.
+Studio-compatible authoring pipeline that performs validation, canonicalization,
+identity generation, digest computation, provenance recording, and optional
+signing or encryption when those layers are enabled.
 
 **Hard boundary:** Optional encryption, when supported, MUST be represented as
 protected entries inside the `.kdna` container (RFC-0008). App-private encrypted
@@ -33,7 +33,8 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
 
 - **Project Model** — create, load, save, validate Studio projects
 - **Judgment Cards** — 9 card types with 6-state machine
-- **Human Lock** — AI proposes, human confirms. Only locked cards compile.
+- **Human Lock** — optional provenance for reviewed publishing flows; Studio
+  projects may use locked cards to mark confirmed judgment.
 - **Authoring Provenance** — exported assets carry Studio-compatible compiler
   metadata, asset/project/build identity, Human Lock count, confirmation status,
   content digest, and project digest.
@@ -98,7 +99,7 @@ var card = KDNStudioCards.createCard(
     ]
 )
 
-// 3. Revise, then Human Lock
+// 3. Revise, then optionally Human Lock for reviewed provenance
 card = try KDNStudioCards.transitionCard(card, to: .revised, by: "writer_001")
 card = try KDNStudioCards.lockCard(card,
     by: "writer_001",
@@ -135,7 +136,9 @@ if !gate.blocked {
 draft → revised → locked → tested → published → deprecated
 ```
 
-Only `locked`, `tested`, or `published` cards can be compiled.
+The reviewed Studio pipeline compiles `locked`, `tested`, or `published` cards.
+That gate is an authoring/provenance policy. It does not make Human Lock a
+KDNA Core v1 format-validity requirement.
 
 ## License
 
