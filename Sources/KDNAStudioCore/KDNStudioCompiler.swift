@@ -148,7 +148,9 @@ public class KDNStudioCompiler {
         }
         files["reports/human-lock-report.json"] = try jsonString([
             "schema_version": "human-lock-report-v1", "build_id": buildId,
-            "human_lock_required": true, "human_lock_count": lockedCards.count,
+            "human_lock_required": false,
+            "human_lock_policy": "optional_provenance",
+            "human_lock_count": lockedCards.count,
             "judgment_card_count": project.cards.filter { KDNStudioCards.judgmentCardTypes.contains($0.type) }.count,
             "cards": lockedList
         ])
@@ -160,7 +162,7 @@ public class KDNStudioCompiler {
             "quality_badge": readiness.grade == "publishable_grade" ? "tested" : "untested",
             "eval_count": project.tests.count, "rated_eval_count": ratedTests.count,
             "gates": ["untested": ["passed": true], "tested": ["passed": ratedTests.count >= 10],
-                       "validated": ["passed": false, "required": "automated scoring + registry validation"]]
+                       "validated": ["passed": false, "required": "reproducible scoring + published eval evidence"]]
         ])
 
         // Eval report
@@ -423,8 +425,10 @@ extension KDNStudioCompiler {
                 "compiler": "kdna-studio-swift",
                 "compiler_version": "0.2.0",
                 "domain_id": domainID,
-                "human_lock_required": true,
+                "human_lock_required": false,
+                "human_lock_policy": "optional_provenance",
                 "human_lock_count": compileResult.stats.lockedCards,
+                "human_confirmed": compileResult.stats.lockedCards > 0,
             ],
         ]
     }
@@ -497,7 +501,8 @@ extension KDNStudioCompiler {
                 "build_id": buildID,
                 "domain_id": domainID,
                 "studio_project_digest": "sha256:\(projectDigest)",
-                "human_lock_required": true,
+                "human_lock_required": false,
+                "human_lock_policy": "optional_provenance",
                 "human_lock_count": compileResult.stats.lockedCards,
                 "ai_assisted": true,
                 "human_confirmed": compileResult.stats.lockedCards > 0,
