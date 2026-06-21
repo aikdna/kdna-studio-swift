@@ -4,19 +4,13 @@
 
 Native Swift authoring kernel for turning scattered notes, documents, works, and feedback into valid, testable `.kdna` judgment assets — for macOS and iOS apps.
 
-KDNA Studio Swift is the authoring kernel for Apple platforms. It provides the native primitives for Studio-compatible apps: project model, evidence import, judgment cards, optional Human Lock provenance, compile, and export. Full Domain-First distillation UI and candidate review currently live in the KDNA Studio Mac app; this package is the reusable Swift authoring kernel.
+KDNA Studio Swift is the authoring kernel for Apple platforms. It provides the native primitives for Studio-compatible apps: project model, evidence import, judgment cards, optional provenance, compile, and export. Full Domain-First distillation UI and candidate review live at the app layer; this package is the reusable Swift authoring kernel.
 
 **KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. Humans, agents, tools, and hybrid workflows can create judgment candidates through Studio-compatible authoring paths. Human confirmation and Human Lock are provenance signals for reviewed or high-risk publishing flows, not KDNA Core v1 format-validity requirements.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
 Studio-compatible authoring pipeline that performs validation, canonicalization,
-identity generation, digest computation, provenance recording, and optional
-signing or encryption when those layers are enabled.
-
-**Hard boundary:** Optional encryption, when supported, MUST be represented as
-protected entries inside the `.kdna` container (RFC-0008). App-private encrypted
-envelopes or transfer wrappers that cannot be opened by KDNA Core are NOT
-conforming KDNA runtime assets.
+identity generation, digest computation, and provenance recording.
 
 This is the Swift counterpart to [`@aikdna/kdna-studio-core`](https://github.com/aikdna/kdna-studio-core) (JavaScript/npm).
 
@@ -63,7 +57,7 @@ checksums.json
 Top-level source entries such as `KDNA_Core.json`, `KDNA_Patterns.json`,
 `KDNA_CARD.json`, reports, and `source_cards` are not runtime distribution
 entries. Apple Studio apps must use this runtime export path and must not create
-app-private `.kdna` envelopes that KDNA Core, CLI, or Chat cannot inspect.
+app-private `.kdna` envelopes that KDNA Core or CLI cannot inspect.
 
 ## Install
 
