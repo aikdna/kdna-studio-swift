@@ -6,7 +6,7 @@ Native Swift authoring kernel for turning scattered notes, documents, works, and
 
 KDNA Studio Swift is the authoring kernel for Apple platforms. It provides the native primitives for Studio-compatible apps: project model, evidence import, judgment cards, optional provenance, compile, and export. Full Domain-First distillation UI and candidate review live at the app layer; this package is the reusable Swift authoring kernel.
 
-**KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. Humans, agents, tools, and hybrid workflows can create judgment candidates through Studio-compatible authoring paths. Human confirmation and Human Lock are provenance signals for reviewed or high-risk publishing flows, not KDNA Core v1 format-validity requirements.
+**KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. Humans, agents, tools, and hybrid workflows can create judgment candidates through Studio-compatible authoring paths. Human confirmation and Human Lock are provenance signals for reviewed or high-risk publishing flows, not Core GA format-validity requirements.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
 Studio-compatible authoring pipeline that performs validation, canonicalization,
@@ -36,7 +36,7 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
 - **Evidence Import** — text, markdown, interview records
 - **Domain-Scoped Authoring Boundary** — one exported `.kdna` should represent one clear judgment domain; complex work should compose multiple assets through KDNA Clusters rather than broadening a single file
 - **Compiler** — locked cards → internal KDNA asset entries
-- **Runtime Export** — write a canonical KDNA Core v1 `.kdna` runtime asset; directory export is dev-only
+- **Runtime Export** — write a canonical `.kdna` runtime asset; directory export is dev-only
 
 ## Runtime Export Contract
 
@@ -45,7 +45,7 @@ source/audit entries such as `KDNA_Core.json`, `KDNA_Patterns.json`, reports,
 and build receipts for review.
 
 `KDNStudioCompiler.exportAsset(_:to:project:)` is the user-facing runtime export
-step. It must emit only the canonical KDNA Core v1 runtime container entries:
+step. It must emit only the canonical Core GA runtime container entries:
 
 ```text
 mimetype
@@ -132,7 +132,7 @@ draft → revised → locked → tested → published → deprecated
 
 The reviewed Studio pipeline compiles `locked`, `tested`, or `published` cards.
 That gate is an authoring/provenance policy. It does not make Human Lock a
-KDNA Core v1 format-validity requirement.
+Core GA format-validity requirement.
 
 ## License
 
