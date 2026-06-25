@@ -275,7 +275,7 @@ extension KDNStudioCompiler {
     /// such as `KDNA_Core.json`, `KDNA_Patterns.json`, and reports remain authoring
     /// artifacts and are not top-level runtime distribution entries.
     @discardableResult
-    public static func exportAsset(_ compileResult: KDNCompileResult, to url: URL, project: KDNStudioProject? = nil) throws -> URL {
+    public static func exportAsset(_ compileResult: KDNCompileResult, to url: URL, project: KDNStudioProject? = nil, password: String? = nil) throws -> URL {
         let assetURL: URL
         if url.pathExtension == "kdna" {
             assetURL = url
@@ -286,7 +286,7 @@ extension KDNStudioCompiler {
             assetURL = url.appendingPathComponent("\(compileResult.domain).kdna")
         }
 
-        let entries = try buildRuntimeAssetFiles(compileResult, project: project)
+        let entries = try buildRuntimeAssetFiles(compileResult, project: project, password: password)
         let archive = try buildStoredZip(entries: entries)
         try archive.write(to: assetURL, options: [.atomic])
 
@@ -316,10 +316,10 @@ extension KDNStudioCompiler {
         }
     }
 
-    public static func buildRuntimeAssetFiles(_ compileResult: KDNCompileResult, project: KDNStudioProject? = nil) throws -> [String: String] {
+    public static func buildRuntimeAssetFiles(_ compileResult: KDNCompileResult, project: KDNStudioProject? = nil, password: String? = nil) throws -> [String: String] {
         let payload = try buildRuntimePayload(compileResult)
         let payloadJSON = try jsonString(payload)
-        let manifest = try buildRuntimeManifest(compileResult, project: project, payloadJSON: payloadJSON)
+        let manifest = try buildRuntimeManifest(compileResult, project: project, payloadJSON: payloadJSON, password: password)
         let manifestJSON = try jsonString(manifest)
 
         var files: [String: String] = [
@@ -327,6 +327,29 @@ extension KDNStudioCompiler {
             "kdna.json": manifestJSON,
             "payload.kdnab": payloadJSON,
         ]
+
+        // B3: Encrypt payload with password when requested
+        if let pw = password, !pw.isEmpty {
+            let kdnaManifest = KDNAManifest(
+                name: manifest["name"] as? String ?? compileResult.domain,
+                version: manifest["version"] as? String ?? "1.0.0",
+                access: "licensed"
+            )
+            let recoveryCode = KDNAProtectedCrypto.generateRecoveryCode()
+            let payloadData = payloadJSON.data(using: .utf8)!
+            let envelope = try KDNAProtectedCrypto.encryptProtectedEntry(
+                plaintext: payloadData,
+                entryName: "payload.kdnab",
+                manifest: kdnaManifest,
+                password: pw,
+                recoveryCode: recoveryCode
+            )
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
+            let envelopeData = try encoder.encode(envelope)
+            files["payload.kdnab"] = String(data: envelopeData, encoding: .utf8)!
+        }
+
         files["checksums.json"] = try jsonString(buildRuntimeChecksums(files: files))
         return files
     }
@@ -374,7 +397,8 @@ extension KDNStudioCompiler {
     private static func buildRuntimeManifest(
         _ compileResult: KDNCompileResult,
         project: KDNStudioProject?,
-        payloadJSON: String
+        payloadJSON: String,
+        password: String? = nil
     ) throws -> [String: Any] {
         let version = semverValue(project?.release?.version ?? extractVersion(from: compileResult.files["KDNA_Core.json"]) ?? "0.1.0")
         let assetUID = UUID().uuidString.lowercased()
@@ -383,7 +407,9 @@ extension KDNStudioCompiler {
         let author = project?.author ?? KDNStudioAuthor(name: "KDNA Studio", id: "kdna-studio")
         let payloadDigest = "sha256:\(sha256(payloadJSON))"
 
-        return [
+        let isEncrypted = password != nil && !password!.isEmpty
+
+        var manifest: [String: Any] = [
             "kdna_version": "1.0",
             "name": project?.name ?? compileResult.domain,
             "asset_id": assetID(from: project?.name ?? compileResult.domain),
@@ -403,10 +429,10 @@ extension KDNStudioCompiler {
             "payload": [
                 "path": "payload.kdnab",
                 "encoding": "json",
-                "encrypted": false,
+                "encrypted": isEncrypted,
                 "digest": payloadDigest,
             ],
-            "access": "public",
+            "access": isEncrypted ? "licensed" : "public",
             "summary": project?.release?.version == nil ? "KDNA asset exported by KDNAStudioCore." : "KDNA Studio runtime export.",
             "languages": ["en"],
             "license": ["type": "CC-BY-4.0"],
@@ -415,10 +441,10 @@ extension KDNStudioCompiler {
             "load_contract": [
                 "default_profile": "compact",
                 "profiles": [
-                    "index": ["requires_decryption": false, "max_tokens_hint": 200],
-                    "compact": ["requires_decryption": false, "max_tokens_hint": 500],
-                    "scenario": ["requires_decryption": false, "selection": "triggered_sections_only"],
-                    "full": ["requires_decryption": false, "intended_for": ["audit", "reference"]],
+                    "index": ["requires_decryption": isEncrypted, "max_tokens_hint": 200],
+                    "compact": ["requires_decryption": isEncrypted, "max_tokens_hint": 500],
+                    "scenario": ["requires_decryption": isEncrypted, "selection": "triggered_sections_only"],
+                    "full": ["requires_decryption": isEncrypted, "intended_for": ["audit", "reference"]],
                 ],
             ],
             "authoring": [
@@ -431,6 +457,21 @@ extension KDNStudioCompiler {
                 "human_confirmed": compileResult.stats.lockedCards > 0,
             ],
         ]
+
+        // B3: Add entitlement + encryption metadata for password-protected assets
+        if isEncrypted {
+            manifest["entitlement"] = [
+                "profile": "password",
+                "offline": true,
+                "revocable": false,
+            ]
+            manifest["encryption"] = [
+                "profile": "kdna-password-protected-v1",
+                "encrypted_entries": ["payload.kdnab"],
+            ]
+        }
+
+        return manifest
     }
 
     private static func buildRuntimeChecksums(files: [String: String]) -> [String: Any] {
