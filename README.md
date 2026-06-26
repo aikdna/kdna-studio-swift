@@ -26,7 +26,7 @@ No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external depen
 ## What it does
 
 - **Project Model** — create, load, save, validate Studio projects
-- **Judgment Cards** — 9 card types with 6-state machine
+- **Judgment Cards** — 7 card types (axiom, boundary, risk, stance, misunderstanding, case, pattern) with 6-state machine
 - **Human Lock** — optional provenance for reviewed publishing flows; Studio
   projects may use locked cards to mark confirmed judgment.
 - **Authoring Provenance** — exported assets carry Studio-compatible compiler
