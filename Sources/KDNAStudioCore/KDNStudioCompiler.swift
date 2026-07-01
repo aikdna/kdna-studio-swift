@@ -335,9 +335,9 @@ extension KDNStudioCompiler {
                 version: manifest["version"] as? String ?? "1.0.0",
                 access: "licensed"
             )
-            let recoveryCode = KDNAProtectedCrypto.generateRecoveryCode()
+            let recoveryCode = generateRecoveryCode()
             let payloadData = payloadJSON.data(using: .utf8)!
-            let envelope = try KDNAProtectedCrypto.encryptProtectedEntry(
+            let envelope = try encryptProtectedEntry(
                 plaintext: payloadData,
                 entryName: "payload.kdnab",
                 manifest: kdnaManifest,
