@@ -335,9 +335,9 @@ extension KDNStudioCompiler {
                 version: manifest["version"] as? String ?? "1.0.0",
                 access: "licensed"
             )
-            let recoveryCode = KDNAProtectedCrypto.generateRecoveryCode()
+            let recoveryCode = generateRecoveryCode()
             let payloadData = payloadJSON.data(using: .utf8)!
-            let envelope = try KDNAProtectedCrypto.encryptProtectedEntry(
+            let envelope = try encryptProtectedEntry(
                 plaintext: payloadData,
                 entryName: "payload.kdnab",
                 manifest: kdnaManifest,
@@ -365,33 +365,43 @@ extension KDNStudioCompiler {
         let meta = core["meta"] as? [String: Any] ?? [:]
         let axioms = core["axioms"] as? [[String: Any]] ?? []
         let firstAxiom = axioms.first
+        let highestQuestion = meta["load_condition"] as? String
+            ?? firstAxiom?["one_sentence"] as? String
+            ?? "What judgment should be loaded for \(compileResult.domain)?"
+        let boundaries = patterns["boundaries"] as? [[String: Any]]
+            ?? core["boundaries"] as? [[String: Any]]
+            ?? []
+        let risks = patterns["risk_model"] as? [[String: Any]]
+            ?? core["risks"] as? [[String: Any]]
+            ?? []
+        let corePayload: [String: Any] = [
+            "highest_question": highestQuestion,
+            "axioms": axioms,
+            "boundaries": boundaries,
+            "risk_model": ["risks": risks],
+        ]
+        let reasoningChains = reasoning["reasoning_chains"] as? [[String: Any]] ?? []
+        let reasoningPayload: [String: Any] = [
+            "self_checks": patterns["self_check"] as? [[String: Any]] ?? [],
+            "failure_modes": reasoningChains,
+            "reasoning_chains": reasoningChains,
+        ]
+        let evolutionPayload: [String: Any] = [
+            "stages": evolution["stages"] as? [[String: Any]] ?? [],
+            "evolution_layers": evolution["evolution_layers"] as? [[String: Any]] ?? [],
+            "measurement": evolution["measurement"] as? [[String: Any]] ?? [],
+        ]
 
-        return [
+        let payload: [String: Any] = [
             "profile": "judgment-profile-v1",
-            "core": [
-                "highest_question": meta["load_condition"] as? String
-                    ?? firstAxiom?["one_sentence"] as? String
-                    ?? "What judgment should be loaded for \(compileResult.domain)?",
-                "axioms": axioms,
-                "boundaries": patterns["boundaries"] as? [[String: Any]] ?? core["boundaries"] as? [[String: Any]] ?? [],
-                "risk_model": [
-                    "risks": patterns["risk_model"] as? [[String: Any]] ?? core["risks"] as? [[String: Any]] ?? []
-                ],
-            ],
+            "core": corePayload,
             "patterns": patterns["misunderstandings"] as? [[String: Any]] ?? [],
             "scenarios": scenarios["scenes"] as? [[String: Any]] ?? [],
             "cases": cases["cases"] as? [[String: Any]] ?? [],
-            "reasoning": [
-                "self_checks": patterns["self_check"] as? [[String: Any]] ?? [],
-                "failure_modes": reasoning["reasoning_chains"] as? [[String: Any]] ?? [],
-                "reasoning_chains": reasoning["reasoning_chains"] as? [[String: Any]] ?? [],
-            ],
-            "evolution": [
-                "stages": evolution["stages"] as? [[String: Any]] ?? [],
-                "evolution_layers": evolution["evolution_layers"] as? [[String: Any]] ?? [],
-                "measurement": evolution["measurement"] as? [[String: Any]] ?? [],
-            ],
+            "reasoning": reasoningPayload,
+            "evolution": evolutionPayload,
         ]
+        return payload
     }
 
     private static func buildRuntimeManifest(
