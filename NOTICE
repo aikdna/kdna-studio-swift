@@ -1,0 +1,12 @@
+kdna-studio-swift
+Copyright 2026 KDNA Authors
+
+This product includes software developed at
+https://github.com/aikdna/kdna-studio-swift
+
+kdna-studio-swift is the Swift authoring kernel for creating, reviewing,
+compiling, and exporting `.kdna` judgment assets on Apple platforms
+through the KDNA toolchain.
+
+See LICENSE for the full Apache 2.0 license text. See README.md for the
+Swift authoring guide and beta API surface.
