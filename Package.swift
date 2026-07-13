@@ -14,8 +14,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // Pin Core until the next stable tag includes the current protected-runtime APIs.
-        .package(url: "https://github.com/aikdna/kdna-core-swift.git", revision: "0c94032bea8677167e7d57e8d914d9e29bef9edf"),
+        .package(url: "https://github.com/aikdna/kdna-core-swift.git", from: "0.3.1"),
     ],
     targets: [
         .target(

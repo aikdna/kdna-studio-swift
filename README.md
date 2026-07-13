@@ -6,7 +6,7 @@ Native Swift authoring kernel for turning scattered notes, documents, works, and
 
 KDNA Studio Swift is the authoring kernel for Apple platforms. It provides the native primitives for Studio-compatible apps: project model, evidence import, judgment cards, optional provenance, compile, and export. Full Domain-First distillation UI and candidate review live at the app layer; this package is the reusable Swift authoring kernel.
 
-**KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. Humans, agents, tools, and hybrid workflows can create judgment candidates through Studio-compatible authoring paths. Human confirmation and Human Lock are provenance signals for reviewed or high-risk publishing flows, not KDNA Core v1 format-validity requirements.
+**KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. Humans, agents, tools, and hybrid workflows can create judgment candidates through Studio-compatible authoring paths. Human confirmation and Human Lock are provenance signals for reviewed or high-risk publishing flows, not KDNA format-validity requirements.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
 Studio-compatible authoring pipeline that performs validation, canonicalization,
@@ -21,7 +21,9 @@ This is the Swift counterpart to [`@aikdna/kdna-studio-core`](https://github.com
 | [`kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) | Swift | **Use** KDNA — load, route, inject into LLM |
 | **`kdna-studio-swift`** | Swift | **Create** KDNA — author, lock, compile, export |
 
-No Node.js dependency. No JavaScriptCore bridge. Pure Swift, zero external dependencies.
+No Node.js dependency and no JavaScriptCore bridge. The package delegates the
+runtime wire contract, authorization, and encryption primitives to the
+official `kdna-core-swift` package.
 
 ## What it does
 
@@ -45,7 +47,7 @@ source/audit entries such as `KDNA_Core.json`, `KDNA_Patterns.json`, reports,
 and build receipts for review.
 
 `KDNStudioCompiler.exportAsset(_:to:project:)` is the user-facing runtime export
-step. It must emit only the canonical KDNA Core v1 runtime container entries:
+step. It must emit only the canonical KDNA runtime container entries:
 
 ```text
 mimetype
@@ -53,6 +55,10 @@ kdna.json
 payload.kdnab
 checksums.json
 ```
+
+`payload.kdnab` is CBOR. Password-protected export stores a CBOR encrypted
+envelope and can only be consumed after Core returns an authorized LoadPlan;
+the normal Agent-facing result is a Runtime Capsule.
 
 Top-level source entries such as `KDNA_Core.json`, `KDNA_Patterns.json`,
 `KDNA_CARD.json`, reports, and `source_cards` are not runtime distribution
@@ -64,7 +70,7 @@ app-private `.kdna` envelopes that KDNA Core or CLI cannot inspect.
 Add via Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/aikdna/kdna-studio-swift.git", from: "0.1.0")
+.package(url: "https://github.com/aikdna/kdna-studio-swift.git", from: "0.3.0")
 ```
 
 ## Quick Start
@@ -132,7 +138,7 @@ draft → revised → locked → tested → published → deprecated
 
 The reviewed Studio pipeline compiles `locked`, `tested`, or `published` cards.
 That gate is an authoring/provenance policy. It does not make Human Lock a
-KDNA Core v1 format-validity requirement.
+KDNA format-validity requirement.
 
 ## License
 
