@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 (2026-07-13)
+- Build and test against KDNA Swift Core 0.4.0
+- Keep authoring export on the single current CBOR `.kdna` contract
+- Inherit RFC-0019 account/device grant loading through Core without
+  implementing authorization policy in Studio
+
 ## 0.3.0 (2026-07-13)
 - Export the single KDNA runtime container with CBOR `payload.kdnab`
 - Encode password-protected envelopes as CBOR and keep decrypted content in memory

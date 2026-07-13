@@ -70,7 +70,7 @@ app-private `.kdna` envelopes that KDNA Core or CLI cannot inspect.
 Add via Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/aikdna/kdna-studio-swift.git", from: "0.3.0")
+.package(url: "https://github.com/aikdna/kdna-studio-swift.git", from: "0.4.0")
 ```
 
 ## Quick Start
