@@ -55,12 +55,16 @@ final class KDNAStudioCoreTests: XCTestCase {
         XCTAssertFalse(entries.contains("KDNA_Core.json"))
         XCTAssertFalse(entries.contains("KDNA_Patterns.json"))
 
-        let payload = try XCTUnwrap(try reader.readJSON(asset: asset, name: "payload.kdnab"))
+        let payload = try KDNACBOR.decodeObject(reader.readEntry(asset: asset, name: "payload.kdnab"))
         XCTAssertEqual(payload["profile"] as? String, "judgment-profile-v1")
         XCTAssertNil(payload["source_cards"])
+
+        let capsule = try KDNARuntime.load(assetURL: assetURL)
+        XCTAssertEqual(capsule.type, "kdna.context.capsule")
+        XCTAssertEqual(capsule.context["axioms"]?.arrayValue?.count, 1)
     }
 
-    func testRuntimeAssetFilesUseCanonicalCoreV1Shape() throws {
+    func testRuntimeAssetFilesUseCanonicalShape() throws {
         let manager = KDNStudioProjectManager()
         var project = manager.createProject(
             name: "@test/writing_judgment",
@@ -93,6 +97,65 @@ final class KDNAStudioCoreTests: XCTestCase {
         let files = try KDNStudioCompiler.buildRuntimeAssetFiles(result, project: project)
         XCTAssertEqual(Set(files.keys), ["mimetype", "kdna.json", "payload.kdnab", "checksums.json"])
         XCTAssertFalse(files.keys.contains("KDNA_Core.json"))
-        XCTAssertFalse(files["payload.kdnab"]?.contains("source_cards") ?? true)
+        let payload = try KDNACBOR.decodeObject(try XCTUnwrap(files["payload.kdnab"]))
+        XCTAssertNil(payload["source_cards"])
+        let manifest = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: XCTUnwrap(files["kdna.json"])) as? [String: Any]
+        )
+        XCTAssertEqual((manifest["payload"] as? [String: Any])?["encoding"] as? String, "cbor")
+    }
+
+    func testPasswordProtectedExportLoadsOnlyThroughAuthorizedCapsule() throws {
+        let manager = KDNStudioProjectManager()
+        var project = manager.createProject(
+            name: "@test/protected_judgment",
+            author: KDNStudioAuthor(name: "Test Author", id: "author_001")
+        )
+        var card = KDNStudioCards.createCard(
+            type: .axiom,
+            fields: [
+                "one_sentence": .string("Protected judgment stays inside the authorized runtime."),
+                "full_statement": .string("Never expose decrypted judgment as a source file."),
+                "why": .string("Authorization is part of the asset contract."),
+            ]
+        )
+        card = try KDNStudioCards.transitionCard(card, to: .revised, by: "author_001")
+        card = try KDNStudioCards.lockCard(
+            card,
+            by: "author_001",
+            statement: "Confirmed.",
+            appliesWhen: true,
+            doesNotApplyWhen: true,
+            failureRisk: true
+        )
+        project.cards.append(card)
+
+        let output = FileManager.default.temporaryDirectory
+            .appendingPathComponent("kdna-studio-swift-protected-\(UUID().uuidString).kdna")
+        defer { try? FileManager.default.removeItem(at: output) }
+        let compiled = try KDNStudioCompiler.compile(project)
+        let assetURL = try KDNStudioCompiler.exportAsset(
+            compiled,
+            to: output,
+            project: project,
+            password: "correct-horse-battery-staple"
+        )
+
+        let plan = KDNARuntime.planLoad(assetURL: assetURL)
+        XCTAssertEqual(plan.state, "needs_password")
+        XCTAssertFalse(plan.can_load_now)
+        XCTAssertThrowsError(try KDNARuntime.load(assetURL: assetURL))
+        XCTAssertThrowsError(try KDNARuntime.load(
+            assetURL: assetURL,
+            credential: KDNACredential(password: "wrong-password")
+        ))
+
+        let capsule = try KDNARuntime.load(
+            assetURL: assetURL,
+            credential: KDNACredential(password: "correct-horse-battery-staple")
+        )
+        XCTAssertEqual(capsule.type, "kdna.context.capsule")
+        XCTAssertEqual(capsule.access, "licensed")
+        XCTAssertEqual(capsule.context["axioms"]?.arrayValue?.count, 1)
     }
 }

@@ -28,10 +28,10 @@ public class KDNStudioProvenance {
 
         return [
             "studio_core": "aikdna/kdna-studio-swift",
-            "studio_core_version": "0.2.0",
+            "studio_core_version": "0.3.0",
             "created_by": "kdna-studio-sdk",
             "compiler": "kdna-studio-swift",
-            "compiler_version": "0.2.0",
+            "compiler_version": "0.3.0",
             "build_id": bid,
             "project_id": project.projectId,
             "project_uid": identity?.projectUID as Any,
