@@ -136,7 +136,7 @@ public class KDNStudioCompiler {
         files["reports/build-report.json"] = try jsonString([
             "schema_version": "studio-build-report-v1",
             "build_id": buildId, "asset_uid": assetUID, "project_uid": projectUID, "domain_id": domainId,
-            "compiler": "kdna-studio-swift", "compiler_version": "0.3.0", "compiled_at": compiledAt,
+            "compiler": "kdna-studio-swift", "compiler_version": "0.4.0", "compiled_at": compiledAt,
             "stats": ["total_cards": project.cards.count, "locked_cards": lockedCards.count,
                        "excluded_cards": excludedCards, "kdna_files": files.filter { $0.key.hasPrefix("KDNA_") }.count]
         ])
@@ -179,7 +179,7 @@ public class KDNStudioCompiler {
             "schema_version": "studio-build-receipt-v1",
             "asset_uid": assetUID, "project_uid": projectUID, "build_id": buildId, "domain_id": domainId,
             "version": project.release?.version ?? "0.1.0",
-            "compiler": "kdna-studio-swift", "compiler_version": "0.3.0",
+            "compiler": "kdna-studio-swift", "compiler_version": "0.4.0",
             "signature_status": "pending_export_sign",
             "built_at": compiledAt
         ])
@@ -477,7 +477,7 @@ extension KDNStudioCompiler {
             ],
             "authoring": [
                 "compiler": "kdna-studio-swift",
-                "compiler_version": "0.3.0",
+                "compiler_version": "0.4.0",
                 "domain_id": domainID,
                 "human_lock_required": false,
                 "human_lock_policy": "optional_provenance",
@@ -559,9 +559,9 @@ extension KDNStudioCompiler {
             "authoring": [
                 "created_by": "kdna-studio-sdk",
                 "authoring_tool": "KDNA Studio Swift",
-                "authoring_tool_version": "0.3.0",
+                "authoring_tool_version": "0.4.0",
                 "compiler": "kdna-studio-swift",
-                "compiler_version": "0.3.0",
+                "compiler_version": "0.4.0",
                 "source_mode": sourceMode.rawValue,
                 "asset_uid": assetUID,
                 "project_uid": projectUID,
