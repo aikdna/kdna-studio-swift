@@ -82,19 +82,44 @@ public class KDNStudioProjectManager {
         return (issues.isEmpty, issues)
     }
 
-    // MARK: - Export with Human Lock Gate
+    // MARK: - Export with optional Human Lock policy
 
     public func exportProject(_ project: KDNStudioProject, force: Bool = false, forceReason: String? = nil) throws -> String {
+        try exportProject(
+            project,
+            requireHumanLock: false,
+            force: force,
+            forceReason: forceReason
+        )
+    }
+
+    /// Export a Studio project record. Human Lock is optional provenance by
+    /// default; reviewed-only callers can explicitly require it.
+    public func exportProject(
+        _ project: KDNStudioProject,
+        requireHumanLock: Bool,
+        force: Bool = false,
+        forceReason: String? = nil
+    ) throws -> String {
+        let recordedLockGate = KDNStudioHumanLockGate.validateRecordedLocks(project)
+        if recordedLockGate.blocked {
+            throw KDNStudioError.humanLockRequired(
+                humanLockFailureMessage(
+                    recordedLockGate,
+                    heading: "Invalid Human Lock provenance blocked export:"
+                )
+            )
+        }
+
         let gate = KDNStudioHumanLockGate.check(project)
 
-        if gate.blocked && !force {
-            var msg = "Human Lock Gate blocked export:\n"
-            for issue in gate.issues {
-                msg += "  ✗ \(issue.cardId): \(issue.reason)\n"
-            }
-            msg += "\n  Locked judgment cards: \(gate.lockedJudgmentCards)"
-            msg += "\n  Use force:true for emergency override."
-            throw KDNStudioError.humanLockRequired(msg)
+        if requireHumanLock && gate.blocked && !force {
+            throw KDNStudioError.humanLockRequired(
+                humanLockFailureMessage(
+                    gate,
+                    heading: "Human Lock Gate blocked reviewed-only export:"
+                ) + "\n  Use force:true for an explicit missing-review override."
+            )
         }
 
         var p = project
@@ -103,11 +128,12 @@ public class KDNStudioProjectManager {
         if p.release == nil { p.release = KDNStudioRelease() }
         p.release?.exportedAt = ISO8601DateFormatter().string(from: Date())
         p.release?.lockedJudgmentCards = gate.lockedJudgmentCards
-        p.release?.humanLockGatePassed = !gate.blocked || force
+        p.release?.humanLockGatePassed = !gate.blocked
 
-        if gate.blocked && force {
+        if requireHumanLock && gate.blocked && force {
             // Emergency override recorded
             // (override metadata stored via a custom field if needed)
+            _ = forceReason
         }
 
         let encoder = JSONEncoder()
@@ -117,6 +143,15 @@ public class KDNStudioProjectManager {
             throw KDNStudioError.invalidJSON("encode failed")
         }
         return json
+    }
+
+    private func humanLockFailureMessage(
+        _ gate: KDNHumanLockGateResult,
+        heading: String
+    ) -> String {
+        let details = gate.issues.map { "  - \($0.cardId): \($0.reason)" }
+        let count = "  Locked judgment cards: \(gate.lockedJudgmentCards)"
+        return ([heading] + details + [count]).joined(separator: "\n")
     }
 }
 

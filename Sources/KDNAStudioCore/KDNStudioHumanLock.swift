@@ -7,16 +7,38 @@ public class KDNStudioHumanLockGate {
     /// Check whether all judgment-class cards satisfy Human Lock requirements.
     /// Returns blocked=true if any card fails.
     public static func check(_ project: KDNStudioProject) -> KDNHumanLockGateResult {
+        validate(project, requireAllJudgmentCards: true)
+    }
+
+    /// Validate only cards that claim Human Lock provenance.
+    ///
+    /// Ordinary authoring does not require Human Lock. Once a card claims to be
+    /// locked, however, the state, record, review confirmations, and optional
+    /// fingerprint must remain internally consistent.
+    public static func validateRecordedLocks(_ project: KDNStudioProject) -> KDNHumanLockGateResult {
+        validate(project, requireAllJudgmentCards: false)
+    }
+
+    private static func validate(
+        _ project: KDNStudioProject,
+        requireAllJudgmentCards: Bool
+    ) -> KDNHumanLockGateResult {
         var issues: [KDNLockIssue] = []
 
         for card in project.cards {
             guard KDNStudioCards.judgmentCardTypes.contains(card.type) else { continue }
             let cardId = card.id
+            let hasLockedStatus = [KDNCardStatus.locked, .tested, .published].contains(card.status)
+            let claimsHumanLock = hasLockedStatus || card.locked || card.humanLock != nil
 
-            // Rule 1: Must be locked
-            if ![KDNCardStatus.locked, .tested, .published].contains(card.status) {
+            if !requireAllJudgmentCards && !claimsHumanLock {
+                continue
+            }
+
+            // Rule 1: Required or claimed Human Lock must use a consistent state.
+            if !hasLockedStatus || !card.locked {
                 issues.append(KDNLockIssue(cardId: cardId, type: card.type.rawValue,
-                    reason: "judgment-class card \"\(cardId)\" is not locked. Human Lock required before export."))
+                    reason: "judgment-class card \"\(cardId)\" does not have a consistent locked state."))
                 continue
             }
 
@@ -53,7 +75,8 @@ public class KDNStudioHumanLockGate {
 
         let lockedCount = project.cards.filter {
             KDNStudioCards.judgmentCardTypes.contains($0.type) &&
-            [KDNCardStatus.locked, .tested, .published].contains($0.status)
+            [KDNCardStatus.locked, .tested, .published].contains($0.status) &&
+            $0.locked
         }.count
 
         return KDNHumanLockGateResult(blocked: !issues.isEmpty, issues: issues, lockedJudgmentCards: lockedCount)

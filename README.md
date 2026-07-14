@@ -19,7 +19,7 @@ This is the Swift counterpart to [`@aikdna/kdna-studio-core`](https://github.com
 | Library | Language | Role |
 |---------|----------|------|
 | [`kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) | Swift | **Use** KDNA — load, route, inject into LLM |
-| **`kdna-studio-swift`** | Swift | **Create** KDNA — author, lock, compile, export |
+| **`kdna-studio-swift`** | Swift | **Create** KDNA — author, optionally review/lock, compile, export |
 
 No Node.js dependency and no JavaScriptCore bridge. The package delegates the
 runtime wire contract, authorization, and encryption primitives to the
@@ -37,7 +37,7 @@ official `kdna-core-swift` package.
 - **Fingerprint Detection** — SHA256 hash catches post-lock content changes
 - **Evidence Import** — text, markdown, interview records
 - **Domain-Scoped Authoring Boundary** — one exported `.kdna` should represent one clear judgment domain; complex work should compose multiple assets through KDNA Clusters rather than broadening a single file
-- **Compiler** — locked cards → internal KDNA asset entries
+- **Compiler** — non-deprecated cards → internal KDNA asset entries; review provenance is reported separately
 - **Runtime Export** — write a canonical `.kdna` runtime asset; directory export is dev-only
 
 ## Runtime Export Contract
@@ -99,23 +99,23 @@ var card = KDNStudioCards.createCard(
     ]
 )
 
-// 3. Revise, then optionally Human Lock for reviewed provenance
+// 3. Revise. Human Lock is not required for ordinary compile/export.
 card = try KDNStudioCards.transitionCard(card, to: .revised, by: "writer_001")
-card = try KDNStudioCards.lockCard(card,
+project.cards.append(card)
+
+// 4. Compile and export the canonical runtime .kdna.
+let result = try KDNStudioCompiler.compile(project)
+let assetURL = try KDNStudioCompiler.exportAsset(result, to: outputURL)
+
+// Optional reviewed-only workflow: record a valid lock, then request the
+// explicit policy. A missing, incomplete, or stale recorded lock fails closed.
+project.cards[0] = try KDNStudioCards.lockCard(
+    project.cards[0],
     by: "writer_001",
     statement: "This represents my professional judgment.",
     appliesWhen: true, doesNotApplyWhen: true, failureRisk: true
 )
-project.cards.append(card)
-
-// 4. Check gate
-let gate = KDNStudioHumanLockGate.check(project)
-if !gate.blocked {
-    // 5. Compile
-    let result = try KDNStudioCompiler.compile(project)
-    // 6. Export canonical runtime .kdna
-    let assetURL = try KDNStudioCompiler.exportAsset(result, to: outputURL)
-}
+let reviewedResult = try KDNStudioCompiler.compile(project, requireHumanLock: true)
 ```
 
 ## Card Types
@@ -136,9 +136,13 @@ if !gate.blocked {
 draft → revised → locked → tested → published → deprecated
 ```
 
-The reviewed Studio pipeline compiles `locked`, `tested`, or `published` cards.
-That gate is an authoring/provenance policy. It does not make Human Lock a
-KDNA format-validity requirement.
+Ordinary compilation includes every non-deprecated card. `locked`, `tested`,
+and `published` states add review provenance; they are not creation, format, or
+ordinary export requirements. Workflows that require reviewed-only output can
+call `KDNStudioCompiler.compile(_:requireHumanLock:)` or
+`KDNStudioProjectManager.exportProject(_:requireHumanLock:force:forceReason:)`.
+Any card that claims Human Lock provenance is validated even in the ordinary
+path, so an incomplete or stale lock cannot be exported as a valid claim.
 
 ## License
 

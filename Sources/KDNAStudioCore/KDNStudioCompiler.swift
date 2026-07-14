@@ -1,4 +1,4 @@
-//  KDNAStudioCore — Compiler: locked cards → .kdna asset entries
+//  KDNAStudioCore — Compiler: authored cards → .kdna asset entries
 
 import Foundation
 import CryptoKit
@@ -6,14 +6,50 @@ import KDNACore
 
 public class KDNStudioCompiler {
 
-    /// Compile locked judgment cards into the internal entries of a .kdna asset.
+    /// Compile non-deprecated judgment cards into the internal entries of a
+    /// `.kdna` asset. Human Lock is optional provenance in the ordinary path.
     public static func compile(_ project: KDNStudioProject) throws -> KDNCompileResult {
-        let domainName = project.name
-        let lockedCards = KDNStudioCards.getLockedCards(project)
-        let excludedCards = project.cards.count - lockedCards.count
+        try compile(project, requireHumanLock: false)
+    }
 
-        guard !lockedCards.isEmpty else {
-            throw KDNStudioError.compileError("No locked cards to compile. Lock at least one axiom or pattern card.")
+    /// Compile a project, optionally requiring the reviewed-only Human Lock
+    /// policy. Existing callers of `compile(_:)` keep the ordinary open
+    /// authoring behavior.
+    public static func compile(
+        _ project: KDNStudioProject,
+        requireHumanLock: Bool
+    ) throws -> KDNCompileResult {
+        let domainName = project.name
+        let recordedLockGate = KDNStudioHumanLockGate.validateRecordedLocks(project)
+        if recordedLockGate.blocked {
+            throw KDNStudioError.humanLockRequired(
+                humanLockFailureMessage(
+                    recordedLockGate,
+                    heading: "Invalid Human Lock provenance blocked compile:"
+                )
+            )
+        }
+
+        if requireHumanLock {
+            let requiredLockGate = KDNStudioHumanLockGate.check(project)
+            if requiredLockGate.blocked {
+                throw KDNStudioError.humanLockRequired(
+                    humanLockFailureMessage(
+                        requiredLockGate,
+                        heading: "Human Lock Gate blocked reviewed-only compile:"
+                    )
+                )
+            }
+        }
+
+        let compiledCards = project.cards.filter { $0.status != .deprecated }
+        let lockedCards = KDNStudioCards.getLockedCards(project)
+        let excludedCards = project.cards.count - compiledCards.count
+
+        guard !compiledCards.isEmpty else {
+            throw KDNStudioError.compileError(
+                "No non-deprecated cards to compile. Add at least one judgment card."
+            )
         }
 
         // Build KDNA_Core.json
@@ -30,7 +66,7 @@ public class KDNStudioCompiler {
         var risks: [[String: Any]] = []
         var aesthetics: [[String: Any]] = []
 
-        for card in lockedCards {
+        for card in compiledCards {
             switch card.type {
             case .axiom:
                 axioms.append(buildAxiom(card))
@@ -137,7 +173,8 @@ public class KDNStudioCompiler {
             "schema_version": "studio-build-report-v1",
             "build_id": buildId, "asset_uid": assetUID, "project_uid": projectUID, "domain_id": domainId,
             "compiler": "kdna-studio-swift", "compiler_version": "0.4.0", "compiled_at": compiledAt,
-            "stats": ["total_cards": project.cards.count, "locked_cards": lockedCards.count,
+            "stats": ["total_cards": project.cards.count, "compiled_cards": compiledCards.count,
+                       "locked_cards": lockedCards.count,
                        "excluded_cards": excludedCards, "kdna_files": files.filter { $0.key.hasPrefix("KDNA_") }.count]
         ])
 
@@ -199,6 +236,14 @@ public class KDNStudioCompiler {
     private static func jsonString(_ obj: [String: Any]) throws -> String {
         let data = try JSONSerialization.data(withJSONObject: obj, options: [.prettyPrinted, .sortedKeys])
         return String(data: data, encoding: .utf8) ?? "{}"
+    }
+
+    private static func humanLockFailureMessage(
+        _ gate: KDNHumanLockGateResult,
+        heading: String
+    ) -> String {
+        let details = gate.issues.map { "  - \($0.cardId): \($0.reason)" }
+        return ([heading] + details).joined(separator: "\n")
     }
 
     private static func buildGenericCard(_ card: KDNJudgmentCard) -> [String: Any] {

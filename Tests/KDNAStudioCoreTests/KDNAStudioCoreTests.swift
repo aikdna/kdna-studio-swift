@@ -4,6 +4,30 @@ import KDNACore
 @testable import KDNAStudioCore
 
 final class KDNAStudioCoreTests: XCTestCase {
+    private func makeProject(name: String = "@test/open_authoring") -> KDNStudioProject {
+        KDNStudioProjectManager().createProject(
+            name: name,
+            author: KDNStudioAuthor(name: "Test Author", id: "author_001")
+        )
+    }
+
+    private func makeRevisedAxiom() throws -> KDNJudgmentCard {
+        var card = KDNStudioCards.createCard(
+            type: .axiom,
+            fields: [
+                "one_sentence": .string("Prefer reversible changes while evidence is incomplete."),
+                "full_statement": .string("Choose a reversible step before expanding an uncertain change."),
+                "why": .string("A reversible step preserves recovery while evidence is gathered."),
+                "applies_when": .array(["Evidence is incomplete"]),
+                "does_not_apply_when": .array(["The change is already proven safe"]),
+                "failure_risk": .string("A broad change may become difficult to recover.")
+            ],
+            id: "ax_reversible"
+        )
+        card = try KDNStudioCards.transitionCard(card, to: .revised, by: "author_001")
+        return card
+    }
+
     func testPackageVersion() {
         XCTAssertTrue(true)
     }
@@ -157,5 +181,125 @@ final class KDNAStudioCoreTests: XCTestCase {
         XCTAssertEqual(capsule.type, "kdna.context.capsule")
         XCTAssertEqual(capsule.access, "licensed")
         XCTAssertEqual(capsule.context["axioms"]?.arrayValue?.count, 1)
+    }
+
+    func testOrdinaryCompileAndRuntimeExportWithoutHumanLock() throws {
+        var project = makeProject()
+        project.cards = [try makeRevisedAxiom()]
+
+        let compiled = try KDNStudioCompiler.compile(project)
+        XCTAssertEqual(compiled.stats.lockedCards, 0)
+        XCTAssertEqual(compiled.stats.excludedCards, 0)
+
+        let coreData = try XCTUnwrap(compiled.files["KDNA_Core.json"]?.data(using: .utf8))
+        let core = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: coreData) as? [String: Any]
+        )
+        XCTAssertEqual((core["axioms"] as? [[String: Any]])?.count, 1)
+
+        let lockReportData = try XCTUnwrap(
+            compiled.files["reports/human-lock-report.json"]?.data(using: .utf8)
+        )
+        let lockReport = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: lockReportData) as? [String: Any]
+        )
+        XCTAssertEqual(lockReport["human_lock_required"] as? Bool, false)
+        XCTAssertEqual(lockReport["human_lock_count"] as? Int, 0)
+
+        let output = FileManager.default.temporaryDirectory
+            .appendingPathComponent("kdna-studio-swift-open-\(UUID().uuidString).kdna")
+        defer { try? FileManager.default.removeItem(at: output) }
+        let assetURL = try KDNStudioCompiler.exportAsset(compiled, to: output, project: project)
+        let capsule = try KDNARuntime.load(assetURL: assetURL)
+        XCTAssertEqual(capsule.context["axioms"]?.arrayValue?.count, 1)
+    }
+
+    func testReviewedOnlyModeRequiresLockAndLegacyCallsRemainCompatible() throws {
+        let manager = KDNStudioProjectManager()
+        var project = makeProject()
+        project.cards = [try makeRevisedAxiom()]
+
+        XCTAssertThrowsError(try KDNStudioCompiler.compile(project, requireHumanLock: true)) {
+            guard case KDNStudioError.humanLockRequired = $0 else {
+                return XCTFail("expected Human Lock policy failure, got \($0)")
+            }
+        }
+
+        project.cards[0] = try KDNStudioCards.lockCard(
+            project.cards[0],
+            by: "author_001",
+            statement: "This represents my reviewed judgment.",
+            appliesWhen: true,
+            doesNotApplyWhen: true,
+            failureRisk: true
+        )
+
+        XCTAssertFalse(KDNStudioHumanLockGate.check(project).blocked)
+        XCTAssertEqual(try KDNStudioCompiler.compile(project).stats.lockedCards, 1)
+        XCTAssertEqual(
+            try KDNStudioCompiler.compile(project, requireHumanLock: true).stats.lockedCards,
+            1
+        )
+        XCTAssertNoThrow(try manager.exportProject(project))
+        XCTAssertNoThrow(try manager.exportProject(project, requireHumanLock: true))
+    }
+
+    func testOrdinaryProjectExportDoesNotClaimHumanReview() throws {
+        let manager = KDNStudioProjectManager()
+        var project = makeProject()
+        project.cards = [try makeRevisedAxiom()]
+
+        let exported = try manager.exportProject(project)
+        let decoded = try manager.loadProject(json: exported)
+        XCTAssertEqual(decoded.release?.lockedJudgmentCards, 0)
+        XCTAssertEqual(decoded.release?.humanLockGatePassed, false)
+
+        XCTAssertThrowsError(try manager.exportProject(project, requireHumanLock: true))
+        XCTAssertNoThrow(
+            try manager.exportProject(project, force: true, forceReason: "legacy call compatibility")
+        )
+        let overridden = try manager.exportProject(
+            project,
+            requireHumanLock: true,
+            force: true,
+            forceReason: "explicit reviewed-only override"
+        )
+        let decodedOverride = try manager.loadProject(json: overridden)
+        XCTAssertEqual(decodedOverride.release?.humanLockGatePassed, false)
+    }
+
+    func testInvalidRecordedHumanLockFailsClosed() throws {
+        let manager = KDNStudioProjectManager()
+        var missingRecordProject = makeProject()
+        var missingRecord = try makeRevisedAxiom()
+        missingRecord.status = .locked
+        missingRecord.locked = true
+        missingRecordProject.cards = [missingRecord]
+
+        XCTAssertThrowsError(try KDNStudioCompiler.compile(missingRecordProject))
+        XCTAssertThrowsError(try manager.exportProject(missingRecordProject))
+
+        var tamperedProject = makeProject()
+        var tampered = try KDNStudioCards.lockCard(
+            makeRevisedAxiom(),
+            by: "author_001",
+            statement: "This represents my reviewed judgment.",
+            appliesWhen: true,
+            doesNotApplyWhen: true,
+            failureRisk: true
+        )
+        tampered.fields["failure_risk"] = .string("Changed after review.")
+        tamperedProject.cards = [tampered]
+
+        XCTAssertTrue(KDNStudioHumanLockGate.validateRecordedLocks(tamperedProject).blocked)
+        XCTAssertThrowsError(try KDNStudioCompiler.compile(tamperedProject))
+        XCTAssertThrowsError(
+            try manager.exportProject(
+                tamperedProject,
+                requireHumanLock: true,
+                force: true,
+                forceReason: "must not bypass a stale recorded lock"
+            )
+        )
     }
 }

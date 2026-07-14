@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Compile and export ordinary non-deprecated judgment cards without requiring
+  Human Lock.
+- Keep Human Lock as optional review provenance, with explicit reviewed-only
+  compile/export APIs and fail-closed validation for recorded lock claims.
+- Preserve existing `compile(_:)` and `exportProject(_:force:forceReason:)`
+  source calls while removing their implicit review requirement.
+
 ## 0.4.0 (2026-07-13)
 - Build and test against KDNA Swift Core 0.4.0
 - Keep authoring export on the single current CBOR `.kdna` contract
