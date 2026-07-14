@@ -127,6 +127,14 @@ final class KDNAStudioCoreTests: XCTestCase {
             try JSONSerialization.jsonObject(with: XCTUnwrap(files["kdna.json"])) as? [String: Any]
         )
         XCTAssertEqual((manifest["payload"] as? [String: Any])?["encoding"] as? String, "cbor")
+        let checksums = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: XCTUnwrap(files["checksums.json"])) as? [String: Any]
+        )
+        let entrySetDigest = try XCTUnwrap(checksums["entry_set_digest"] as? String)
+        XCTAssertEqual(checksums["digest_profile"] as? String, "kdna-runtime-entry-set-v1")
+        XCTAssertEqual(checksums["covered_entries"] as? [String], ["kdna.json", "payload.kdnab"])
+        XCTAssertTrue(entrySetDigest.hasPrefix("sha256:"))
+        XCTAssertEqual(entrySetDigest, checksums["asset_digest"] as? String)
     }
 
     func testPasswordProtectedExportLoadsOnlyThroughAuthorizedCapsule() throws {

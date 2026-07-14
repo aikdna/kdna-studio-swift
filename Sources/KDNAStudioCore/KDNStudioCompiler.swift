@@ -551,11 +551,16 @@ extension KDNStudioCompiler {
         let manifestHash = sha256(files["kdna.json"] ?? Data())
         let payloadHash = sha256(files["payload.kdnab"] ?? Data())
         let combined = "kdna.json:\(manifestHash)\npayload.kdnab:\(payloadHash)"
+        let entrySetDigest = "sha256:\(sha256(combined))"
         return [
+            "digest_profile": "kdna-runtime-entry-set-v1",
+            "covered_entries": ["kdna.json", "payload.kdnab"],
             "algorithm": "sha256",
             "manifest_digest": "sha256:\(manifestHash)",
             "payload_digest": "sha256:\(payloadHash)",
-            "asset_digest": "sha256:\(sha256(combined))",
+            "entry_set_digest": entrySetDigest,
+            // Deprecated v1 compatibility alias. This is not the final .kdna file hash.
+            "asset_digest": entrySetDigest,
             "entries": [
                 "kdna.json": ["algorithm": "sha256", "value": manifestHash],
                 "payload.kdnab": ["algorithm": "sha256", "value": payloadHash],
