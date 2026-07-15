@@ -60,6 +60,11 @@ checksums.json
 envelope and can only be consumed after Core returns an authorized LoadPlan;
 the normal Agent-facing result is a Runtime Capsule.
 
+The exported manifest uses `format_version: 0.1.0` and identifies the judgment
+payload as `kdna.payload.judgment` with `profile_version: 0.1.0`. Encryption,
+digest, and Runtime Capsule identifiers name their responsibility; their
+independent compatibility coordinates remain numeric semantic versions.
+
 Top-level source entries such as `KDNA_Core.json`, `KDNA_Patterns.json`,
 `KDNA_CARD.json`, reports, and `source_cards` are not runtime distribution
 entries. Apple Studio apps must use this runtime export path and must not create

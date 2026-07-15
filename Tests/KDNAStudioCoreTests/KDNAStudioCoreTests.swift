@@ -28,10 +28,6 @@ final class KDNAStudioCoreTests: XCTestCase {
         return card
     }
 
-    func testPackageVersion() {
-        XCTAssertTrue(true)
-    }
-
     func testExportAssetWritesKdnaZip() throws {
         let manager = KDNStudioProjectManager()
         var project = manager.createProject(
@@ -80,11 +76,23 @@ final class KDNAStudioCoreTests: XCTestCase {
         XCTAssertFalse(entries.contains("KDNA_Patterns.json"))
 
         let payload = try KDNACBOR.decodeObject(reader.readEntry(asset: asset, name: "payload.kdnab"))
-        XCTAssertEqual(payload["profile"] as? String, "judgment-profile-v1")
+        XCTAssertEqual(payload["profile"] as? String, "kdna.payload.judgment")
+        XCTAssertEqual(payload["profile_version"] as? String, "0.1.0")
         XCTAssertNil(payload["source_cards"])
 
+        let manifestData = try reader.readEntry(asset: asset, name: "kdna.json")
+        let manifest = try JSONDecoder().decode(KDNAManifest.self, from: manifestData)
+        XCTAssertEqual(manifest.format_version, "0.1.0")
+        XCTAssertEqual(manifest.compatibility.profile, "kdna.payload.judgment")
+        XCTAssertEqual(manifest.compatibility.profile_version, "0.1.0")
+        XCTAssertNil(manifest.creator, "export without project context must not invent creator identity")
+
         let capsule = try KDNARuntime.load(assetURL: assetURL)
-        XCTAssertEqual(capsule.type, "kdna.context.capsule")
+        XCTAssertEqual(capsule.type, "kdna.runtime-capsule")
+        XCTAssertEqual(capsule.contract_version, "0.1.0")
+        XCTAssertEqual(capsule.digests.profile, "kdna.digest-evidence")
+        XCTAssertEqual(capsule.digests.profile_version, "0.1.0")
+        XCTAssertEqual(capsule.digests.runtime_entry_set.basis, "kdna.digest-basis.runtime-entry-set")
         XCTAssertEqual(capsule.context["axioms"]?.arrayValue?.count, 1)
     }
 
@@ -122,19 +130,32 @@ final class KDNAStudioCoreTests: XCTestCase {
         XCTAssertEqual(Set(files.keys), ["mimetype", "kdna.json", "payload.kdnab", "checksums.json"])
         XCTAssertFalse(files.keys.contains("KDNA_Core.json"))
         let payload = try KDNACBOR.decodeObject(try XCTUnwrap(files["payload.kdnab"]))
+        XCTAssertEqual(payload["profile"] as? String, "kdna.payload.judgment")
+        XCTAssertEqual(payload["profile_version"] as? String, "0.1.0")
         XCTAssertNil(payload["source_cards"])
         let manifest = try XCTUnwrap(
             try JSONSerialization.jsonObject(with: XCTUnwrap(files["kdna.json"])) as? [String: Any]
         )
+        XCTAssertEqual(manifest["format_version"] as? String, "0.1.0")
         XCTAssertEqual((manifest["payload"] as? [String: Any])?["encoding"] as? String, "cbor")
+        let compatibility = try XCTUnwrap(manifest["compatibility"] as? [String: Any])
+        XCTAssertEqual(compatibility["profile"] as? String, "kdna.payload.judgment")
+        XCTAssertEqual(compatibility["profile_version"] as? String, "0.1.0")
         let checksums = try XCTUnwrap(
             try JSONSerialization.jsonObject(with: XCTUnwrap(files["checksums.json"])) as? [String: Any]
         )
         let entrySetDigest = try XCTUnwrap(checksums["entry_set_digest"] as? String)
-        XCTAssertEqual(checksums["digest_profile"] as? String, "kdna-runtime-entry-set-v1")
-        XCTAssertEqual(checksums["covered_entries"] as? [String], ["kdna.json", "payload.kdnab"])
+        XCTAssertEqual(checksums["digest_profile"] as? String, KDNAChecksumDigests.runtimeEntrySetProfile)
+        XCTAssertEqual(checksums["digest_profile_version"] as? String, KDNAChecksumDigests.runtimeEntrySetProfileVersion)
+        XCTAssertEqual(checksums["covered_entries"] as? [String], KDNAChecksumDigests.runtimeCoveredEntries)
         XCTAssertTrue(entrySetDigest.hasPrefix("sha256:"))
-        XCTAssertEqual(entrySetDigest, checksums["asset_digest"] as? String)
+        XCTAssertEqual(
+            entrySetDigest,
+            KDNAChecksumDigests.computeRuntimeEntrySetDigest(
+                manifest: try XCTUnwrap(files["kdna.json"]),
+                payload: try XCTUnwrap(files["payload.kdnab"])
+            )
+        )
     }
 
     func testPasswordProtectedExportLoadsOnlyThroughAuthorizedCapsule() throws {
@@ -176,6 +197,18 @@ final class KDNAStudioCoreTests: XCTestCase {
         let plan = KDNARuntime.planLoad(assetURL: assetURL)
         XCTAssertEqual(plan.state, "needs_password")
         XCTAssertFalse(plan.can_load_now)
+
+        let reader = KDNAAssetReader()
+        let asset = try reader.open(url: assetURL)
+        let manifest = try reader.decodeManifest(asset: asset)
+        XCTAssertEqual(manifest.encryption?.profile, "kdna.encryption.password")
+        XCTAssertEqual(manifest.encryption?.profile_version, "0.1.0")
+        let envelope = try KDNACBOR.decode(
+            KDNAProtectedEnvelope.self,
+            from: reader.readEntry(asset: asset, name: "payload.kdnab")
+        )
+        XCTAssertEqual(envelope.profile, "kdna.encryption.password")
+        XCTAssertEqual(envelope.profile_version, "0.1.0")
         XCTAssertThrowsError(try KDNARuntime.load(assetURL: assetURL))
         XCTAssertThrowsError(try KDNARuntime.load(
             assetURL: assetURL,
@@ -186,9 +219,72 @@ final class KDNAStudioCoreTests: XCTestCase {
             assetURL: assetURL,
             credential: KDNACredential(password: "correct-horse-battery-staple")
         )
-        XCTAssertEqual(capsule.type, "kdna.context.capsule")
+        XCTAssertEqual(capsule.type, "kdna.runtime-capsule")
+        XCTAssertEqual(capsule.contract_version, "0.1.0")
         XCTAssertEqual(capsule.access, "licensed")
         XCTAssertEqual(capsule.context["axioms"]?.arrayValue?.count, 1)
+    }
+
+    func testCompileReportsUseResponsibilityIdentityAndIndependentCoordinate() throws {
+        var project = makeProject()
+        project.cards = [try makeRevisedAxiom()]
+        let compiled = try KDNStudioCompiler.compile(project)
+        let expectedReports = [
+            ("reports/build-report.json", "kdna.studio.build-report"),
+            ("reports/human-lock-report.json", "kdna.studio.human-lock-report"),
+            ("reports/quality-gate-report.json", "kdna.studio.quality-gate-report"),
+            ("reports/eval-report.json", "kdna.studio.evaluation-report"),
+            ("build-receipt.json", "kdna.studio.build-receipt"),
+        ]
+
+        for (path, type) in expectedReports {
+            let data = try XCTUnwrap(compiled.files[path]?.data(using: .utf8))
+            let report = try XCTUnwrap(
+                try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            )
+            XCTAssertEqual(report["type"] as? String, type, path)
+            XCTAssertEqual(report["schema_version"] as? String, "0.1.0", path)
+        }
+    }
+
+    func testMisunderstandingMapsToFailureModeWithoutCorruptingReasoningChain() throws {
+        var project = makeProject()
+        var misunderstanding = KDNStudioCards.createCard(
+            type: .misunderstanding,
+            fields: [
+                "wrong": .string("Irreversible change is always faster."),
+                "correct": .string("Recovery cost is part of delivery time."),
+                "key_distinction": .string("Immediate speed differs from total recovery cost."),
+                "why": .string("Rollback preserves evidence and service continuity."),
+                "failure_risk": .string("A failed irreversible change can stop delivery."),
+                "applies_when": .array(["Evidence is incomplete"]),
+                "does_not_apply_when": .array(["The change is proven and reversible"]),
+            ],
+            id: "mis_recovery"
+        )
+        misunderstanding = try KDNStudioCards.transitionCard(
+            misunderstanding,
+            to: .revised,
+            by: "author_001"
+        )
+        project.cards = [try makeRevisedAxiom(), misunderstanding]
+
+        let files = try KDNStudioCompiler.buildRuntimeAssetFiles(
+            KDNStudioCompiler.compile(project),
+            project: project
+        )
+        let payload = try KDNACBOR.decodeObject(try XCTUnwrap(files["payload.kdnab"]))
+        let reasoning = try XCTUnwrap(payload["reasoning"] as? [String: Any])
+        let failureModes = try XCTUnwrap(reasoning["failure_modes"] as? [[String: Any]])
+        let chains = try XCTUnwrap(reasoning["reasoning_chains"] as? [[String: Any]])
+
+        XCTAssertEqual(failureModes.count, 1)
+        XCTAssertEqual(failureModes[0]["id"] as? String, "mis_recovery")
+        XCTAssertEqual(failureModes[0]["mode"] as? String, "Irreversible change is always faster.")
+        XCTAssertEqual(failureModes[0]["failure_risk"] as? String, "A failed irreversible change can stop delivery.")
+        XCTAssertEqual(failureModes[0]["applies_when"] as? [String], ["Evidence is incomplete"])
+        XCTAssertEqual(chains.count, 1)
+        XCTAssertEqual(chains[0]["id"] as? String, "chain_ax_reversible")
     }
 
     func testOrdinaryCompileAndRuntimeExportWithoutHumanLock() throws {
@@ -308,6 +404,45 @@ final class KDNAStudioCoreTests: XCTestCase {
                 force: true,
                 forceReason: "must not bypass a stale recorded lock"
             )
+        )
+    }
+
+    func testExternalCoreFixtureExportHook() throws {
+        let requestedDirectory = ProcessInfo.processInfo.environment["KDNA_STUDIO_FIXTURE_OUTPUT"]
+            .map(URL.init(fileURLWithPath:))
+        let outputDirectory = requestedDirectory ?? FileManager.default.temporaryDirectory
+            .appendingPathComponent("kdna-studio-external-fixture-\(UUID().uuidString)")
+        let shouldCleanup = requestedDirectory == nil
+        defer {
+            if shouldCleanup { try? FileManager.default.removeItem(at: outputDirectory) }
+        }
+        try FileManager.default.createDirectory(
+            at: outputDirectory,
+            withIntermediateDirectories: true
+        )
+
+        var project = makeProject(name: "@test/external_core_fixture")
+        project.cards = [try makeRevisedAxiom()]
+        let compiled = try KDNStudioCompiler.compile(project)
+        let publicAsset = try KDNStudioCompiler.exportAsset(
+            compiled,
+            to: outputDirectory.appendingPathComponent("public.kdna"),
+            project: project
+        )
+        let protectedAsset = try KDNStudioCompiler.exportAsset(
+            compiled,
+            to: outputDirectory.appendingPathComponent("protected.kdna"),
+            project: project,
+            password: "cross-language-password"
+        )
+
+        XCTAssertEqual(try KDNARuntime.load(assetURL: publicAsset).type, "kdna.runtime-capsule")
+        XCTAssertEqual(
+            try KDNARuntime.load(
+                assetURL: protectedAsset,
+                credential: KDNACredential(password: "cross-language-password")
+            ).type,
+            "kdna.runtime-capsule"
         )
     }
 }

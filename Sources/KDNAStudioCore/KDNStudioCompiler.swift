@@ -170,7 +170,8 @@ public class KDNStudioCompiler {
 
         // Build report
         files["reports/build-report.json"] = try jsonString([
-            "schema_version": "studio-build-report-v1",
+            "type": "kdna.studio.build-report",
+            "schema_version": "0.1.0",
             "build_id": buildId, "asset_uid": assetUID, "project_uid": projectUID, "domain_id": domainId,
             "compiler": "kdna-studio-swift", "compiler_version": "0.4.0", "compiled_at": compiledAt,
             "stats": ["total_cards": project.cards.count, "compiled_cards": compiledCards.count,
@@ -184,7 +185,8 @@ public class KDNStudioCompiler {
              "locked_by": c.humanLock?.by ?? "", "locked_at": c.humanLock?.at ?? ""]
         }
         files["reports/human-lock-report.json"] = try jsonString([
-            "schema_version": "human-lock-report-v1", "build_id": buildId,
+            "type": "kdna.studio.human-lock-report",
+            "schema_version": "0.1.0", "build_id": buildId,
             "human_lock_required": false,
             "human_lock_policy": "optional_provenance",
             "human_lock_count": lockedCards.count,
@@ -195,7 +197,8 @@ public class KDNStudioCompiler {
         // Quality gate report
         let readiness = KDNStudioQuality.computeReadiness(project)
         files["reports/quality-gate-report.json"] = try jsonString([
-            "schema_version": "quality-gate-report-v1", "build_id": buildId,
+            "type": "kdna.studio.quality-gate-report",
+            "schema_version": "0.1.0", "build_id": buildId,
             "quality_badge": readiness.grade == "publishable_grade" ? "tested" : "untested",
             "eval_count": project.tests.count, "rated_eval_count": ratedTests.count,
             "gates": ["untested": ["passed": true], "tested": ["passed": ratedTests.count >= 10],
@@ -204,7 +207,8 @@ public class KDNStudioCompiler {
 
         // Eval report
         files["reports/eval-report.json"] = try jsonString([
-            "schema_version": "eval-report-v1", "build_id": buildId,
+            "type": "kdna.studio.evaluation-report",
+            "schema_version": "0.1.0", "build_id": buildId,
             "total": project.tests.count, "rated": ratedTests.count,
             "cases": project.tests.map { t in
                 ["id": t.id, "title": t.notes, "result": t.result ?? "", "linked_cards": t.linkedCards] as [String: Any]
@@ -213,7 +217,8 @@ public class KDNStudioCompiler {
 
         // Build receipt
         files["build-receipt.json"] = try jsonString([
-            "schema_version": "studio-build-receipt-v1",
+            "type": "kdna.studio.build-receipt",
+            "schema_version": "0.1.0",
             "asset_uid": assetUID, "project_uid": projectUID, "build_id": buildId, "domain_id": domainId,
             "version": project.release?.version ?? "0.1.0",
             "compiler": "kdna-studio-swift", "compiler_version": "0.4.0",
@@ -286,13 +291,21 @@ public class KDNStudioCompiler {
     }
 
     private static func buildMisunderstanding(_ card: KDNJudgmentCard) -> [String: Any] {
-        return [
+        var result: [String: Any] = [
             "id": card.id,
             "wrong": KDNStudioCards.field(card, "wrong") ?? "",
             "correct": KDNStudioCards.field(card, "correct") ?? "",
             "key_distinction": KDNStudioCards.field(card, "key_distinction") ?? "",
             "why": KDNStudioCards.field(card, "why") ?? "",
         ]
+        if let failureRisk = KDNStudioCards.field(card, "failure_risk") {
+            result["failure_risk"] = failureRisk
+        }
+        let appliesWhen = KDNStudioCards.fieldArray(card, "applies_when")
+        if !appliesWhen.isEmpty { result["applies_when"] = appliesWhen }
+        let doesNotApplyWhen = KDNStudioCards.fieldArray(card, "does_not_apply_when")
+        if !doesNotApplyWhen.isEmpty { result["does_not_apply_when"] = doesNotApplyWhen }
+        return result
     }
 
     private static func buildSelfCheck(_ card: KDNJudgmentCard) -> [String: Any] {
@@ -309,6 +322,11 @@ public class KDNStudioCompiler {
 
 extension KDNStudioCompiler {
     private static let runtimeMimeType = "application/vnd.kdna.asset"
+    private static let formatVersion = "0.1.0"
+    private static let payloadProfile = "kdna.payload.judgment"
+    private static let payloadProfileVersion = "0.1.0"
+    private static let encryptionProfile = "kdna.encryption.password"
+    private static let encryptionProfileVersion = "0.1.0"
 
     /// Export the compiled result as a canonical KDNA runtime `.kdna` asset.
     ///
@@ -346,6 +364,13 @@ extension KDNStudioCompiler {
               mediaType == runtimeMimeType else {
             throw KDNStudioError.compileError("Export verification failed: invalid runtime mimetype")
         }
+        let loadPlan = KDNARuntime.planLoad(assetURL: assetURL)
+        guard loadPlan.checks.overall_valid else {
+            let issues = loadPlan.issues.map(\.message).joined(separator: "; ")
+            throw KDNStudioError.compileError(
+                "Export verification failed: Runtime contract rejected the packaged asset: \(issues)"
+            )
+        }
 
         return assetURL
     }
@@ -367,11 +392,7 @@ extension KDNStudioCompiler {
         var manifest = try buildRuntimeManifest(compileResult, project: project, payloadBytes: payloadBytes, password: password)
 
         if let pw = password, !pw.isEmpty {
-            let kdnaManifest = KDNAManifest(
-                name: manifest["name"] as? String ?? compileResult.domain,
-                version: manifest["version"] as? String ?? "1.0.0",
-                access: "licensed"
-            )
+            let kdnaManifest = try decodeRuntimeManifest(manifest)
             let recoveryCode = generateRecoveryCode()
             let envelope = try encryptProtectedEntry(
                 plaintext: payloadBytes,
@@ -386,6 +407,11 @@ extension KDNStudioCompiler {
                 manifest["payload"] = payloadManifest
             }
         }
+
+        // Fail before packaging if the producer no longer matches Core's sole
+        // typed manifest contract. This is intentionally a decode, not a
+        // hand-maintained parallel validator.
+        _ = try decodeRuntimeManifest(manifest)
 
         var files: [String: Data] = [
             "mimetype": Data(runtimeMimeType.utf8),
@@ -422,9 +448,23 @@ extension KDNStudioCompiler {
             "risk_model": ["risks": risks],
         ]
         let reasoningChains = reasoning["reasoning_chains"] as? [[String: Any]] ?? []
+        let misunderstandings = patterns["misunderstandings"] as? [[String: Any]] ?? []
+        let failureModes = misunderstandings.map { misunderstanding -> [String: Any] in
+            var failureMode: [String: Any] = [
+                "id": misunderstanding["id"] as? String ?? "",
+                "mode": misunderstanding["wrong"] as? String ?? "",
+                "correct": misunderstanding["correct"] as? String ?? "",
+                "key_distinction": misunderstanding["key_distinction"] as? String ?? "",
+                "why": misunderstanding["why"] as? String ?? "",
+            ]
+            for key in ["failure_risk", "applies_when", "does_not_apply_when"] {
+                if let value = misunderstanding[key] { failureMode[key] = value }
+            }
+            return failureMode
+        }
         let reasoningPayload: [String: Any] = [
             "self_check": patterns["self_check"] as? [[String: Any]] ?? [],
-            "failure_modes": reasoningChains,
+            "failure_modes": failureModes,
             "reasoning_chains": reasoningChains,
         ]
         let evolutionPayload: [String: Any] = [
@@ -436,9 +476,10 @@ extension KDNStudioCompiler {
         ]
 
         let payload: [String: Any] = [
-            "profile": "judgment-profile-v1",
+            "profile": payloadProfile,
+            "profile_version": payloadProfileVersion,
             "core": corePayload,
-            "patterns": patterns["misunderstandings"] as? [[String: Any]] ?? [],
+            "patterns": misunderstandings,
             "scenarios": scenarios["scenes"] as? [[String: Any]] ?? [],
             "cases": cases["cases"] as? [[String: Any]] ?? [],
             "reasoning": reasoningPayload,
@@ -457,14 +498,12 @@ extension KDNStudioCompiler {
         let assetUID = UUID().uuidString.lowercased()
         let domainID = normalizedDomainID(compileResult.domain)
         let now = ISO8601DateFormatter().string(from: Date())
-        let author = project?.author ?? KDNStudioAuthor(name: "KDNA Studio", id: "kdna-studio")
         let payloadDigest = "sha256:\(sha256(payloadBytes))"
 
         let isEncrypted = password != nil && !password!.isEmpty
 
         var manifest: [String: Any] = [
-            "kdna_version": "1.0",
-            "name": project?.name ?? compileResult.domain,
+            "format_version": formatVersion,
             "asset_id": assetID(from: project?.name ?? compileResult.domain),
             "asset_uid": "urn:uuid:\(assetUID)",
             "asset_type": project?.type == "cluster" ? "cluster" : "domain",
@@ -473,10 +512,10 @@ extension KDNStudioCompiler {
             "judgment_version": version,
             "created_at": isoDateTime(project?.created),
             "updated_at": now,
-            "creator": ["name": author.name, "id": author.id],
             "compatibility": [
-                "min_loader_version": "1.0.0",
-                "profile": "judgment-profile-v1",
+                "min_loader_version": "0.18.1",
+                "profile": payloadProfile,
+                "profile_version": payloadProfileVersion,
             ],
             "payload": [
                 "path": "payload.kdnab",
@@ -531,7 +570,12 @@ extension KDNStudioCompiler {
             ],
         ]
 
-        // B3: Add entitlement + encryption metadata for password-protected assets
+        if let author = project?.author,
+           !author.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            manifest["creator"] = ["name": author.name, "id": author.id]
+        }
+
+        // Add entitlement and encryption metadata for password-protected assets.
         if isEncrypted {
             manifest["entitlement"] = [
                 "profile": "password",
@@ -539,7 +583,8 @@ extension KDNStudioCompiler {
                 "revocable": false,
             ]
             manifest["encryption"] = [
-                "profile": "kdna-password-protected-v1",
+                "profile": encryptionProfile,
+                "profile_version": encryptionProfileVersion,
                 "encrypted_entries": ["payload.kdnab"],
             ]
         }
@@ -548,19 +593,22 @@ extension KDNStudioCompiler {
     }
 
     private static func buildRuntimeChecksums(files: [String: Data]) -> [String: Any] {
-        let manifestHash = sha256(files["kdna.json"] ?? Data())
-        let payloadHash = sha256(files["payload.kdnab"] ?? Data())
-        let combined = "kdna.json:\(manifestHash)\npayload.kdnab:\(payloadHash)"
-        let entrySetDigest = "sha256:\(sha256(combined))"
+        let manifest = files["kdna.json"] ?? Data()
+        let payload = files["payload.kdnab"] ?? Data()
+        let manifestHash = KDNACrypto.sha256Hex(manifest)
+        let payloadHash = KDNACrypto.sha256Hex(payload)
+        let entrySetDigest = KDNAChecksumDigests.computeRuntimeEntrySetDigest(
+            manifest: manifest,
+            payload: payload
+        )
         return [
-            "digest_profile": "kdna-runtime-entry-set-v1",
-            "covered_entries": ["kdna.json", "payload.kdnab"],
+            "digest_profile": KDNAChecksumDigests.runtimeEntrySetProfile,
+            "digest_profile_version": KDNAChecksumDigests.runtimeEntrySetProfileVersion,
+            "covered_entries": KDNAChecksumDigests.runtimeCoveredEntries,
             "algorithm": "sha256",
             "manifest_digest": "sha256:\(manifestHash)",
             "payload_digest": "sha256:\(payloadHash)",
             "entry_set_digest": entrySetDigest,
-            // Deprecated v1 compatibility alias. This is not the final .kdna file hash.
-            "asset_digest": entrySetDigest,
             "entries": [
                 "kdna.json": ["algorithm": "sha256", "value": manifestHash],
                 "payload.kdnab": ["algorithm": "sha256", "value": payloadHash],
@@ -568,101 +616,14 @@ extension KDNStudioCompiler {
         ]
     }
 
+    private static func decodeRuntimeManifest(_ manifest: [String: Any]) throws -> KDNAManifest {
+        try JSONDecoder().decode(KDNAManifest.self, from: jsonData(manifest))
+    }
+
     private static func parseJSONFile(_ json: String?) throws -> [String: Any]? {
         guard let json else { return nil }
         let data = Data(json.utf8)
         return try JSONSerialization.jsonObject(with: data) as? [String: Any]
-    }
-
-    private static func buildAssetManifest(_ compileResult: KDNCompileResult, project: KDNStudioProject? = nil) throws -> String {
-        let version = extractVersion(from: compileResult.files["KDNA_Core.json"]) ?? "0.1.0"
-        let projectDigest = sha256(compileResult.files.keys.sorted().joined(separator: "\n"))
-        let assetUID = UUID().uuidString.lowercased()
-        let projectUID = UUID().uuidString.lowercased()
-        let buildID = "build_\(UUID().uuidString.lowercased())"
-        let domainID = normalizedDomainID(compileResult.domain)
-        let registryName = compileResult.domain.hasPrefix("@") ? compileResult.domain : nil
-        let compiledAt = ISO8601DateFormatter().string(from: Date())
-        let sourceMode = project?.sourceMode ?? .blank
-
-        // Build complete manifest without content_digest first,
-        // then compute digest on the full file set including the manifest.
-        var manifest: [String: Any] = [
-            "kdna_version": "1.0",
-            "name": compileResult.domain,
-            "domain_id": domainID,
-            "asset_uid": assetUID,
-            "project_uid": projectUID,
-            "build_id": buildID,
-            "version": version,
-            "judgment_version": version,
-            "description": "KDNA asset exported by KDNAStudioCore.",
-            "creator": ["name": "KDNA Studio", "id": "kdna-studio"],
-            "license": ["type": "UNSPECIFIED"],
-            "status": "draft",
-            "quality_badge": "untested",
-            "access": "public",
-            "languages": ["en"],
-            "default_language": "en",
-            "file_count": compileResult.files.count,
-            "lineage": lineageFor(project),
-            "authoring": [
-                "created_by": "kdna-studio-sdk",
-                "authoring_tool": "KDNA Studio Swift",
-                "authoring_tool_version": "0.4.0",
-                "compiler": "kdna-studio-swift",
-                "compiler_version": "0.4.0",
-                "source_mode": sourceMode.rawValue,
-                "asset_uid": assetUID,
-                "project_uid": projectUID,
-                "build_id": buildID,
-                "domain_id": domainID,
-                "studio_project_digest": "sha256:\(projectDigest)",
-                "human_lock_required": false,
-                "human_lock_policy": "optional_provenance",
-                "human_lock_count": compileResult.stats.lockedCards,
-                "ai_assisted": true,
-                "human_confirmed": compileResult.stats.lockedCards > 0,
-                "compiled_at": compiledAt,
-            ],
-        ]
-        // Creator
-        if let ci = project?.creatorIdentity {
-            manifest["creator"] = [
-                "creator_id": ci.creatorId, "display_name": ci.displayName,
-                "public_key": ci.publicKey, "verified": ci.verified,
-            ]
-        }
-        if let registryName { manifest["registry_name"] = registryName }
-
-        // Build manifest JSON, add to files, compute digest on full set
-        let manifestJSON = String(data: try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys]), encoding: .utf8) ?? "{}"
-        var allFiles = compileResult.files
-        allFiles["kdna.json"] = manifestJSON
-
-        let contentDigest = KDNAContentDigest.compute(files: allFiles)
-
-        // Set digest and finalize
-        manifest["content_digest"] = contentDigest
-        if var auth = manifest["authoring"] as? [String: Any] {
-            auth["content_digest"] = contentDigest
-            manifest["authoring"] = auth
-        }
-
-        let data = try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys])
-        return String(data: data, encoding: .utf8) ?? "{}"
-    }
-
-    private static func lineageFor(_ project: KDNStudioProject?) -> [String: Any] {
-        if let lin = project?.lineage {
-            var d: [String: Any] = ["type": lin.type]
-            if let pn = lin.parentName { d["parent_name"] = pn }
-            if let pu = lin.parentAssetUID { d["parent_asset_uid"] = pu }
-            if let pv = lin.parentVersion { d["parent_version"] = pv }
-            if let pd = lin.parentAssetDigest { d["parent_asset_digest"] = pd }
-            return d
-        }
-        return ["type": "original"]
     }
 
     private static func canonicalLineage(_ lineage: KDNLineage?) -> [String: Any] {
@@ -735,21 +696,6 @@ extension KDNStudioCompiler {
             }
         let result = String(normalized).trimmingCharacters(in: CharacterSet(charactersIn: "_"))
         return result.isEmpty ? fallback : result
-    }
-
-    /// Canonical content digest — delegates to KDNACore for single source of truth.
-    private static func computeContentDigest(files: [String: String]) -> String {
-        KDNAContentDigest.compute(files: files)
-    }
-
-    /// Canonicalize JSON — delegates to KDNACore.
-    private static func canonicalizeJSON(name: String, content: String) -> String {
-        KDNAContentDigest.canonicalizeJSON(name: name, content: content)
-    }
-
-    /// Stable-sort JSON — delegates to KDNACore.
-    private static func stableStringify(_ value: Any) -> String {
-        KDNAContentDigest.stableStringify(value)
     }
 
     private static func normalizedDomainID(_ domain: String) -> String {

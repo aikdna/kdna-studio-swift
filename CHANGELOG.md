@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Emit the current container, judgment payload, password encryption, Runtime
+  Capsule, and runtime-entry-set digest responsibility identifiers with their
+  independent `0.1.0` compatibility coordinates.
+- Emit Studio build, Human Lock, quality, evaluation, and receipt artifacts
+  with stable responsibility `type` fields and `schema_version: 0.1.0`.
+- Build password-encryption AAD from the exact typed Runtime manifest accepted
+  by KDNA Swift Core, and compute entry-set evidence through Core's canonical
+  digest API.
+- Preserve misunderstanding applicability and failure-risk fields when
+  producing Runtime failure-mode projections.
+- Pin the source candidate to the audited KDNA Swift Core revision used by the
+  coordinated protocol cutover.
+- Use the application-support container for the default creator-identity path
+  on iOS so the advertised generic iOS library target builds against Foundation.
 - Compile and export ordinary non-deprecated judgment cards without requiring
   Human Lock.
 - Keep Human Lock as optional review provenance, with explicit reviewed-only

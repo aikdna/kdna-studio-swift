@@ -5,9 +5,19 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v7
+      - name: Responsibility naming gate
+        run: scripts/check-responsibility-names.sh working-tree
       - name: Resolve dependencies
         run: swift package resolve
       - name: Build
         run: swift build
+      - name: Build generic iOS target
+        run: >-
+          xcodebuild -quiet -scheme kdna-studio-swift
+          -destination 'generic/platform=iOS'
+          -derivedDataPath "$RUNNER_TEMP/kdna-studio-swift-ios"
+          CODE_SIGNING_ALLOWED=NO build
       - name: Test
         run: swift test
+      - name: Release archive naming gate
+        run: scripts/check-responsibility-names.sh archive

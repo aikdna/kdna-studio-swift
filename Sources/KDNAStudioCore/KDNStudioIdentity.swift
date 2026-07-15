@@ -12,7 +12,7 @@
 import Foundation
 import CryptoKit
 
-#if os(macOS)
+#if canImport(Security)
 import Security
 #endif
 
@@ -188,8 +188,19 @@ public class KDNStudioIdentity: @unchecked Sendable {
     // MARK: - Helpers
 
     private static func defaultIdentityDir() -> String {
+        #if os(macOS)
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         return (home as NSString).appendingPathComponent(".kdna/identity")
+        #else
+        let applicationSupport = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ).first ?? FileManager.default.temporaryDirectory
+        return applicationSupport
+            .appendingPathComponent("KDNA", isDirectory: true)
+            .appendingPathComponent("identity", isDirectory: true)
+            .path
+        #endif
     }
 
     private static func derToPEM(_ der: Data) -> String {
