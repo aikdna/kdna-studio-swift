@@ -16,7 +16,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/aikdna/kdna-core-swift.git",
-            revision: "a5e49a0daed19e2cc23aedcfc662ebc40c9377eb"
+            revision: "da06952cd62c84fda73cac4da30b389e60ff2988"
         ),
     ],
     targets: [
