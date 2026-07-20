@@ -4,7 +4,7 @@
 
 - Pin the corrective Swift Core candidate that closes password-plan,
   authorization, Schema, and compact-projection parity; the coordinated
-  candidate at `228e03bff074b7f8c66ed04d54c5d61f8ea9ef78`
+  candidate at `8c1a9de38234091c921e33ae2ebaf8adc5bce0b9`
   passes all Studio tests through a local exact-commit overlay.
 - Emit the current container, judgment payload, password encryption, Runtime
   Capsule, and runtime-entry-set digest responsibility identifiers with their
