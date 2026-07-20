@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pin the corrective Swift Core candidate that closes password-plan,
+  authorization, Schema, and compact-projection parity; the coordinated
+  candidate passes all 10 Studio tests through a local exact-commit overlay.
 - Emit the current container, judgment payload, password encryption, Runtime
   Capsule, and runtime-entry-set digest responsibility identifiers with their
   independent `0.1.0` compatibility coordinates.
