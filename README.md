@@ -1,3 +1,10 @@
+> **Frozen historical repository**
+>
+> This repository is not part of the current supported KDNA toolchain. It
+> receives no feature or compatibility work and will not publish new releases.
+> Do not use it for new integrations. Its code remains available as development
+> history.
+
 # KDNA Studio Swift
 
 [![CI](https://github.com/aikdna/kdna-studio-swift/actions/workflows/ci.yml/badge.svg)](https://github.com/aikdna/kdna-studio-swift/actions/workflows/ci.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
