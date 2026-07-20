@@ -4,7 +4,7 @@
 
 - Pin the corrective Swift Core candidate that closes password-plan,
   authorization, Schema, and compact-projection parity; the coordinated
-  candidate at `8c1a9de38234091c921e33ae2ebaf8adc5bce0b9`
+  candidate at `f866025d386b45bfe94fb39adcf6c09438629d42`
   passes all Studio tests through a local exact-commit overlay.
 - Emit the current container, judgment payload, password encryption, Runtime
   Capsule, and runtime-entry-set digest responsibility identifiers with their
@@ -26,6 +26,8 @@
   compile/export APIs and fail-closed validation for recorded lock claims.
 - Preserve existing `compile(_:)` and `exportProject(_:force:forceReason:)`
   source calls while removing their implicit review requirement.
+- Describe the Swift authoring and Core dependency support surfaces as
+  pre-release rather than assigning Beta maturity.
 
 ## 0.4.0 (2026-07-13)
 - Build and test against KDNA Swift Core 0.4.0
