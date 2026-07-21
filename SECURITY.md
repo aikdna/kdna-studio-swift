@@ -15,16 +15,16 @@ chance to address it.
 
 ## Supported Versions
 
-`kdna-studio-swift` is a public beta support surface for Apple-platform
+`kdna-studio-swift` is a public pre-release support surface for Apple-platform
 authoring kernels.
 
 | Component | Supported Versions |
 |-----------|-------------------|
 | KDNA Protocol | Latest tagged release in `aikdna/kdna` |
-| kdna-studio-swift | Latest mainline beta release |
-| kdna-core-swift | Latest mainline beta release |
+| kdna-studio-swift | Latest mainline pre-release |
+| kdna-core-swift | Latest mainline pre-release |
 
-Older Swift beta versions may receive critical security patches on a
+Older Swift pre-release versions may receive critical security patches on a
 case-by-case basis.
 
 ## Security Model
