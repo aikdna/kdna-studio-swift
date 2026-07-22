@@ -10,6 +10,12 @@ Native Swift authoring kernel for turning scattered notes, documents, works, and
 
 KDNA Studio Swift is the authoring kernel for Apple platforms. It provides the native primitives for Studio-compatible apps: project model, evidence import, judgment cards, optional provenance, compile, and export. Full Domain-First distillation UI and candidate review live at the app layer; this package is the reusable Swift authoring kernel.
 
+The source candidate also provides a narrow local-user interface layer for
+Studio-compatible apps. It inspects one explicitly selected `.kdna` file from
+exact bytes and delegates workspace status and controls to an explicitly
+configured Runtime CLI 0.36.0. It does not read the attachment record, scan
+`PATH`, select assets, or create another resolver.
+
 **KDNA Studio Swift is not a UI tool.** It is a pure-logic authoring engine. Humans, agents, tools, and hybrid workflows can create judgment candidates through Studio-compatible authoring paths. Human confirmation and Human Lock are provenance signals for reviewed or high-risk publishing flows, not KDNA format-validity requirements.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
@@ -29,6 +35,14 @@ No Node.js dependency and no JavaScriptCore bridge. The package delegates the
 runtime wire contract, authorization, and encryption primitives to the
 official `kdna-core-swift` package.
 
+Workspace attachment presentation types come from `kdna-app-shared`; the
+macOS CLI adapter only supplies the exact status JSON and mutation result.
+File inspection, one-time load, attach, and switch return argv-only commands
+that apps must launch in a real terminal. Attach and switch intentionally omit
+`--yes`, so the Runtime CLI's exact preview and positive `y/N` confirmation
+remain authoritative. One-time load never creates a workspace relation or puts
+authorization secrets on argv.
+
 ## What it does
 
 - **Project Model** — create, load, save, validate Studio projects
@@ -43,6 +57,13 @@ official `kdna-core-swift` package.
 - **Domain-Scoped Authoring Boundary** — one exported `.kdna` should represent one clear judgment domain; multi-asset use requires an explicit, separately admitted Host contract rather than silently broadening or combining files
 - **Compiler** — non-deprecated cards → internal KDNA asset entries; review provenance is reported separately
 - **Runtime Export** — write a canonical `.kdna` runtime asset; directory export is dev-only
+- **Explicit File Inspection** — show identity, version, container digest,
+  creator declaration, declared applicability boundaries, access, encryption,
+  compatibility, and Core LoadPlan without attaching or loading the asset into
+  a task; protected payload boundaries remain unavailable until authorization
+- **Workspace Interface (macOS)** — read visible status and apply
+  enable/disable/rollback/relation-only remove through one exact Runtime CLI;
+  return terminal approval commands for attach and switch
 
 ## Runtime Export Contract
 
@@ -81,6 +102,10 @@ Add via Swift Package Manager:
 ```swift
 .package(url: "https://github.com/aikdna/kdna-studio-swift.git", from: "0.4.0")
 ```
+
+That installs the published line, which predates the local workspace interface.
+The interface described here is an unpublished exact-coordinate source
+candidate and requires the matching App Shared and Runtime CLI candidates.
 
 ## Quick Start
 

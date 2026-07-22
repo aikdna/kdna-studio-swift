@@ -28,6 +28,18 @@
   source calls while removing their implicit review requirement.
 - Describe the Swift authoring and Core dependency support surfaces as
   pre-release rather than assigning Beta maturity.
+- Add content-neutral inspection of one explicitly selected `.kdna` file from
+  a bounded non-symlink descriptor and an isolated exact-byte Core LoadPlan.
+- Add a thin macOS workspace adapter that validates exact Runtime CLI status,
+  rejects parent inheritance and stale selections, and delegates direct
+  controls without reading or mutating the record itself.
+- Keep attach and switch approval inside a real Runtime CLI terminal session;
+  the returned argv deliberately excludes `--yes`.
+- Provide visible terminal commands for content-neutral inspection and one-time
+  public/local loading without creating a workspace relation or passing a
+  secret on argv.
+- Reuse App Shared workspace presentation DTOs instead of defining a second UI
+  state model or resolver.
 
 ## 0.4.0 (2026-07-13)
 - Build and test against KDNA Swift Core 0.4.0
