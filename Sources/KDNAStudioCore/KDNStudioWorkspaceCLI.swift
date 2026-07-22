@@ -60,25 +60,137 @@ public enum KDNStudioWorkspaceCLIError: Error, Equatable, LocalizedError, Sendab
 }
 
 #if os(macOS)
+public protocol KDNStudioWorkspaceCLITransport: Sendable {
+    func execute(
+        launcher: URL,
+        arguments: [String],
+        cwd: URL
+    ) async throws -> Data
+}
+
+/// Default transport for unsandboxed hosts and package-level consumers.
+public struct KDNStudioProcessCLITransport: KDNStudioWorkspaceCLITransport {
+    private static let maximumOutputBytes = 16 * 1_024 * 1_024
+    private static let commandTimeout: TimeInterval = 30
+
+    public init() {}
+
+    public func execute(
+        launcher: URL,
+        arguments: [String],
+        cwd: URL
+    ) async throws -> Data {
+        try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                do {
+                    continuation.resume(returning: try Self.executeSync(
+                        launcher: launcher,
+                        arguments: arguments,
+                        cwd: cwd
+                    ))
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    private static func executeSync(
+        launcher: URL,
+        arguments: [String],
+        cwd: URL
+    ) throws -> Data {
+        let process = Process()
+        let outputPipe = Pipe()
+        let errorPipe = Pipe()
+        process.executableURL = launcher
+        process.arguments = arguments
+        process.currentDirectoryURL = cwd
+        process.standardInput = FileHandle.nullDevice
+        process.standardOutput = outputPipe
+        process.standardError = errorPipe
+
+        let exited = DispatchSemaphore(value: 0)
+        process.terminationHandler = { _ in exited.signal() }
+        do { try process.run() } catch {
+            throw KDNStudioWorkspaceCLIError.unavailable
+        }
+
+        let readers = DispatchGroup()
+        let output = KDNStudioLockedData()
+        let errorOutput = KDNStudioLockedData()
+        readers.enter()
+        DispatchQueue.global(qos: .userInitiated).async {
+            output.value = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            readers.leave()
+        }
+        readers.enter()
+        DispatchQueue.global(qos: .userInitiated).async {
+            errorOutput.value = errorPipe.fileHandleForReading.readDataToEndOfFile()
+            readers.leave()
+        }
+
+        if exited.wait(timeout: .now() + commandTimeout) == .timedOut {
+            process.terminate()
+            if exited.wait(timeout: .now() + 2) == .timedOut {
+                kill(process.processIdentifier, SIGKILL)
+                _ = exited.wait(timeout: .now() + 2)
+            }
+            readers.wait()
+            throw KDNStudioWorkspaceCLIError.commandRejected
+        }
+        readers.wait()
+        guard output.value.count <= maximumOutputBytes,
+              errorOutput.value.count <= maximumOutputBytes
+        else { throw KDNStudioWorkspaceCLIError.outputTooLarge }
+        guard process.terminationStatus == 0 else {
+            throw KDNStudioWorkspaceCLIError.commandRejected
+        }
+        return output.value
+    }
+}
+
+private final class KDNStudioLockedData: @unchecked Sendable {
+    private let lock = NSLock()
+    private var storage = Data()
+
+    var value: Data {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return storage
+        }
+        set {
+            lock.lock()
+            storage = newValue
+            lock.unlock()
+        }
+    }
+}
+
 /// Thin macOS adapter around the exact Runtime CLI.
 ///
 /// It never parses `.kdna/attachments.json`, searches `PATH`, or owns a second
 /// attachment state. Direct mutations are guarded against stale UI state.
 public actor KDNStudioWorkspaceCLIClient {
     private static let maximumOutputBytes = 16 * 1_024 * 1_024
-    private static let commandTimeout: TimeInterval = 30
     private let configuration: KDNStudioRuntimeCLIConfiguration
+    private let transport: any KDNStudioWorkspaceCLITransport
     private var resolvedLauncher: URL?
     private var resolvedEntry: URL?
 
-    public init(configuration: KDNStudioRuntimeCLIConfiguration) {
+    public init(
+        configuration: KDNStudioRuntimeCLIConfiguration,
+        transport: any KDNStudioWorkspaceCLITransport = KDNStudioProcessCLITransport()
+    ) {
         self.configuration = configuration
+        self.transport = transport
     }
 
-    public func status(workspaceURL: URL) throws -> KDNAWorkspaceAttachmentRecord? {
+    public func status(workspaceURL: URL) async throws -> KDNAWorkspaceAttachmentRecord? {
         let root = try workspaceRoot(workspaceURL, recordRequired: false)
         guard root.recordExists else { return nil }
-        let output = try run(["attachments", "--cwd", root.url.path], cwd: root.url)
+        let output = try await run(["attachments", "--cwd", root.url.path], cwd: root.url)
         do {
             return try KDNAWorkspaceAttachmentStatusDecoder.decode(output)
         } catch KDNAWorkspaceAttachmentStatusError.outputTooLarge {
@@ -92,11 +204,11 @@ public actor KDNStudioWorkspaceCLIClient {
         _ action: KDNAWorkspaceAttachmentAction,
         selected: KDNAWorkspaceAttachment,
         workspaceURL: URL
-    ) throws -> KDNAWorkspaceAttachmentRecord? {
+    ) async throws -> KDNAWorkspaceAttachmentRecord? {
         guard [.enable, .disable, .rollback, .removeRelation].contains(action) else {
             throw KDNStudioWorkspaceCLIError.invalidAttachment
         }
-        let current = try currentAttachment(selected, workspaceURL: workspaceURL)
+        let current = try await currentAttachment(selected, workspaceURL: workspaceURL)
         guard current == selected else { throw KDNStudioWorkspaceCLIError.stateChanged }
         let command: String
         switch action {
@@ -107,12 +219,12 @@ public actor KDNStudioWorkspaceCLIClient {
         case .switchExactFile: throw KDNStudioWorkspaceCLIError.invalidAttachment
         }
         let root = try workspaceRoot(workspaceURL, recordRequired: true)
-        let output = try run(
+        let output = try await run(
             [command, selected.attachmentID, "--cwd", root.url.path],
             cwd: root.url
         )
         try validateMutationOutput(output, operation: command)
-        let updated = try status(workspaceURL: root.url)
+        let updated = try await status(workspaceURL: root.url)
         try validatePostcondition(action, selected: selected, record: updated)
         return updated
     }
@@ -123,7 +235,7 @@ public actor KDNStudioWorkspaceCLIClient {
         role: String,
         appliesTo: [String],
         doesNotApplyTo: [String]
-    ) throws -> KDNStudioRuntimeCLITerminalCommand {
+    ) async throws -> KDNStudioRuntimeCLITerminalCommand {
         let root = try workspaceRoot(workspaceURL, recordRequired: false)
         guard assetURL.isFileURL, assetURL.pathExtension.lowercased() == "kdna",
               validText(role), validTerms(appliesTo, required: true),
@@ -136,22 +248,22 @@ public actor KDNStudioWorkspaceCLIClient {
         ]
         for scope in appliesTo { arguments += ["--applies-to", scope] }
         for scope in doesNotApplyTo { arguments += ["--does-not-apply-to", scope] }
-        return try approvalCommand(arguments, cwd: root.url)
+        return try await approvalCommand(arguments, cwd: root.url)
     }
 
     public func switchApprovalCommand(
         selected: KDNAWorkspaceAttachment,
         assetURL: URL,
         workspaceURL: URL
-    ) throws -> KDNStudioRuntimeCLITerminalCommand {
-        guard try currentAttachment(selected, workspaceURL: workspaceURL) == selected else {
+    ) async throws -> KDNStudioRuntimeCLITerminalCommand {
+        guard try await currentAttachment(selected, workspaceURL: workspaceURL) == selected else {
             throw KDNStudioWorkspaceCLIError.stateChanged
         }
         guard assetURL.isFileURL, assetURL.pathExtension.lowercased() == "kdna" else {
             throw KDNStudioWorkspaceCLIError.invalidAttachment
         }
         let root = try workspaceRoot(workspaceURL, recordRequired: true)
-        return try approvalCommand([
+        return try await approvalCommand([
             "switch", selected.attachmentID, assetURL.path,
             "--cwd", root.url.path,
         ], cwd: root.url)
@@ -160,8 +272,8 @@ public actor KDNStudioWorkspaceCLIClient {
     /// Opens the exact CLI's content-neutral inspection in a visible terminal.
     public func inspectTerminalCommand(
         assetURL: URL
-    ) throws -> KDNStudioRuntimeCLITerminalCommand {
-        try explicitAssetCommand(["inspect", assetURL.path, "--json"], assetURL: assetURL)
+    ) async throws -> KDNStudioRuntimeCLITerminalCommand {
+        try await explicitAssetCommand(["inspect", assetURL.path, "--json"], assetURL: assetURL)
     }
 
     /// Loads one explicitly selected public/local asset without creating a
@@ -169,8 +281,8 @@ public actor KDNStudioWorkspaceCLIClient {
     /// authorization flow and are not given secrets on argv.
     public func useOnceTerminalCommand(
         assetURL: URL
-    ) throws -> KDNStudioRuntimeCLITerminalCommand {
-        try explicitAssetCommand(
+    ) async throws -> KDNStudioRuntimeCLITerminalCommand {
+        try await explicitAssetCommand(
             ["load", assetURL.path, "--profile", "compact", "--as", "json"],
             assetURL: assetURL
         )
@@ -179,8 +291,8 @@ public actor KDNStudioWorkspaceCLIClient {
     private func currentAttachment(
         _ selected: KDNAWorkspaceAttachment,
         workspaceURL: URL
-    ) throws -> KDNAWorkspaceAttachment {
-        guard let record = try status(workspaceURL: workspaceURL),
+    ) async throws -> KDNAWorkspaceAttachment {
+        guard let record = try await status(workspaceURL: workspaceURL),
               let current = record.attachments.first(where: { $0.attachmentID == selected.attachmentID })
         else { throw KDNStudioWorkspaceCLIError.stateChanged }
         return current
@@ -189,8 +301,8 @@ public actor KDNStudioWorkspaceCLIClient {
     private func approvalCommand(
         _ commandArguments: [String],
         cwd: URL
-    ) throws -> KDNStudioRuntimeCLITerminalCommand {
-        let executable = try verifiedExecutable()
+    ) async throws -> KDNStudioRuntimeCLITerminalCommand {
+        let executable = try await verifiedExecutable()
         return KDNStudioRuntimeCLITerminalCommand(
             executableURL: executable.launcher,
             arguments: executable.prefix + commandArguments,
@@ -201,11 +313,11 @@ public actor KDNStudioWorkspaceCLIClient {
     private func explicitAssetCommand(
         _ arguments: [String],
         assetURL: URL
-    ) throws -> KDNStudioRuntimeCLITerminalCommand {
+    ) async throws -> KDNStudioRuntimeCLITerminalCommand {
         guard assetURL.isFileURL, assetURL.pathExtension.lowercased() == "kdna" else {
             throw KDNStudioWorkspaceCLIError.invalidAttachment
         }
-        return try approvalCommand(arguments, cwd: assetURL.deletingLastPathComponent())
+        return try await approvalCommand(arguments, cwd: assetURL.deletingLastPathComponent())
     }
 
     private func validatePostcondition(
@@ -266,14 +378,14 @@ public actor KDNStudioWorkspaceCLIClient {
         return (root, true)
     }
 
-    private func verifiedExecutable() throws -> (launcher: URL, prefix: [String]) {
+    private func verifiedExecutable() async throws -> (launcher: URL, prefix: [String]) {
         if let resolvedLauncher {
             return (resolvedLauncher, resolvedEntry.map { [$0.path] } ?? [])
         }
         let launcher = try regularFile(configuration.launcherURL, executable: true)
         let entry = try configuration.cliEntryURL.map { try regularFile($0, executable: false) }
         let prefix = entry.map { [$0.path] } ?? []
-        let output = try execute(
+        let output = try await transport.execute(
             launcher: launcher,
             arguments: prefix + ["--version"],
             cwd: FileManager.default.temporaryDirectory
@@ -297,63 +409,13 @@ public actor KDNStudioWorkspaceCLIClient {
         return resolved
     }
 
-    private func run(_ arguments: [String], cwd: URL) throws -> Data {
-        let executable = try verifiedExecutable()
-        return try execute(
+    private func run(_ arguments: [String], cwd: URL) async throws -> Data {
+        let executable = try await verifiedExecutable()
+        return try await transport.execute(
             launcher: executable.launcher,
             arguments: executable.prefix + arguments,
             cwd: cwd
         )
-    }
-
-    private func execute(launcher: URL, arguments: [String], cwd: URL) throws -> Data {
-        let process = Process()
-        let outputPipe = Pipe()
-        let errorPipe = Pipe()
-        process.executableURL = launcher
-        process.arguments = arguments
-        process.currentDirectoryURL = cwd
-        process.standardInput = FileHandle.nullDevice
-        process.standardOutput = outputPipe
-        process.standardError = errorPipe
-
-        let exited = DispatchSemaphore(value: 0)
-        process.terminationHandler = { _ in exited.signal() }
-        do { try process.run() } catch {
-            throw KDNStudioWorkspaceCLIError.unavailable
-        }
-
-        let readers = DispatchGroup()
-        var output = Data()
-        var errorOutput = Data()
-        readers.enter()
-        DispatchQueue.global(qos: .userInitiated).async {
-            output = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            readers.leave()
-        }
-        readers.enter()
-        DispatchQueue.global(qos: .userInitiated).async {
-            errorOutput = errorPipe.fileHandleForReading.readDataToEndOfFile()
-            readers.leave()
-        }
-
-        if exited.wait(timeout: .now() + Self.commandTimeout) == .timedOut {
-            process.terminate()
-            if exited.wait(timeout: .now() + 2) == .timedOut {
-                kill(process.processIdentifier, SIGKILL)
-                _ = exited.wait(timeout: .now() + 2)
-            }
-            readers.wait()
-            throw KDNStudioWorkspaceCLIError.commandRejected
-        }
-        readers.wait()
-        guard output.count <= Self.maximumOutputBytes,
-              errorOutput.count <= Self.maximumOutputBytes
-        else { throw KDNStudioWorkspaceCLIError.outputTooLarge }
-        guard process.terminationStatus == 0 else {
-            throw KDNStudioWorkspaceCLIError.commandRejected
-        }
-        return output
     }
 
     private func validText(_ value: String) -> Bool {

@@ -124,6 +124,27 @@ final class LocalUserExperienceTests: XCTestCase {
         }
     }
 
+    func testRuntimeCLITransportIsInjectableWithoutMovingClientPolicy() async throws {
+        let fixture = try makeFakeCLI()
+        let workspace = try makeWorkspace(withRecord: true, under: fixture.root)
+        let transport = RecordingCLITransport()
+        let client = KDNStudioWorkspaceCLIClient(
+            configuration: .init(launcherURL: fixture.executable),
+            transport: transport
+        )
+
+        let status = try await client.status(workspaceURL: workspace)
+
+        XCTAssertEqual(status?.attachments.first?.state, .enabled)
+        let calls = await transport.recordedCalls()
+        XCTAssertEqual(calls.count, 2)
+        XCTAssertEqual(calls[0].launcher, fixture.executable.resolvingSymlinksInPath())
+        XCTAssertEqual(calls[0].arguments, ["--version"])
+        XCTAssertEqual(calls[1].arguments, ["attachments", "--cwd", workspace.path])
+        XCTAssertEqual(calls[1].cwd, workspace)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: fixture.log.path))
+    }
+
     func testApprovalCommandsKeepExactPreviewInRuntimeCLI() async throws {
         let fixture = try makeFakeCLI()
         let workspace = try makeWorkspace(withRecord: true, under: fixture.root)
@@ -196,6 +217,32 @@ final class LocalUserExperienceTests: XCTestCase {
     }
 
 #if os(macOS)
+    private actor RecordingCLITransport: KDNStudioWorkspaceCLITransport {
+        struct Call: Sendable {
+            let launcher: URL
+            let arguments: [String]
+            let cwd: URL
+        }
+
+        private var calls: [Call] = []
+
+        func execute(launcher: URL, arguments: [String], cwd: URL) async throws -> Data {
+            calls.append(Call(launcher: launcher, arguments: arguments, cwd: cwd))
+            if arguments == ["--version"] {
+                return Data("0.36.0\n".utf8)
+            }
+            guard arguments.first == "attachments" else {
+                throw KDNStudioWorkspaceCLIError.commandRejected
+            }
+            let digest = "sha256:" + String(repeating: "a", count: 64)
+            return Data("""
+            {"document_type":"kdna.workspace-attachments","schema_version":"0.1.0","workspace":{"root_marker":".kdna/attachments.json"},"attachments":[{"attachment_id":"att_0123456789abcdef01234567","asset":{"id":"kdna:example:review","version":"1.0.0","digest":"\(digest)","snapshot":"assets/sha256-\(String(repeating: "a", count: 64)).kdna"},"state":"enabled","role":"deployment-review","scope":{"kind":"workspace","applies_to":["deployment review"],"does_not_apply_to":["poetry"]},"resolution_policy":"load_when_clear_ask_when_ambiguous","approved_at":"2026-07-22T00:00:00.000Z","update_policy":"explicit_switch_only","history":[]}]}
+            """.utf8)
+        }
+
+        func recordedCalls() -> [Call] { calls }
+    }
+
     private func makeFakeCLI(version: String = "0.36.0") throws -> (
         root: URL,
         executable: URL,
