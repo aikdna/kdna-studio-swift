@@ -145,6 +145,29 @@ final class LocalUserExperienceTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: fixture.log.path))
     }
 
+    func testRuntimeCLITransportCannotBypassLauncherExecutableMode() async throws {
+        let fixture = try makeFakeCLI()
+        let workspace = try makeWorkspace(withRecord: true, under: fixture.root)
+        try FileManager.default.setAttributes(
+            [.posixPermissions: 0o600],
+            ofItemAtPath: fixture.executable.path
+        )
+        let transport = RecordingCLITransport()
+        let client = KDNStudioWorkspaceCLIClient(
+            configuration: .init(launcherURL: fixture.executable),
+            transport: transport
+        )
+
+        do {
+            _ = try await client.status(workspaceURL: workspace)
+            XCTFail("expected launcher mode rejection")
+        } catch {
+            XCTAssertEqual(error as? KDNStudioWorkspaceCLIError, .unavailable)
+        }
+        let calls = await transport.recordedCalls()
+        XCTAssertTrue(calls.isEmpty)
+    }
+
     func testApprovalCommandsKeepExactPreviewInRuntimeCLI() async throws {
         let fixture = try makeFakeCLI()
         let workspace = try makeWorkspace(withRecord: true, under: fixture.root)

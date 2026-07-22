@@ -404,9 +404,24 @@ public actor KDNStudioWorkspaceCLIClient {
         let resolved = url.resolvingSymlinksInPath().standardizedFileURL
         let values = try? resolved.resourceValues(forKeys: [.isRegularFileKey])
         guard values?.isRegularFile == true,
-              !executable || FileManager.default.isExecutableFile(atPath: resolved.path)
+              !executable || executableModeIsSet(resolved)
         else { throw KDNStudioWorkspaceCLIError.unavailable }
         return resolved
+    }
+
+    /// A sandboxed host may be allowed to inspect a user-selected executable
+    /// without receiving a direct-execution extension. Validate the file's
+    /// actual POSIX mode here; the selected transport remains responsible for
+    /// executing it and fails closed if that execution is unavailable.
+    private func executableModeIsSet(_ url: URL) -> Bool {
+        var metadata = stat()
+        let result = url.withUnsafeFileSystemRepresentation { path in
+            guard let path else { return Int32(-1) }
+            return Darwin.lstat(path, &metadata)
+        }
+        guard result == 0 else { return false }
+        let executableBits = mode_t(S_IXUSR | S_IXGRP | S_IXOTH)
+        return metadata.st_mode & executableBits != 0
     }
 
     private func run(_ arguments: [String], cwd: URL) async throws -> Data {
