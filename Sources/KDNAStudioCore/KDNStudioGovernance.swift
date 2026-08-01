@@ -14,12 +14,12 @@ public class KDNStudioGovernance {
         let lockedAxioms = locked.filter { $0.type == .axiom }
         let lockedMisunderstandings = locked.filter { $0.type == .misunderstanding }
         let lockedSelfChecks = locked.filter { $0.type == .self_check }
-        let ratedTests = project.tests.filter { $0.result != nil }
+        let readiness = KDNStudioQuality.computeReadiness(project)
 
-        let badge: String
-        if ratedTests.count >= 10 { badge = "tested" }
-        else if lockedAxioms.count >= 1 { badge = "untested" }
-        else { badge = "draft" }
+        let reviewStatus: String
+        if readiness.grade == "tested" { reviewStatus = "rated_community_review" }
+        else if lockedAxioms.contains(where: { $0.humanLock != nil }) { reviewStatus = "reviewed" }
+        else { reviewStatus = "draft" }
 
         var card: [String: Any] = [
             "name": project.name,
@@ -48,8 +48,7 @@ public class KDNStudioGovernance {
                 "misunderstandings": lockedMisunderstandings.count,
                 "self_checks": lockedSelfChecks.count,
             ],
-            "quality_badge": badge,
-            "review_status": badge == "tested" ? "community" : "unlisted",
+            "review_status": reviewStatus,
         ]
 
         if let provenance { card["provenance"] = provenance }

@@ -199,10 +199,15 @@ public class KDNStudioCompiler {
         files["reports/quality-gate-report.json"] = try jsonString([
             "type": "kdna.studio.quality-gate-report",
             "schema_version": "0.1.0", "build_id": buildId,
-            "quality_badge": readiness.grade == "publishable_grade" ? "tested" : "untested",
+            "readiness_stage": readiness.grade,
+            "blocking_count": readiness.blocking.count,
+            "blocking": readiness.blocking,
+            "warning_count": readiness.warnings.count,
+            "warnings": readiness.warnings,
             "eval_count": project.tests.count, "rated_eval_count": ratedTests.count,
-            "gates": ["untested": ["passed": true], "tested": ["passed": ratedTests.count >= 10],
-                       "validated": ["passed": false, "required": "reproducible scoring + published eval evidence"]]
+            "gates": ["structure_complete": ["passed": readiness.blocking.isEmpty],
+                       "reviewed": ["passed": readiness.grade == "reviewed" || readiness.grade == "tested"],
+                       "rated_eval_evidence": ["passed": !ratedTests.isEmpty]]
         ])
 
         // Eval report
