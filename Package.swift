@@ -20,7 +20,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/aikdna/kdna-app-shared.git",
-            revision: "c942bc932ab087dc6f1ed751cb476c82e2db43a4"
+            revision: "017e759efb448bf99b3384ccafa7f25172169ebb"
         ),
     ],
     targets: [
