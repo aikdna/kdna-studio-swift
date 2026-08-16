@@ -193,6 +193,14 @@ path, so an incomplete or stale lock cannot be exported as a valid claim.
   local workspace interface described above is an exact-coordinate source
   candidate and requires the matching App Shared and Runtime CLI coordinates.
 
+
+## Official packages
+
+Official KDNA packages are published under the `@aikdna` npm scope and the
+`aikdna` name on PyPI. The unscoped npm package `kdna` is not affiliated with
+the KDNA project. Install only from the official coordinates shown in this
+README.
+
 ## License
 
 Apache-2.0 — see [LICENSE](LICENSE).
