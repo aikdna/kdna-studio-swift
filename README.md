@@ -103,8 +103,8 @@ let reviewedResult = try KDNStudioCompiler.compile(project, requireHumanLock: tr
 ## What it does
 
 - **Project Model** — create, load, save, validate Studio projects
-- **Judgment Cards** — 7 card types (axiom, boundary, risk, stance,
-  misunderstanding, case, pattern) with a 6-state machine
+- **Judgment Cards** — 9 card types (axiom, ontology, misunderstanding,
+  self_check, scenario, case, boundary, risk, aesthetic) with a 6-state machine
 - **Human Lock** — optional provenance for reviewed publishing flows; Studio
   projects may use locked cards to mark confirmed judgment
 - **Authoring Provenance** — exported assets carry Studio-compatible compiler
@@ -163,9 +163,11 @@ app-private `.kdna` envelopes that KDNA Core or CLI cannot inspect.
 | `ontology` | KDNA_Core.json | Concept boundaries |
 | `misunderstanding` | KDNA_Patterns.json | Common wrong interpretation |
 | `self_check` | KDNA_Patterns.json | Yes/no verification question |
-| `boundary` | KDNA_Core.json | Domain boundary |
-| `risk` | KDNA_Core.json | Risk assessment |
-| `aesthetic` | KDNA_Core.json | Aesthetic preference |
+| `boundary` | KDNA_Patterns.json | Domain boundary |
+| `risk` | KDNA_Patterns.json | Risk assessment |
+| `aesthetic` | KDNA_Patterns.json | Aesthetic preference |
+| `scenario` | KDNA_Scenarios.json | Worked scenario or situational example |
+| `case` | KDNA_Cases.json | Concrete case study |
 
 ## Card State Machine
 
