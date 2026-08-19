@@ -36,7 +36,7 @@ swift_macos_token="${lower_v}13"
 swift_ios_token="${lower_v}16"
 checkout_token="${lower_v}7"
 action_token="${lower_v}4"
-stale_token="${lower_v}10"
+stale_token="${lower_v}11"
 findings="$(mktemp)"
 retired_findings="$(mktemp)"
 trap 'rm -f "$findings" "$retired_findings"; cleanup' EXIT
