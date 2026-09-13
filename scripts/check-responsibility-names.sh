@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root="$(cd "$(dirname "$0")/.." && pwd)"
+# Resolve the script's own physical location before deriving the repository
+# root. A symlinked entry point (for example the macOS /tmp -> /private/tmp
+# shim) must not silently make the gate scan the wrong tree.
+script_path="$0"
+while [[ -L "$script_path" ]]; do
+  link_target="$(readlink "$script_path")"
+  case "$link_target" in
+    /*) script_path="$link_target" ;;
+    *) script_path="$(dirname "$script_path")/$link_target" ;;
+  esac
+done
+root="$(cd "$(dirname "$script_path")/.." && pwd -P)"
 mode="${1:-working-tree}"
 scan_root="$root"
 temporary=""
@@ -27,13 +38,12 @@ case "$mode" in
     ;;
 esac
 
-# KDNA-owned generation labels are always blocked. The only exact exceptions
-# are syntax controlled by Swift PackageDescription and immutable third-party
-# GitHub Action coordinates.
+# KDNA-owned generation labels are always blocked. One separate category is
+# allowed: third-party mandated strings that the tooling itself fixes, namely
+# SwiftPM PackageDescription platform identifiers and immutable GitHub Action
+# coordinates. Nothing else is exempted.
 generation_pattern='[Vv][0-9]+'
 lower_v='v'
-swift_macos_token="${lower_v}13"
-swift_ios_token="${lower_v}16"
 checkout_token="${lower_v}7"
 action_token="${lower_v}4"
 stale_token="${lower_v}11"
@@ -55,9 +65,18 @@ while IFS=: read -r path line token; do
   path="${path#./}"
   [[ -z "$path" ]] && continue
   source_line="$(sed -n "${line}p" "$scan_root/$path" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-  if [[ "$path|$source_line" == "Package.swift|.macOS(.${swift_macos_token})," ]] ||
-     [[ "$path|$source_line" == "Package.swift|.iOS(.${swift_ios_token})" ]] ||
-     [[ "$path|$source_line" == ".github/workflows/ci.yml|- uses: actions/checkout@${checkout_token}" ]] ||
+  # Third-party mandated strings, classified separately from KDNA-owned
+  # generation labels and allowed. SwiftPM fixes the spelling of
+  # `.macOS(.v<N>)` / `.iOS(.v<N>)` platform identifiers, so they must be
+  # accepted whether the platforms array is written inline on one line or one
+  # platform per line. The match is scoped to SwiftPM platform syntax in
+  # Package.swift; every other `vN` token stays blocked.
+  if [[ "$path" == "Package.swift" ]] &&
+     { [[ "$source_line" =~ ^platforms:[[:space:]]*\[.*\.(macOS|iOS|tvOS|watchOS|visionOS)\(\.v[0-9]+\) ]] ||
+       [[ "$source_line" =~ ^\.(macOS|iOS|tvOS|watchOS|visionOS)\(\.v[0-9]+\)[,]?$ ]]; }; then
+    continue
+  fi
+  if [[ "$path|$source_line" == ".github/workflows/ci.yml|- uses: actions/checkout@${checkout_token}" ]] ||
      [[ "$path|$source_line" == ".github/workflows/codeql-swift.yml|uses: actions/checkout@${checkout_token}" ]] ||
      [[ "$path|$source_line" == ".github/workflows/codeql-swift.yml|uses: github/codeql-action/init@${action_token}" ]] ||
      [[ "$path|$source_line" == ".github/workflows/codeql-swift.yml|uses: github/codeql-action/autobuild@${action_token}" ]] ||
