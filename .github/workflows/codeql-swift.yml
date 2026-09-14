@@ -27,13 +27,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
+    - name: Verify source surfaces
+      run: python3 scripts/check-source-surface.py --swiftpm
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63
       with:
         languages: ${{ matrix.language }}
-
-    - name: Verify source surfaces
-      run: python3 scripts/check-source-surface.py --swiftpm
 
     - name: Build Swift package
       run: swift build
