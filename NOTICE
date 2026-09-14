@@ -9,4 +9,4 @@ compiling, and exporting `.kdna` judgment assets on Apple platforms
 through the KDNA toolchain.
 
 See LICENSE for the full Apache 2.0 license text. See README.md for the
-Swift authoring guide and beta API surface.
+Swift authoring guide and current source API surface.

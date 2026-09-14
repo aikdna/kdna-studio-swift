@@ -94,6 +94,6 @@
   "validation_scope": "Repository checks cover source inventories, frozen contracts/fixtures, current native lifecycle and public consumption. Platform build results do not authenticate editorial identity or prove filesystem durability.",
   "dependency_source": {
     "url": "https://github.com/aikdna/kdna-core-swift.git",
-    "revision": "7f686046ce8bae968f9645420ff736f5a0aa2091"
+    "revision": "0b85375b7e92b9ca4591f92c1e814018a4fb95b8"
   }
 }
