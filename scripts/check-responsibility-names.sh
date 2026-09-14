@@ -38,6 +38,22 @@ case "$mode" in
     ;;
 esac
 
+if ! command -v rg >/dev/null 2>&1; then
+  echo "responsibility naming gate requires ripgrep (rg)" >&2
+  exit 2
+fi
+
+# A search with no matches is valid. Missing tools, unreadable inputs and all
+# other scanner failures must stop the gate instead of becoming a clean scan.
+scan() {
+  local scan_status=0
+  rg "$@" || scan_status=$?
+  if [[ "$scan_status" -ne 0 && "$scan_status" -ne 1 ]]; then
+    echo "responsibility naming scan failed (exit $scan_status)" >&2
+    return 2
+  fi
+}
+
 # KDNA-owned generation labels are always blocked. One separate category is
 # allowed: third-party mandated strings that the tooling itself fixes, namely
 # SwiftPM PackageDescription platform identifiers and immutable GitHub Action
@@ -49,15 +65,16 @@ action_token="${lower_v}4"
 stale_token="${lower_v}11"
 findings="$(mktemp)"
 retired_findings="$(mktemp)"
-trap 'rm -f "$findings" "$retired_findings"; cleanup' EXIT
+source_paths="$(mktemp)"
+trap 'rm -f "$findings" "$retired_findings" "$source_paths"; cleanup' EXIT
 
 (
   cd "$scan_root"
-  rg --hidden \
+  scan --hidden \
     --glob '!.git/**' \
     --glob '!.build/**' \
     --glob '!Package.resolved' \
-    --no-heading -n -o "$generation_pattern" . || true
+    --no-heading -n -o "$generation_pattern" .
 ) > "$findings"
 
 failures=0
@@ -91,12 +108,16 @@ while IFS=: read -r path line token; do
   failures=$((failures + 1))
 done < "$findings"
 
+(
+  cd "$scan_root"
+  scan --files --hidden --glob '!.git/**' --glob '!.build/**' --glob '!Package.resolved'
+) > "$source_paths"
 while IFS= read -r source_path; do
   if [[ "$source_path" =~ $generation_pattern ]]; then
     echo "blocked generation label in path: $source_path" >&2
     failures=$((failures + 1))
   fi
-done < <(cd "$scan_root" && rg --files --hidden --glob '!.git/**' --glob '!.build/**' --glob '!Package.resolved')
+done < "$source_paths"
 
 # Build the retired vocabulary without embedding a blocked generation label in
 # the gate itself. These are exact protocol identifiers, not broad prose terms.
@@ -118,12 +139,12 @@ retired_tokens=(
 for token in "${retired_tokens[@]}"; do
   (
     cd "$scan_root"
-    rg --hidden \
+    scan --hidden \
       --glob '!.git/**' \
       --glob '!.build/**' \
       --glob '!Package.resolved' \
       --glob '!scripts/check-responsibility-names.sh' \
-      --no-heading -n -F "$token" . || true
+      --no-heading -n -F "$token" .
   ) >> "$retired_findings"
 done
 

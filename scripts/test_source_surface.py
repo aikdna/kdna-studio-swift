@@ -1,6 +1,8 @@
 import importlib.util
 import json
+import os
 from pathlib import Path
+import shlex
 import shutil
 import subprocess
 import sys
@@ -83,8 +85,47 @@ class SourceSurfaceTests(unittest.TestCase):
 
 class ResponsibilityNameTests(unittest.TestCase):
     setUp = SourceSurfaceTests.setUp
-    def run_names(self):
-        return subprocess.run(["bash", "scripts/check-responsibility-names.sh", "working-tree"], cwd=self.root, capture_output=True, text=True, timeout=30)
+    def run_names(self, env=None):
+        return subprocess.run(["bash", "scripts/check-responsibility-names.sh", "working-tree"], cwd=self.root, env=env, capture_output=True, text=True, timeout=30)
+
+    def test_missing_scanner_fails_closed(self):
+        tools = Path(self.temporary.name) / "tools"
+        tools.mkdir()
+        for name in ("bash", "dirname", "readlink", "mktemp", "rm"):
+            target = shutil.which(name)
+            self.assertIsNotNone(target, name)
+            (tools / name).symlink_to(target)
+        result = self.run_names({**os.environ, "PATH": str(tools)})
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("requires ripgrep", result.stderr)
+        self.assertNotIn("gate passed", result.stdout)
+
+    def scanner_error(self, selector):
+        tools = Path(self.temporary.name) / "tools"
+        tools.mkdir()
+        real_scanner = shutil.which("rg")
+        self.assertIsNotNone(real_scanner, "ripgrep is required to run naming tests")
+        scanner = tools / "rg"
+        condition = "exit 2" if selector is None else (
+            'for argument in "$@"; do\n'
+            f'  if [ "$argument" = {shlex.quote(selector)} ]; then exit 2; fi\n'
+            'done'
+        )
+        scanner.write_text("#!/bin/sh\n" + condition + "\nexec " + shlex.quote(real_scanner) + ' "$@"\n')
+        scanner.chmod(0o700)
+        result = self.run_names({**os.environ, "PATH": str(tools) + os.pathsep + os.environ["PATH"]})
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("naming scan failed", result.stderr)
+        self.assertNotIn("gate passed", result.stdout)
+
+    def test_content_scanner_error_fails_closed(self):
+        self.scanner_error(None)
+
+    def test_path_scanner_error_fails_closed(self):
+        self.scanner_error("--files")
+
+    def test_retired_scanner_error_fails_closed(self):
+        self.scanner_error("-F")
 
     def test_platform_spelling_is_allowed(self):
         result = self.run_names()
