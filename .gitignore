@@ -3,3 +3,5 @@ DerivedData/
 *.xcodeproj
 xcuserdata/
 Package.resolved
+__pycache__/
+.swiftpm/

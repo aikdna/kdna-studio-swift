@@ -1,0 +1,1462 @@
+{
+  "format": {
+    "id": "kdna.studio-creation-evidence/2",
+    "version": "2.0.0"
+  },
+  "reference_contract": {
+    "container": "0.2.0",
+    "core": "kdna.core/0.3.0",
+    "host": "kdna.agent-host/0.2.0",
+    "ir": "kdna.canonical-ir/0.2.0",
+    "payload_profile": "kdna.payload.judgment",
+    "payload_version": "0.2.0",
+    "plan": "kdna.consumption-plan/0.2.0",
+    "read": "kdna.read/0.2.0",
+    "runtime": "kdna.runtime-capsule/0.2.0",
+    "trace": "kdna.judgment-trace/0.2.0"
+  },
+  "component_definition": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+  "compiler": {
+    "name": "@aikdna/kdna-studio-core",
+    "version": "4.0.0-rc.components.1",
+    "provider": "javascript",
+    "artifact_sha256": "UNKNOWN"
+  },
+  "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d",
+  "revision": 4,
+  "context": {
+    "adoption_channel": {
+      "channel": "synthetic-provider:11",
+      "kind": "delegated_agent_editorial"
+    },
+    "agent": {
+      "name": "Synthetic lifecycle fixture",
+      "version": "1"
+    },
+    "asset": {
+      "asset_id": "asset:8bf23199-19db-4f81-97a2-68f0980c0de6",
+      "asset_uid": "urn:uuid:b1f8c70f-22ff-4162-b716-3b1ad70219d6",
+      "version": "0.1.4"
+    },
+    "authorization": {
+      "coordinate": "fixture:local-only",
+      "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+    },
+    "brief": {
+      "scope": "Local test of authoring and saved readback.",
+      "title": "Synthetic signal fixture"
+    },
+    "corePackageVersion": "0.24.0-rc.component-semantics.2",
+    "createdAt": "2026-09-10T10:48:11.369Z",
+    "groups": [
+      {
+        "alternatives": [
+          {
+            "localKey": "preserve",
+            "materialRefs": [
+              "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "states",
+                  "role": "input-items"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "broader": [],
+                    "items": [
+                      {
+                        "key": "known",
+                        "meaning": "An observation is available.",
+                        "title": "Known"
+                      },
+                      {
+                        "key": "unknown",
+                        "meaning": "No observation is available.",
+                        "title": "Unknown"
+                      }
+                    ]
+                  },
+                  "localKey": "states",
+                  "type": "taxonomy"
+                }
+              ],
+              "method": {
+                "term": "evidence-classification"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          },
+          {
+            "localKey": "infer",
+            "materialRefs": [
+              "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "states",
+                  "role": "input-items"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "broader": [],
+                    "items": [
+                      {
+                        "key": "known",
+                        "meaning": "An observation is available.",
+                        "title": "Known"
+                      },
+                      {
+                        "key": "unknown",
+                        "meaning": "No observation is available.",
+                        "title": "Unknown"
+                      }
+                    ]
+                  },
+                  "localKey": "states",
+                  "type": "taxonomy"
+                }
+              ],
+              "method": {
+                "term": "evidence-classification"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Treat an absent observation as a negative result.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          }
+        ],
+        "localKey": "signal",
+        "revision": 1
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-10T10:48:11.369Z",
+        "detail": {
+          "scope": "Local test of authoring and saved readback.",
+          "title": "Synthetic signal fixture"
+        },
+        "digest": "sha256:365f635796b9876ca72e689d6ad35d854692e5b4a44cb06794e3d5a1f5f1877d",
+        "event": "brief",
+        "previous_digest": null,
+        "revision": 1,
+        "sequence": 1
+      },
+      {
+        "at": "2026-09-10T10:48:11.369Z",
+        "detail": {
+          "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_11",
+          "content_digest": "sha256:16eaefa96ae5b29f5fba5cea6000963b10d52ee0792d89401ea5af0cc047b0d6",
+          "coordinate": "private:fixture:11",
+          "id": "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f",
+          "kind": "text",
+          "recorded_at": "2026-09-10T10:48:11.369Z",
+          "title": "Private input"
+        },
+        "digest": "sha256:308f4243091612b33e98be12dcdd5ea87f3f5a9943df3357e864d067d867b6aa",
+        "event": "material",
+        "previous_digest": "sha256:365f635796b9876ca72e689d6ad35d854692e5b4a44cb06794e3d5a1f5f1877d",
+        "revision": 2,
+        "sequence": 2
+      },
+      {
+        "at": "2026-09-10T10:48:11.369Z",
+        "detail": {
+          "alternatives": [
+            {
+              "localKey": "preserve",
+              "materialRefs": [
+                "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+              ],
+              "method": {
+                "bindings": [
+                  {
+                    "componentLocalKey": "states",
+                    "role": "input-items"
+                  }
+                ],
+                "components": [
+                  {
+                    "content": {
+                      "broader": [],
+                      "items": [
+                        {
+                          "key": "known",
+                          "meaning": "An observation is available.",
+                          "title": "Known"
+                        },
+                        {
+                          "key": "unknown",
+                          "meaning": "No observation is available.",
+                          "title": "Unknown"
+                        }
+                      ]
+                    },
+                    "localKey": "states",
+                    "type": "taxonomy"
+                  }
+                ],
+                "method": {
+                  "term": "evidence-classification"
+                }
+              },
+              "rationale": "Missing input cannot establish a negative finding.",
+              "scope": "Only missing observations",
+              "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+              "subject": "A synthetic observation",
+              "title": "Preserve uncertainty é é 𝄞"
+            },
+            {
+              "localKey": "infer",
+              "materialRefs": [
+                "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+              ],
+              "method": {
+                "bindings": [
+                  {
+                    "componentLocalKey": "states",
+                    "role": "input-items"
+                  }
+                ],
+                "components": [
+                  {
+                    "content": {
+                      "broader": [],
+                      "items": [
+                        {
+                          "key": "known",
+                          "meaning": "An observation is available.",
+                          "title": "Known"
+                        },
+                        {
+                          "key": "unknown",
+                          "meaning": "No observation is available.",
+                          "title": "Unknown"
+                        }
+                      ]
+                    },
+                    "localKey": "states",
+                    "type": "taxonomy"
+                  }
+                ],
+                "method": {
+                  "term": "evidence-classification"
+                }
+              },
+              "rationale": "Missing input cannot establish a negative finding.",
+              "scope": "Only missing observations",
+              "statement": "Treat an absent observation as a negative result.",
+              "subject": "A synthetic observation",
+              "title": "Preserve uncertainty é é 𝄞"
+            }
+          ],
+          "localKey": "signal",
+          "revision": 1
+        },
+        "digest": "sha256:4c966236a9a64c09c33294ddf53cd0d25fa53b4bbd6a5701b6a69e029378ea53",
+        "event": "proposal",
+        "previous_digest": "sha256:308f4243091612b33e98be12dcdd5ea87f3f5a9943df3357e864d067d867b6aa",
+        "revision": 3,
+        "sequence": 3
+      },
+      {
+        "at": "2026-09-10T10:48:11.370Z",
+        "detail": {
+          "identity": "not_verified",
+          "interpretation": {
+            "choices": [
+              {
+                "alternativeLocalKey": "preserve",
+                "judgmentLocalKey": "signal"
+              }
+            ],
+            "kind": "select"
+          },
+          "interpreted_by": {
+            "name": "Synthetic lifecycle fixture",
+            "version": "1"
+          },
+          "response": {
+            "channel": "synthetic-provider:11",
+            "id": "response:11:1",
+            "review_id": "review:aedb5cc4-e1d9-4bba-8372-f46d92c9c41f",
+            "role": "agent",
+            "text": "select"
+          },
+          "review": {
+            "channel": "synthetic-provider:11",
+            "groups": [
+              {
+                "alternatives": [
+                  {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "states",
+                          "role": "input-items"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "broader": [],
+                            "items": [
+                              {
+                                "key": "known",
+                                "meaning": "An observation is available.",
+                                "title": "Known"
+                              },
+                              {
+                                "key": "unknown",
+                                "meaning": "No observation is available.",
+                                "title": "Unknown"
+                              }
+                            ]
+                          },
+                          "localKey": "states",
+                          "type": "taxonomy"
+                        }
+                      ],
+                      "method": {
+                        "term": "evidence-classification"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  {
+                    "localKey": "infer",
+                    "materialRefs": [
+                      "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "states",
+                          "role": "input-items"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "broader": [],
+                            "items": [
+                              {
+                                "key": "known",
+                                "meaning": "An observation is available.",
+                                "title": "Known"
+                              },
+                              {
+                                "key": "unknown",
+                                "meaning": "No observation is available.",
+                                "title": "Unknown"
+                              }
+                            ]
+                          },
+                          "localKey": "states",
+                          "type": "taxonomy"
+                        }
+                      ],
+                      "method": {
+                        "term": "evidence-classification"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Treat an absent observation as a negative result.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  }
+                ],
+                "localKey": "signal",
+                "revision": 1
+              }
+            ],
+            "kind": "delegated_agent_editorial",
+            "preview": null,
+            "review_id": "review:aedb5cc4-e1d9-4bba-8372-f46d92c9c41f",
+            "revision": 3,
+            "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+          }
+        },
+        "digest": "sha256:1036d8b288bd6787e0a30ad956201d91764c5096c77efa515978966f769e874e",
+        "event": "selection",
+        "previous_digest": "sha256:4c966236a9a64c09c33294ddf53cd0d25fa53b4bbd6a5701b6a69e029378ea53",
+        "revision": 4,
+        "sequence": 4
+      }
+    ],
+    "materials": [
+      {
+        "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_11",
+        "content_digest": "sha256:16eaefa96ae5b29f5fba5cea6000963b10d52ee0792d89401ea5af0cc047b0d6",
+        "coordinate": "private:fixture:11",
+        "id": "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f",
+        "kind": "text",
+        "recorded_at": "2026-09-10T10:48:11.369Z",
+        "title": "Private input"
+      }
+    ],
+    "revision": 4,
+    "selected": [
+      {
+        "alternative": {
+          "localKey": "preserve",
+          "materialRefs": [
+            "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+          ],
+          "method": {
+            "bindings": [
+              {
+                "componentLocalKey": "states",
+                "role": "input-items"
+              }
+            ],
+            "components": [
+              {
+                "content": {
+                  "broader": [],
+                  "items": [
+                    {
+                      "key": "known",
+                      "meaning": "An observation is available.",
+                      "title": "Known"
+                    },
+                    {
+                      "key": "unknown",
+                      "meaning": "No observation is available.",
+                      "title": "Unknown"
+                    }
+                  ]
+                },
+                "localKey": "states",
+                "type": "taxonomy"
+              }
+            ],
+            "method": {
+              "term": "evidence-classification"
+            }
+          },
+          "rationale": "Missing input cannot establish a negative finding.",
+          "scope": "Only missing observations",
+          "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+          "subject": "A synthetic observation",
+          "title": "Preserve uncertainty é é 𝄞"
+        },
+        "judgmentLocalKey": "signal"
+      }
+    ],
+    "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d",
+    "synthetic_fixture": true
+  },
+  "decision": {
+    "actual_reply": {
+      "identity": "not_verified",
+      "interpretation": {
+        "kind": "confirm"
+      },
+      "interpreted_by": {
+        "name": "Synthetic lifecycle fixture",
+        "version": "1"
+      },
+      "response": {
+        "channel": "synthetic-provider:11",
+        "id": "response:11:2",
+        "review_id": "review:89d416b3-16ef-4ef9-9134-2c0494fe3f4a",
+        "role": "agent",
+        "text": "confirm"
+      },
+      "review": {
+        "channel": "synthetic-provider:11",
+        "groups": [
+          {
+            "alternatives": [
+              {
+                "localKey": "preserve",
+                "materialRefs": [
+                  "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                ],
+                "method": {
+                  "bindings": [
+                    {
+                      "componentLocalKey": "states",
+                      "role": "input-items"
+                    }
+                  ],
+                  "components": [
+                    {
+                      "content": {
+                        "broader": [],
+                        "items": [
+                          {
+                            "key": "known",
+                            "meaning": "An observation is available.",
+                            "title": "Known"
+                          },
+                          {
+                            "key": "unknown",
+                            "meaning": "No observation is available.",
+                            "title": "Unknown"
+                          }
+                        ]
+                      },
+                      "localKey": "states",
+                      "type": "taxonomy"
+                    }
+                  ],
+                  "method": {
+                    "term": "evidence-classification"
+                  }
+                },
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              },
+              {
+                "localKey": "infer",
+                "materialRefs": [
+                  "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                ],
+                "method": {
+                  "bindings": [
+                    {
+                      "componentLocalKey": "states",
+                      "role": "input-items"
+                    }
+                  ],
+                  "components": [
+                    {
+                      "content": {
+                        "broader": [],
+                        "items": [
+                          {
+                            "key": "known",
+                            "meaning": "An observation is available.",
+                            "title": "Known"
+                          },
+                          {
+                            "key": "unknown",
+                            "meaning": "No observation is available.",
+                            "title": "Unknown"
+                          }
+                        ]
+                      },
+                      "localKey": "states",
+                      "type": "taxonomy"
+                    }
+                  ],
+                  "method": {
+                    "term": "evidence-classification"
+                  }
+                },
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Treat an absent observation as a negative result.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              }
+            ],
+            "localKey": "signal",
+            "revision": 1
+          }
+        ],
+        "kind": "delegated_agent_editorial",
+        "preview": {
+          "context_digest": "sha256:38019dd41805c02a01ccc3724f5418719176da619a752bd63c55c5ca069e517e",
+          "creation_accepted": "not_evaluated",
+          "expected_component_bindings": [
+            {
+              "bindings": [
+                {
+                  "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                  "role": "input-items",
+                  "target_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+                }
+              ],
+              "carrier": {
+                "adoption_proposal_digest": "sha256:4ce4bf11562258bb020690d35dc7b9c99ffb8835d2f0bde7ec8eae7c9a8b3800",
+                "bindings_digest": "sha256:906edbed1797ae0e632dac8f570955f324ac33cb2b4e3acfddaa2dbfca8fe7c0",
+                "component_declaration_digest": "sha256:7a8c4281b5fdd049c7364645ca4e292f8c3fe10048269b7d4e1dcfb468938252",
+                "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                "component_type": "taxonomy",
+                "content": {
+                  "broader": [],
+                  "items": [
+                    {
+                      "key": "known",
+                      "meaning": "An observation is available.",
+                      "title": "Known"
+                    },
+                    {
+                      "key": "unknown",
+                      "meaning": "No observation is available.",
+                      "title": "Unknown"
+                    }
+                  ]
+                },
+                "content_digest": "sha256:c62904001964e311ef2e80f3e258f2af104ca160053513db3cb1ecd38e209818",
+                "contract_id": "kdna.component-semantics/1",
+                "contract_version": "1.0.0",
+                "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446",
+                "profile_id": "taxonomy-set/1",
+                "statement_origin": "mechanical_content_representation"
+              },
+              "native_component": {
+                "id": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                "method": {
+                  "term": "taxonomy"
+                },
+                "statement": "{\"broader\":[],\"items\":[{\"key\":\"known\",\"meaning\":\"An observation is available.\",\"title\":\"Known\"},{\"key\":\"unknown\",\"meaning\":\"No observation is available.\",\"title\":\"Unknown\"}]}"
+              },
+              "presence": {
+                "bindings_state": "declared",
+                "components_state": "declared",
+                "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+              },
+              "proposal": {
+                "alternativeLocalKey": "preserve",
+                "asset": {
+                  "asset_id": "asset:8bf23199-19db-4f81-97a2-68f0980c0de6",
+                  "asset_uid": "urn:uuid:b1f8c70f-22ff-4162-b716-3b1ad70219d6",
+                  "version": "0.1.4"
+                },
+                "authored_candidate_digest": "sha256:e3b179fe0ab4e54bf91905dd61bca51abcdff5590f816bdcf1a79a4c416eddd7",
+                "bindings": [
+                  {
+                    "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                    "role": "input-items",
+                    "target_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+                  }
+                ],
+                "componentLocalKey": "states",
+                "content": {
+                  "broader": [],
+                  "items": [
+                    {
+                      "key": "known",
+                      "meaning": "An observation is available.",
+                      "title": "Known"
+                    },
+                    {
+                      "key": "unknown",
+                      "meaning": "No observation is available.",
+                      "title": "Unknown"
+                    }
+                  ]
+                },
+                "context_digest": "sha256:38019dd41805c02a01ccc3724f5418719176da619a752bd63c55c5ca069e517e",
+                "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                "judgmentLocalKey": "signal",
+                "native_component": {
+                  "id": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                  "method": {
+                    "term": "taxonomy"
+                  },
+                  "statement": "{\"broader\":[],\"items\":[{\"key\":\"known\",\"meaning\":\"An observation is available.\",\"title\":\"Known\"},{\"key\":\"unknown\",\"meaning\":\"No observation is available.\",\"title\":\"Unknown\"}]}"
+                },
+                "presence": {
+                  "bindings_state": "declared",
+                  "components_state": "declared",
+                  "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+                },
+                "profile": {
+                  "component_type": "taxonomy",
+                  "profile_id": "taxonomy-set/1"
+                },
+                "rule": "kdna.studio-materialization/2",
+                "statement_origin": "mechanical_content_representation"
+              }
+            }
+          ],
+          "kind": "pre_compiler_authoring_review",
+          "presence": [],
+          "preview_digest": "sha256:95958b774ef751bab711518c16bbfb1216a9c101c77413facce1a4186b7b89fe",
+          "proposal_digests": [
+            "sha256:4ce4bf11562258bb020690d35dc7b9c99ffb8835d2f0bde7ec8eae7c9a8b3800"
+          ],
+          "revision": 4,
+          "selected": [
+            {
+              "alternative": {
+                "localKey": "preserve",
+                "materialRefs": [
+                  "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                ],
+                "method": {
+                  "bindings": [
+                    {
+                      "componentLocalKey": "states",
+                      "role": "input-items"
+                    }
+                  ],
+                  "components": [
+                    {
+                      "content": {
+                        "broader": [],
+                        "items": [
+                          {
+                            "key": "known",
+                            "meaning": "An observation is available.",
+                            "title": "Known"
+                          },
+                          {
+                            "key": "unknown",
+                            "meaning": "No observation is available.",
+                            "title": "Unknown"
+                          }
+                        ]
+                      },
+                      "localKey": "states",
+                      "type": "taxonomy"
+                    }
+                  ],
+                  "method": {
+                    "term": "evidence-classification"
+                  }
+                },
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              },
+              "judgmentLocalKey": "signal"
+            }
+          ],
+          "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+        },
+        "review_id": "review:89d416b3-16ef-4ef9-9134-2c0494fe3f4a",
+        "revision": 4,
+        "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+      }
+    },
+    "adoption_kind": "delegated_agent_editorial",
+    "authorization": {
+      "coordinate": "fixture:local-only",
+      "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+    },
+    "context_digest": "sha256:38019dd41805c02a01ccc3724f5418719176da619a752bd63c55c5ca069e517e",
+    "format": "kdna.studio-decision/2",
+    "preview_digest": "sha256:95958b774ef751bab711518c16bbfb1216a9c101c77413facce1a4186b7b89fe",
+    "proposal_digests": [
+      "sha256:4ce4bf11562258bb020690d35dc7b9c99ffb8835d2f0bde7ec8eae7c9a8b3800"
+    ],
+    "revision": 4,
+    "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+  },
+  "history": [
+    {
+      "at": "2026-09-10T10:48:11.369Z",
+      "detail": {
+        "scope": "Local test of authoring and saved readback.",
+        "title": "Synthetic signal fixture"
+      },
+      "digest": "sha256:365f635796b9876ca72e689d6ad35d854692e5b4a44cb06794e3d5a1f5f1877d",
+      "event": "brief",
+      "previous_digest": null,
+      "revision": 1,
+      "sequence": 1
+    },
+    {
+      "at": "2026-09-10T10:48:11.369Z",
+      "detail": {
+        "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_11",
+        "content_digest": "sha256:16eaefa96ae5b29f5fba5cea6000963b10d52ee0792d89401ea5af0cc047b0d6",
+        "coordinate": "private:fixture:11",
+        "id": "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f",
+        "kind": "text",
+        "recorded_at": "2026-09-10T10:48:11.369Z",
+        "title": "Private input"
+      },
+      "digest": "sha256:308f4243091612b33e98be12dcdd5ea87f3f5a9943df3357e864d067d867b6aa",
+      "event": "material",
+      "previous_digest": "sha256:365f635796b9876ca72e689d6ad35d854692e5b4a44cb06794e3d5a1f5f1877d",
+      "revision": 2,
+      "sequence": 2
+    },
+    {
+      "at": "2026-09-10T10:48:11.369Z",
+      "detail": {
+        "alternatives": [
+          {
+            "localKey": "preserve",
+            "materialRefs": [
+              "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "states",
+                  "role": "input-items"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "broader": [],
+                    "items": [
+                      {
+                        "key": "known",
+                        "meaning": "An observation is available.",
+                        "title": "Known"
+                      },
+                      {
+                        "key": "unknown",
+                        "meaning": "No observation is available.",
+                        "title": "Unknown"
+                      }
+                    ]
+                  },
+                  "localKey": "states",
+                  "type": "taxonomy"
+                }
+              ],
+              "method": {
+                "term": "evidence-classification"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          },
+          {
+            "localKey": "infer",
+            "materialRefs": [
+              "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "states",
+                  "role": "input-items"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "broader": [],
+                    "items": [
+                      {
+                        "key": "known",
+                        "meaning": "An observation is available.",
+                        "title": "Known"
+                      },
+                      {
+                        "key": "unknown",
+                        "meaning": "No observation is available.",
+                        "title": "Unknown"
+                      }
+                    ]
+                  },
+                  "localKey": "states",
+                  "type": "taxonomy"
+                }
+              ],
+              "method": {
+                "term": "evidence-classification"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Treat an absent observation as a negative result.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          }
+        ],
+        "localKey": "signal",
+        "revision": 1
+      },
+      "digest": "sha256:4c966236a9a64c09c33294ddf53cd0d25fa53b4bbd6a5701b6a69e029378ea53",
+      "event": "proposal",
+      "previous_digest": "sha256:308f4243091612b33e98be12dcdd5ea87f3f5a9943df3357e864d067d867b6aa",
+      "revision": 3,
+      "sequence": 3
+    },
+    {
+      "at": "2026-09-10T10:48:11.370Z",
+      "detail": {
+        "identity": "not_verified",
+        "interpretation": {
+          "choices": [
+            {
+              "alternativeLocalKey": "preserve",
+              "judgmentLocalKey": "signal"
+            }
+          ],
+          "kind": "select"
+        },
+        "interpreted_by": {
+          "name": "Synthetic lifecycle fixture",
+          "version": "1"
+        },
+        "response": {
+          "channel": "synthetic-provider:11",
+          "id": "response:11:1",
+          "review_id": "review:aedb5cc4-e1d9-4bba-8372-f46d92c9c41f",
+          "role": "agent",
+          "text": "select"
+        },
+        "review": {
+          "channel": "synthetic-provider:11",
+          "groups": [
+            {
+              "alternatives": [
+                {
+                  "localKey": "preserve",
+                  "materialRefs": [
+                    "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                  ],
+                  "method": {
+                    "bindings": [
+                      {
+                        "componentLocalKey": "states",
+                        "role": "input-items"
+                      }
+                    ],
+                    "components": [
+                      {
+                        "content": {
+                          "broader": [],
+                          "items": [
+                            {
+                              "key": "known",
+                              "meaning": "An observation is available.",
+                              "title": "Known"
+                            },
+                            {
+                              "key": "unknown",
+                              "meaning": "No observation is available.",
+                              "title": "Unknown"
+                            }
+                          ]
+                        },
+                        "localKey": "states",
+                        "type": "taxonomy"
+                      }
+                    ],
+                    "method": {
+                      "term": "evidence-classification"
+                    }
+                  },
+                  "rationale": "Missing input cannot establish a negative finding.",
+                  "scope": "Only missing observations",
+                  "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                  "subject": "A synthetic observation",
+                  "title": "Preserve uncertainty é é 𝄞"
+                },
+                {
+                  "localKey": "infer",
+                  "materialRefs": [
+                    "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                  ],
+                  "method": {
+                    "bindings": [
+                      {
+                        "componentLocalKey": "states",
+                        "role": "input-items"
+                      }
+                    ],
+                    "components": [
+                      {
+                        "content": {
+                          "broader": [],
+                          "items": [
+                            {
+                              "key": "known",
+                              "meaning": "An observation is available.",
+                              "title": "Known"
+                            },
+                            {
+                              "key": "unknown",
+                              "meaning": "No observation is available.",
+                              "title": "Unknown"
+                            }
+                          ]
+                        },
+                        "localKey": "states",
+                        "type": "taxonomy"
+                      }
+                    ],
+                    "method": {
+                      "term": "evidence-classification"
+                    }
+                  },
+                  "rationale": "Missing input cannot establish a negative finding.",
+                  "scope": "Only missing observations",
+                  "statement": "Treat an absent observation as a negative result.",
+                  "subject": "A synthetic observation",
+                  "title": "Preserve uncertainty é é 𝄞"
+                }
+              ],
+              "localKey": "signal",
+              "revision": 1
+            }
+          ],
+          "kind": "delegated_agent_editorial",
+          "preview": null,
+          "review_id": "review:aedb5cc4-e1d9-4bba-8372-f46d92c9c41f",
+          "revision": 3,
+          "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+        }
+      },
+      "digest": "sha256:1036d8b288bd6787e0a30ad956201d91764c5096c77efa515978966f769e874e",
+      "event": "selection",
+      "previous_digest": "sha256:4c966236a9a64c09c33294ddf53cd0d25fa53b4bbd6a5701b6a69e029378ea53",
+      "revision": 4,
+      "sequence": 4
+    },
+    {
+      "at": "2026-09-10T10:48:11.371Z",
+      "detail": {
+        "actual_reply": {
+          "identity": "not_verified",
+          "interpretation": {
+            "kind": "confirm"
+          },
+          "interpreted_by": {
+            "name": "Synthetic lifecycle fixture",
+            "version": "1"
+          },
+          "response": {
+            "channel": "synthetic-provider:11",
+            "id": "response:11:2",
+            "review_id": "review:89d416b3-16ef-4ef9-9134-2c0494fe3f4a",
+            "role": "agent",
+            "text": "confirm"
+          },
+          "review": {
+            "channel": "synthetic-provider:11",
+            "groups": [
+              {
+                "alternatives": [
+                  {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "states",
+                          "role": "input-items"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "broader": [],
+                            "items": [
+                              {
+                                "key": "known",
+                                "meaning": "An observation is available.",
+                                "title": "Known"
+                              },
+                              {
+                                "key": "unknown",
+                                "meaning": "No observation is available.",
+                                "title": "Unknown"
+                              }
+                            ]
+                          },
+                          "localKey": "states",
+                          "type": "taxonomy"
+                        }
+                      ],
+                      "method": {
+                        "term": "evidence-classification"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  {
+                    "localKey": "infer",
+                    "materialRefs": [
+                      "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "states",
+                          "role": "input-items"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "broader": [],
+                            "items": [
+                              {
+                                "key": "known",
+                                "meaning": "An observation is available.",
+                                "title": "Known"
+                              },
+                              {
+                                "key": "unknown",
+                                "meaning": "No observation is available.",
+                                "title": "Unknown"
+                              }
+                            ]
+                          },
+                          "localKey": "states",
+                          "type": "taxonomy"
+                        }
+                      ],
+                      "method": {
+                        "term": "evidence-classification"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Treat an absent observation as a negative result.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  }
+                ],
+                "localKey": "signal",
+                "revision": 1
+              }
+            ],
+            "kind": "delegated_agent_editorial",
+            "preview": {
+              "context_digest": "sha256:38019dd41805c02a01ccc3724f5418719176da619a752bd63c55c5ca069e517e",
+              "creation_accepted": "not_evaluated",
+              "expected_component_bindings": [
+                {
+                  "bindings": [
+                    {
+                      "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                      "role": "input-items",
+                      "target_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+                    }
+                  ],
+                  "carrier": {
+                    "adoption_proposal_digest": "sha256:4ce4bf11562258bb020690d35dc7b9c99ffb8835d2f0bde7ec8eae7c9a8b3800",
+                    "bindings_digest": "sha256:906edbed1797ae0e632dac8f570955f324ac33cb2b4e3acfddaa2dbfca8fe7c0",
+                    "component_declaration_digest": "sha256:7a8c4281b5fdd049c7364645ca4e292f8c3fe10048269b7d4e1dcfb468938252",
+                    "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                    "component_type": "taxonomy",
+                    "content": {
+                      "broader": [],
+                      "items": [
+                        {
+                          "key": "known",
+                          "meaning": "An observation is available.",
+                          "title": "Known"
+                        },
+                        {
+                          "key": "unknown",
+                          "meaning": "No observation is available.",
+                          "title": "Unknown"
+                        }
+                      ]
+                    },
+                    "content_digest": "sha256:c62904001964e311ef2e80f3e258f2af104ca160053513db3cb1ecd38e209818",
+                    "contract_id": "kdna.component-semantics/1",
+                    "contract_version": "1.0.0",
+                    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                    "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446",
+                    "profile_id": "taxonomy-set/1",
+                    "statement_origin": "mechanical_content_representation"
+                  },
+                  "native_component": {
+                    "id": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                    "method": {
+                      "term": "taxonomy"
+                    },
+                    "statement": "{\"broader\":[],\"items\":[{\"key\":\"known\",\"meaning\":\"An observation is available.\",\"title\":\"Known\"},{\"key\":\"unknown\",\"meaning\":\"No observation is available.\",\"title\":\"Unknown\"}]}"
+                  },
+                  "presence": {
+                    "bindings_state": "declared",
+                    "components_state": "declared",
+                    "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+                  },
+                  "proposal": {
+                    "alternativeLocalKey": "preserve",
+                    "asset": {
+                      "asset_id": "asset:8bf23199-19db-4f81-97a2-68f0980c0de6",
+                      "asset_uid": "urn:uuid:b1f8c70f-22ff-4162-b716-3b1ad70219d6",
+                      "version": "0.1.4"
+                    },
+                    "authored_candidate_digest": "sha256:e3b179fe0ab4e54bf91905dd61bca51abcdff5590f816bdcf1a79a4c416eddd7",
+                    "bindings": [
+                      {
+                        "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                        "role": "input-items",
+                        "target_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+                      }
+                    ],
+                    "componentLocalKey": "states",
+                    "content": {
+                      "broader": [],
+                      "items": [
+                        {
+                          "key": "known",
+                          "meaning": "An observation is available.",
+                          "title": "Known"
+                        },
+                        {
+                          "key": "unknown",
+                          "meaning": "No observation is available.",
+                          "title": "Unknown"
+                        }
+                      ]
+                    },
+                    "context_digest": "sha256:38019dd41805c02a01ccc3724f5418719176da619a752bd63c55c5ca069e517e",
+                    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                    "judgmentLocalKey": "signal",
+                    "native_component": {
+                      "id": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+                      "method": {
+                        "term": "taxonomy"
+                      },
+                      "statement": "{\"broader\":[],\"items\":[{\"key\":\"known\",\"meaning\":\"An observation is available.\",\"title\":\"Known\"},{\"key\":\"unknown\",\"meaning\":\"No observation is available.\",\"title\":\"Unknown\"}]}"
+                    },
+                    "presence": {
+                      "bindings_state": "declared",
+                      "components_state": "declared",
+                      "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+                    },
+                    "profile": {
+                      "component_type": "taxonomy",
+                      "profile_id": "taxonomy-set/1"
+                    },
+                    "rule": "kdna.studio-materialization/2",
+                    "statement_origin": "mechanical_content_representation"
+                  }
+                }
+              ],
+              "kind": "pre_compiler_authoring_review",
+              "presence": [],
+              "preview_digest": "sha256:95958b774ef751bab711518c16bbfb1216a9c101c77413facce1a4186b7b89fe",
+              "proposal_digests": [
+                "sha256:4ce4bf11562258bb020690d35dc7b9c99ffb8835d2f0bde7ec8eae7c9a8b3800"
+              ],
+              "revision": 4,
+              "selected": [
+                {
+                  "alternative": {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:5d233e7c-9a89-4b5f-bdd6-cc2aa9f59d5f"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "states",
+                          "role": "input-items"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "broader": [],
+                            "items": [
+                              {
+                                "key": "known",
+                                "meaning": "An observation is available.",
+                                "title": "Known"
+                              },
+                              {
+                                "key": "unknown",
+                                "meaning": "No observation is available.",
+                                "title": "Unknown"
+                              }
+                            ]
+                          },
+                          "localKey": "states",
+                          "type": "taxonomy"
+                        }
+                      ],
+                      "method": {
+                        "term": "evidence-classification"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  "judgmentLocalKey": "signal"
+                }
+              ],
+              "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+            },
+            "review_id": "review:89d416b3-16ef-4ef9-9134-2c0494fe3f4a",
+            "revision": 4,
+            "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+          }
+        },
+        "adoption_kind": "delegated_agent_editorial",
+        "authorization": {
+          "coordinate": "fixture:local-only",
+          "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+        },
+        "context_digest": "sha256:38019dd41805c02a01ccc3724f5418719176da619a752bd63c55c5ca069e517e",
+        "format": "kdna.studio-decision/2",
+        "preview_digest": "sha256:95958b774ef751bab711518c16bbfb1216a9c101c77413facce1a4186b7b89fe",
+        "proposal_digests": [
+          "sha256:4ce4bf11562258bb020690d35dc7b9c99ffb8835d2f0bde7ec8eae7c9a8b3800"
+        ],
+        "revision": 4,
+        "session_id": "session:89c1277a-1209-49d4-879f-2cb281a2ba0d"
+      },
+      "digest": "sha256:135554654de6f1587962b51b3e7bf383f914c78b3da8ba4b9d3031acab7fab59",
+      "event": "final_adoption",
+      "previous_digest": "sha256:1036d8b288bd6787e0a30ad956201d91764c5096c77efa515978966f769e874e",
+      "revision": 4,
+      "sequence": 5
+    }
+  ],
+  "expected_component_bindings": [
+    {
+      "proposal": {
+        "rule": "kdna.studio-materialization/2",
+        "context_digest": "sha256:38019dd41805c02a01ccc3724f5418719176da619a752bd63c55c5ca069e517e",
+        "asset": {
+          "asset_id": "asset:8bf23199-19db-4f81-97a2-68f0980c0de6",
+          "asset_uid": "urn:uuid:b1f8c70f-22ff-4162-b716-3b1ad70219d6",
+          "version": "0.1.4"
+        },
+        "judgmentLocalKey": "signal",
+        "alternativeLocalKey": "preserve",
+        "componentLocalKey": "states",
+        "profile": {
+          "component_type": "taxonomy",
+          "profile_id": "taxonomy-set/1"
+        },
+        "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+        "authored_candidate_digest": "sha256:e3b179fe0ab4e54bf91905dd61bca51abcdff5590f816bdcf1a79a4c416eddd7",
+        "content": {
+          "broader": [],
+          "items": [
+            {
+              "key": "known",
+              "meaning": "An observation is available.",
+              "title": "Known"
+            },
+            {
+              "key": "unknown",
+              "meaning": "No observation is available.",
+              "title": "Unknown"
+            }
+          ]
+        },
+        "native_component": {
+          "id": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+          "method": {
+            "term": "taxonomy"
+          },
+          "statement": "{\"broader\":[],\"items\":[{\"key\":\"known\",\"meaning\":\"An observation is available.\",\"title\":\"Known\"},{\"key\":\"unknown\",\"meaning\":\"No observation is available.\",\"title\":\"Unknown\"}]}"
+        },
+        "statement_origin": "mechanical_content_representation",
+        "bindings": [
+          {
+            "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+            "role": "input-items",
+            "target_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+          }
+        ],
+        "presence": {
+          "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446",
+          "components_state": "declared",
+          "bindings_state": "declared"
+        }
+      },
+      "carrier": {
+        "contract_id": "kdna.component-semantics/1",
+        "contract_version": "1.0.0",
+        "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+        "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446",
+        "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+        "component_type": "taxonomy",
+        "profile_id": "taxonomy-set/1",
+        "content": {
+          "broader": [],
+          "items": [
+            {
+              "key": "known",
+              "meaning": "An observation is available.",
+              "title": "Known"
+            },
+            {
+              "key": "unknown",
+              "meaning": "No observation is available.",
+              "title": "Unknown"
+            }
+          ]
+        },
+        "content_digest": "sha256:c62904001964e311ef2e80f3e258f2af104ca160053513db3cb1ecd38e209818",
+        "component_declaration_digest": "sha256:7a8c4281b5fdd049c7364645ca4e292f8c3fe10048269b7d4e1dcfb468938252",
+        "statement_origin": "mechanical_content_representation",
+        "bindings_digest": "sha256:906edbed1797ae0e632dac8f570955f324ac33cb2b4e3acfddaa2dbfca8fe7c0",
+        "adoption_proposal_digest": "sha256:4ce4bf11562258bb020690d35dc7b9c99ffb8835d2f0bde7ec8eae7c9a8b3800"
+      },
+      "native_component": {
+        "id": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+        "method": {
+          "term": "taxonomy"
+        },
+        "statement": "{\"broader\":[],\"items\":[{\"key\":\"known\",\"meaning\":\"An observation is available.\",\"title\":\"Known\"},{\"key\":\"unknown\",\"meaning\":\"No observation is available.\",\"title\":\"Unknown\"}]}"
+      },
+      "bindings": [
+        {
+          "component_ref": "component:4dab5ac2ecd52a5b68b7fb5715936cf46b54db68aa00760a21f93363d7bc6e2f",
+          "role": "input-items",
+          "target_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446"
+        }
+      ],
+      "presence": {
+        "judgment_ref": "judgment:31aa2ecc2c7d06a9d9d597f7bb618c13eda897983da919bfec4654d8d1b06446",
+        "components_state": "declared",
+        "bindings_state": "declared"
+      }
+    }
+  ],
+  "presence": [],
+  "adoption": {
+    "contract_id": "kdna.component-semantics/1",
+    "contract_version": "1.0.0",
+    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+    "declaration_set_digest": "sha256:9dbae73d316612132afef8a15684ea8b13ad93fd27f9400cdd23a2ecf153c97b",
+    "proposal_set_digest": "sha256:349e899493f0840c45ea4c1267cc773956f518d90b3841f20caa7fcbc947f7c4",
+    "decision_digest": "sha256:7348e087f11fb809b33cdff7e27aad2f07fe572215677dd84689903ac3963c94",
+    "adoption_kind": "delegated_agent_editorial"
+  },
+  "artifact": {
+    "bytes": 5495,
+    "digest": "sha256:89d593b5d8ab83e3b720ce1227cf41453298658ad3895d58930fa5cb6a808da1"
+  },
+  "identity": "not_verified",
+  "action_authorization": "not_evaluated",
+  "creation_accepted": "not_evaluated"
+}

@@ -1,0 +1,471 @@
+{
+  "version": "0.6.0-rc.components.1",
+  "public_product": "KDNAStudioCore",
+  "compiled_source_path": "Sources/ComponentCreation",
+  "compiled_test_path": "Tests/ComponentCreationTests",
+  "public_types": [
+    "KDNAStudio",
+    "KDNAStudioSession",
+    "KDNAStudioAgent",
+    "KDNAStudioAdoptionKind",
+    "KDNAStudioAdoptionInput",
+    "KDNAStudioInterpreter",
+    "KDNAStudioExport",
+    "KDNAStudioFailure"
+  ],
+  "private_implementation": [
+    "CreationValues",
+    "CreationIdentity",
+    "CreationAuthoring",
+    "CreationRuntime",
+    "CreationMaterialization",
+    "CreationCompiler",
+    "CreationWriter",
+    "CreationAudit",
+    "CreationEvidence",
+    "private actor Preview/LiveContext/PendingSave"
+  ],
+  "legacy": [
+    {
+      "symbol": "KDNStudioCards",
+      "source": "Sources/KDNAStudioCore/KDNStudioCards.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioCompiler",
+      "source": "Sources/KDNAStudioCore/KDNStudioCompiler.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioEvidence",
+      "source": "Sources/KDNAStudioCore/KDNStudioEvidence.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioGovernance",
+      "source": "Sources/KDNAStudioCore/KDNStudioGovernance.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioHumanLockGate",
+      "source": "Sources/KDNAStudioCore/KDNStudioHumanLock.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioIdentity",
+      "source": "Sources/KDNAStudioCore/KDNStudioIdentity.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioIdentityError",
+      "source": "Sources/KDNAStudioCore/KDNStudioIdentity.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioLocalAssetInspection",
+      "source": "Sources/KDNAStudioCore/KDNStudioLocalAssetInspection.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioLocalAssetInspectionError",
+      "source": "Sources/KDNAStudioCore/KDNStudioLocalAssetInspection.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioLocalAssetInspector",
+      "source": "Sources/KDNAStudioCore/KDNStudioLocalAssetInspection.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioProjectManager",
+      "source": "Sources/KDNAStudioCore/KDNStudioProject.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioError",
+      "source": "Sources/KDNAStudioCore/KDNStudioProject.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioProvenance",
+      "source": "Sources/KDNAStudioCore/KDNStudioProvenance.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioQuality",
+      "source": "Sources/KDNAStudioCore/KDNStudioQuality.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "ReadinessReport",
+      "source": "Sources/KDNAStudioCore/KDNStudioQuality.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "Stats",
+      "source": "Sources/KDNAStudioCore/KDNStudioQuality.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioProject",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioAuthor",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNSourceMode",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNCreatorIdentity",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNLineage",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioProjectStatus",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioStages",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStageState",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioRelease",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNJudgmentCard",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNCardType",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNCardStatus",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNCardFieldValue",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNHumanLockRecord",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNLockChecks",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNFeynmanRestatement",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNFeynmanScore",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNAuditEntry",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNEvidenceEntry",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNEvidenceSpan",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNTestCase",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNHumanLockGateResult",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNLockIssue",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNReadinessReport",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNReadinessStats",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNCompileResult",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNCompileStats",
+      "source": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioRuntimeCLIConfiguration",
+      "source": "Sources/KDNAStudioCore/KDNStudioWorkspaceCLI.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioRuntimeCLITerminalCommand",
+      "source": "Sources/KDNAStudioCore/KDNStudioWorkspaceCLI.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioWorkspaceCLIError",
+      "source": "Sources/KDNAStudioCore/KDNStudioWorkspaceCLI.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioWorkspaceCLITransport",
+      "source": "Sources/KDNAStudioCore/KDNStudioWorkspaceCLI.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioProcessCLITransport",
+      "source": "Sources/KDNAStudioCore/KDNStudioWorkspaceCLI.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    },
+    {
+      "symbol": "KDNStudioWorkspaceCLIClient",
+      "source": "Sources/KDNAStudioCore/KDNStudioWorkspaceCLI.swift",
+      "disposition": "historical source retained; excluded from explicit target and source RC; no compatibility alias"
+    }
+  ],
+  "clean_break": "Current format2 authoring uses explicit adoption input, current component semantics and one-use saved-readback completion. Earlier interfaces and evidence remain separate history; no automatic relabeling or compiler callback is public.",
+  "zero_write_dependencies": [
+    "public Core",
+    "public Read",
+    "AppShared",
+    "Reader",
+    "official assets"
+  ],
+  "historical_source_groups": [
+    {
+      "path": "Sources/BlankCreation",
+      "disposition": "Original format1 source bytes retained; excluded from current target/RC. Same product name is not a compatibility alias for old method signatures."
+    },
+    {
+      "path": "Tests/BlankCreationTests",
+      "disposition": "Original format1 tests/resources retained; no original expectations changed or claimed as current execution."
+    },
+    {
+      "path": "Sources/KDNAStudioCore",
+      "disposition": "Earlier restored source retained; excluded from current target and RC."
+    },
+    {
+      "path": "Tests/KDNAStudioCoreTests",
+      "disposition": "Earlier restored tests retained; excluded from current target and RC."
+    }
+  ],
+  "schema_version": "1.0.0",
+  "historical_files": [
+    {
+      "path": "Sources/BlankCreation/StudioCompiler.swift",
+      "sha256": "43db26240688d37943d54bb616d118263598929dab0e9478067f13a9a9f29bea"
+    },
+    {
+      "path": "Sources/BlankCreation/StudioEvidence.swift",
+      "sha256": "c9dc04bf513530d7f5d9f376281a8a052075d02519780dc9ee2f7ed2f075ef5b"
+    },
+    {
+      "path": "Sources/BlankCreation/StudioEvidenceMetadata.swift",
+      "sha256": "4f47acc1001ba0d7d2e1c7662b4445baf431f0d4ffb8904d02f093e936234424"
+    },
+    {
+      "path": "Sources/BlankCreation/StudioSession.swift",
+      "sha256": "f2e8c6d431a124443ddbef146938a432eba4b65eabaf84ea01fd44acf8b1b343"
+    },
+    {
+      "path": "Sources/BlankCreation/StudioValues.swift",
+      "sha256": "b2affeda803f303311a5c9253f615c63427dcf867b5d179d7abf435ecb829a1c"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioCards.swift",
+      "sha256": "98dd095c7c8cabd2d6b3cf440b4abfc2cf7ecacb6557a09c60fa3a4fac73b8dc"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioCompiler.swift",
+      "sha256": "e6d52b86d5bacda1c436f7ee01d1b508cf4057189f36c481cf3e404b9202da7d"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioEvidence.swift",
+      "sha256": "17bbbe61b5e98a06797e70bc38627ff835b481d760f6540ef6100ac094e75b4f"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioGovernance.swift",
+      "sha256": "16e544ce82fe6e3c04d9b39bd563e9384957ac975cdaa5170ce2726b5f9a4af7"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioHumanLock.swift",
+      "sha256": "62846c70d53436609033c8821f6713606f3fccd80aa0c7d3219d0bc287a33a21"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioIdentity.swift",
+      "sha256": "9e15f9430931f880e05752f4d5e4bd08c7f477039a79ad9cb945851e80aff2ce"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioLocalAssetInspection.swift",
+      "sha256": "c1f590000d2dcde126798aa55e345f6c06c62f467115f0b23d04ba1acf9abd70"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioProject.swift",
+      "sha256": "0f3f93e9322f6192293525f2e998483609bc88443c5bd2bfde9f74b8aba8e7f1"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioProvenance.swift",
+      "sha256": "857f3f006eee2ba302ebae1e41ad65ef37e5bb6438e3c569fe346727a85cfa42"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioQuality.swift",
+      "sha256": "58d8bba4c689369b296b309a623e72ac2a6007a7f354561e9b7cb795b7bc5c5c"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioTypes.swift",
+      "sha256": "3e51c846d9417f7dbf8a13554f94ffa45cada72a57bff10bc61f2eefcbf7275b"
+    },
+    {
+      "path": "Sources/KDNAStudioCore/KDNStudioWorkspaceCLI.swift",
+      "sha256": "4571d1c993b1576dc146cc103c644d8d2984d59131cd98efbee8d21c914eaf07"
+    },
+    {
+      "path": "Tests/BlankCreationTests/Resources/canonical-vectors.json",
+      "sha256": "9158473af6556d31a844f8352ea4da571406932c7b89d1cb64b08151542b44ff"
+    },
+    {
+      "path": "Tests/BlankCreationTests/StudioCompilerTests.swift",
+      "sha256": "4d32829810c001201df7582a40991a38de08263c17db0508a1887982253d47ba"
+    },
+    {
+      "path": "Tests/BlankCreationTests/StudioEvidenceTests.swift",
+      "sha256": "057526cb020d6747ddaf800b70b0f854fd9b7c421bfa5d36d30a7039485d416b"
+    },
+    {
+      "path": "Tests/BlankCreationTests/StudioSessionTests.swift",
+      "sha256": "86ef2abfa8eaafe4e8226ef08211b86a3a1487d9db194e6a5e2ed4dea3dab822"
+    },
+    {
+      "path": "Tests/KDNAStudioCoreTests/KDNAStudioCoreTests.swift",
+      "sha256": "22f04f7c79f1e41470559d7445c30887b78bd7cdf880279856e9c8081cecaa1a"
+    },
+    {
+      "path": "Tests/KDNAStudioCoreTests/LocalUserExperienceTests.swift",
+      "sha256": "87b9a44e70dc19a379ae0dddc39d8af9a3f1f8f04de109d0525ee67598552e6f"
+    }
+  ],
+  "current_source_files": [
+    "Sources/ComponentCreation/CreationAPI.swift",
+    "Sources/ComponentCreation/CreationAudit.swift",
+    "Sources/ComponentCreation/CreationAuthoring.swift",
+    "Sources/ComponentCreation/CreationCompiler.swift",
+    "Sources/ComponentCreation/CreationEvidence.swift",
+    "Sources/ComponentCreation/CreationIdentity.swift",
+    "Sources/ComponentCreation/CreationMaterialization.swift",
+    "Sources/ComponentCreation/CreationRuntime.swift",
+    "Sources/ComponentCreation/CreationSession.swift",
+    "Sources/ComponentCreation/CreationValues.swift",
+    "Sources/ComponentCreation/CreationWriter.swift"
+  ],
+  "current_fixture_files": [
+    {
+      "path": "Tests/ComponentCreationTests/Resources/Historical/format1/artifact.kdna",
+      "sha256": "41b2425976b1bb099f1dcd3b674b94bdc2750d33af9edcc5fa5f8f2a3dde45b1"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/Historical/format1/binding.json",
+      "sha256": "b2d52bc462c73fe8951e3c0bba9fc8bad40385ce9f269a64e789c1c169f375db"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/Historical/format1/evidence.json",
+      "sha256": "137152bac7f17bb5c02d1fea072c584fb93d909283d057721868849bf40c4ca5"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/Historical/unversioned/artifact.kdna",
+      "sha256": "c7818eada62db00633647b670c03d0aaff0afc37a68677488ff3c4cb779d9200"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/Historical/unversioned/binding.json",
+      "sha256": "2ee29cd874f616f3e3026fa43eef03b31050b0f5c270424d70031f75681b1f51"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/Historical/unversioned/evidence.json",
+      "sha256": "9987621ded32029791d1f079bbdfece97c56383e63fe7f0603a13cc96f07d809"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/differential/asset.kdna",
+      "sha256": "5d567bd284113c6e3041098e60136ec4c62b6cecee34ffb72096935ba8003f13"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/differential/binding.json",
+      "sha256": "2ca35e5d6917953a411a836002c36a551de4367c88e31d7c8e71d01a98d8bad6"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/differential/evidence.json",
+      "sha256": "1b72505f8c060a5119c39ffaaf632aaa3554bfd5a05dbf2c2faa9de312f1f970"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/ordinary/asset.kdna",
+      "sha256": "ef87a298648fd3b028eae24e2298e103473a822eedd1c895f18ab66ffea1d060"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/ordinary/binding.json",
+      "sha256": "6d304ceec79f163ccb5f88b43495d0e8138d4e3404c825d1abe684f5ce763b35"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/ordinary/evidence.json",
+      "sha256": "1561d4612ae75be72cd8abd3efb3031ce897643cea1a19340ba966cf13156fd9"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/taxonomy/asset.kdna",
+      "sha256": "89d593b5d8ab83e3b720ce1227cf41453298658ad3895d58930fa5cb6a808da1"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/taxonomy/binding.json",
+      "sha256": "9ba5bc38dee66d128ddeb15086354a8c5c24f58c29e73f699bf1fae0e417535c"
+    },
+    {
+      "path": "Tests/ComponentCreationTests/Resources/JavaScript/taxonomy/evidence.json",
+      "sha256": "00b201c2dae99f13aa460ad1d9363cc9879b687dcc0d95521ab708a577ac3146"
+    }
+  ]
+}

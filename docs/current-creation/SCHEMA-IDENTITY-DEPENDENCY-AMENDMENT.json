@@ -1,0 +1,27 @@
+{
+  "at": "2026-09-10T10:46:05.963521+00:00",
+  "base_interface_handoff": {
+    "path": "SPEC-HANDOFF.json",
+    "sha256": "81f399c1ae4bad71565ef46e4ae883a76437ba1a59773e16e53165bd2321136f"
+  },
+  "old_handoff_unchanged": true,
+  "interface_change": false,
+  "current_Core": "0.24.0-rc.component-semantics.2",
+  "current_Read": "0.3.0-rc.component-semantics.2",
+  "D": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+  "tuple": {
+    "container": "0.2.0",
+    "payload_profile": "kdna.payload.judgment",
+    "payload_version": "0.2.0",
+    "core": "kdna.core/0.3.0",
+    "ir": "kdna.canonical-ir/0.2.0",
+    "runtime": "kdna.runtime-capsule/0.2.0",
+    "plan": "kdna.consumption-plan/0.2.0",
+    "host": "kdna.agent-host/0.2.0",
+    "trace": "kdna.judgment-trace/0.2.0",
+    "read": "kdna.read/0.2.0"
+  },
+  "core_version_bound_into_every_new_context": true,
+  "independent_dependency_acceptance": "pending",
+  "old_format2_context_policy": "Do not relabel old RC1 contexts; current runtime rejects a context bound to old Core package version."
+}

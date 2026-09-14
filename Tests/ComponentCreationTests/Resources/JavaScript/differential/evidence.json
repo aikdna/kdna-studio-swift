@@ -1,0 +1,2258 @@
+{
+  "format": {
+    "id": "kdna.studio-creation-evidence/2",
+    "version": "2.0.0"
+  },
+  "reference_contract": {
+    "container": "0.2.0",
+    "core": "kdna.core/0.3.0",
+    "host": "kdna.agent-host/0.2.0",
+    "ir": "kdna.canonical-ir/0.2.0",
+    "payload_profile": "kdna.payload.judgment",
+    "payload_version": "0.2.0",
+    "plan": "kdna.consumption-plan/0.2.0",
+    "read": "kdna.read/0.2.0",
+    "runtime": "kdna.runtime-capsule/0.2.0",
+    "trace": "kdna.judgment-trace/0.2.0"
+  },
+  "component_definition": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+  "compiler": {
+    "name": "@aikdna/kdna-studio-core",
+    "version": "4.0.0-rc.components.1",
+    "provider": "javascript",
+    "artifact_sha256": "UNKNOWN"
+  },
+  "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2",
+  "revision": 4,
+  "context": {
+    "adoption_channel": {
+      "channel": "synthetic-provider:13",
+      "kind": "delegated_agent_editorial"
+    },
+    "agent": {
+      "name": "Synthetic lifecycle fixture",
+      "version": "1"
+    },
+    "asset": {
+      "asset_id": "asset:d2885558-463f-4e7c-95c9-b976c9b572ea",
+      "asset_uid": "urn:uuid:88454a29-1783-47d0-9749-9a6baa354dc5",
+      "version": "0.1.4"
+    },
+    "authorization": {
+      "coordinate": "fixture:local-only",
+      "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+    },
+    "brief": {
+      "scope": "Local test of authoring and saved readback.",
+      "title": "Synthetic signal fixture"
+    },
+    "corePackageVersion": "0.24.0-rc.component-semantics.2",
+    "createdAt": "2026-09-10T10:48:11.728Z",
+    "groups": [
+      {
+        "alternatives": [
+          {
+            "localKey": "preserve",
+            "materialRefs": [
+              "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "causes",
+                  "role": "observations"
+                },
+                {
+                  "componentLocalKey": "checks",
+                  "role": "observations"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "items": [
+                      {
+                        "key": "missing",
+                        "meaning": "The expected input was not observed.",
+                        "title": "Input absent"
+                      },
+                      {
+                        "key": "transform",
+                        "meaning": "An input observation existed but disappeared after transformation.",
+                        "title": "Transformation failed"
+                      }
+                    ]
+                  },
+                  "localKey": "causes",
+                  "type": "candidate-set"
+                },
+                {
+                  "content": {
+                    "candidateSetLocalKey": "causes",
+                    "items": [
+                      {
+                        "contrasts": [
+                          {
+                            "candidateKey": "missing",
+                            "criterion": "Input was absent before transformation."
+                          },
+                          {
+                            "candidateKey": "transform",
+                            "criterion": "Input existed before transformation but not after."
+                          }
+                        ],
+                        "key": "boundary",
+                        "prompt": "At which boundary did the observation disappear?",
+                        "title": "Locate the boundary"
+                      }
+                    ]
+                  },
+                  "localKey": "checks",
+                  "type": "discriminator-set"
+                }
+              ],
+              "method": {
+                "term": "diagnostic-differential"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          },
+          {
+            "localKey": "infer",
+            "materialRefs": [
+              "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "causes",
+                  "role": "observations"
+                },
+                {
+                  "componentLocalKey": "checks",
+                  "role": "observations"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "items": [
+                      {
+                        "key": "missing",
+                        "meaning": "The expected input was not observed.",
+                        "title": "Input absent"
+                      },
+                      {
+                        "key": "transform",
+                        "meaning": "An input observation existed but disappeared after transformation.",
+                        "title": "Transformation failed"
+                      }
+                    ]
+                  },
+                  "localKey": "causes",
+                  "type": "candidate-set"
+                },
+                {
+                  "content": {
+                    "candidateSetLocalKey": "causes",
+                    "items": [
+                      {
+                        "contrasts": [
+                          {
+                            "candidateKey": "missing",
+                            "criterion": "Input was absent before transformation."
+                          },
+                          {
+                            "candidateKey": "transform",
+                            "criterion": "Input existed before transformation but not after."
+                          }
+                        ],
+                        "key": "boundary",
+                        "prompt": "At which boundary did the observation disappear?",
+                        "title": "Locate the boundary"
+                      }
+                    ]
+                  },
+                  "localKey": "checks",
+                  "type": "discriminator-set"
+                }
+              ],
+              "method": {
+                "term": "diagnostic-differential"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Treat an absent observation as a negative result.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          }
+        ],
+        "localKey": "signal",
+        "revision": 1
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-10T10:48:11.728Z",
+        "detail": {
+          "scope": "Local test of authoring and saved readback.",
+          "title": "Synthetic signal fixture"
+        },
+        "digest": "sha256:96e40719186c243f0549d3e38a2e47f679b2efcab503d43a90da8aec34abec4b",
+        "event": "brief",
+        "previous_digest": null,
+        "revision": 1,
+        "sequence": 1
+      },
+      {
+        "at": "2026-09-10T10:48:11.729Z",
+        "detail": {
+          "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_13",
+          "content_digest": "sha256:7b5a61557d24b15b174d723324e47029b3e3d4ca555c5cd6116eb7bf31260d43",
+          "coordinate": "private:fixture:13",
+          "id": "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36",
+          "kind": "text",
+          "recorded_at": "2026-09-10T10:48:11.729Z",
+          "title": "Private input"
+        },
+        "digest": "sha256:9199da339fa3dcad4c5cacefb7e58cf9a4fee7b41ae9cf58b5a7b2670399c472",
+        "event": "material",
+        "previous_digest": "sha256:96e40719186c243f0549d3e38a2e47f679b2efcab503d43a90da8aec34abec4b",
+        "revision": 2,
+        "sequence": 2
+      },
+      {
+        "at": "2026-09-10T10:48:11.729Z",
+        "detail": {
+          "alternatives": [
+            {
+              "localKey": "preserve",
+              "materialRefs": [
+                "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+              ],
+              "method": {
+                "bindings": [
+                  {
+                    "componentLocalKey": "causes",
+                    "role": "observations"
+                  },
+                  {
+                    "componentLocalKey": "checks",
+                    "role": "observations"
+                  }
+                ],
+                "components": [
+                  {
+                    "content": {
+                      "items": [
+                        {
+                          "key": "missing",
+                          "meaning": "The expected input was not observed.",
+                          "title": "Input absent"
+                        },
+                        {
+                          "key": "transform",
+                          "meaning": "An input observation existed but disappeared after transformation.",
+                          "title": "Transformation failed"
+                        }
+                      ]
+                    },
+                    "localKey": "causes",
+                    "type": "candidate-set"
+                  },
+                  {
+                    "content": {
+                      "candidateSetLocalKey": "causes",
+                      "items": [
+                        {
+                          "contrasts": [
+                            {
+                              "candidateKey": "missing",
+                              "criterion": "Input was absent before transformation."
+                            },
+                            {
+                              "candidateKey": "transform",
+                              "criterion": "Input existed before transformation but not after."
+                            }
+                          ],
+                          "key": "boundary",
+                          "prompt": "At which boundary did the observation disappear?",
+                          "title": "Locate the boundary"
+                        }
+                      ]
+                    },
+                    "localKey": "checks",
+                    "type": "discriminator-set"
+                  }
+                ],
+                "method": {
+                  "term": "diagnostic-differential"
+                }
+              },
+              "rationale": "Missing input cannot establish a negative finding.",
+              "scope": "Only missing observations",
+              "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+              "subject": "A synthetic observation",
+              "title": "Preserve uncertainty é é 𝄞"
+            },
+            {
+              "localKey": "infer",
+              "materialRefs": [
+                "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+              ],
+              "method": {
+                "bindings": [
+                  {
+                    "componentLocalKey": "causes",
+                    "role": "observations"
+                  },
+                  {
+                    "componentLocalKey": "checks",
+                    "role": "observations"
+                  }
+                ],
+                "components": [
+                  {
+                    "content": {
+                      "items": [
+                        {
+                          "key": "missing",
+                          "meaning": "The expected input was not observed.",
+                          "title": "Input absent"
+                        },
+                        {
+                          "key": "transform",
+                          "meaning": "An input observation existed but disappeared after transformation.",
+                          "title": "Transformation failed"
+                        }
+                      ]
+                    },
+                    "localKey": "causes",
+                    "type": "candidate-set"
+                  },
+                  {
+                    "content": {
+                      "candidateSetLocalKey": "causes",
+                      "items": [
+                        {
+                          "contrasts": [
+                            {
+                              "candidateKey": "missing",
+                              "criterion": "Input was absent before transformation."
+                            },
+                            {
+                              "candidateKey": "transform",
+                              "criterion": "Input existed before transformation but not after."
+                            }
+                          ],
+                          "key": "boundary",
+                          "prompt": "At which boundary did the observation disappear?",
+                          "title": "Locate the boundary"
+                        }
+                      ]
+                    },
+                    "localKey": "checks",
+                    "type": "discriminator-set"
+                  }
+                ],
+                "method": {
+                  "term": "diagnostic-differential"
+                }
+              },
+              "rationale": "Missing input cannot establish a negative finding.",
+              "scope": "Only missing observations",
+              "statement": "Treat an absent observation as a negative result.",
+              "subject": "A synthetic observation",
+              "title": "Preserve uncertainty é é 𝄞"
+            }
+          ],
+          "localKey": "signal",
+          "revision": 1
+        },
+        "digest": "sha256:ee970a753a8ae2452b6221fb16a770d047e4ddc21052722f075df9c55d40c90e",
+        "event": "proposal",
+        "previous_digest": "sha256:9199da339fa3dcad4c5cacefb7e58cf9a4fee7b41ae9cf58b5a7b2670399c472",
+        "revision": 3,
+        "sequence": 3
+      },
+      {
+        "at": "2026-09-10T10:48:11.729Z",
+        "detail": {
+          "identity": "not_verified",
+          "interpretation": {
+            "choices": [
+              {
+                "alternativeLocalKey": "preserve",
+                "judgmentLocalKey": "signal"
+              }
+            ],
+            "kind": "select"
+          },
+          "interpreted_by": {
+            "name": "Synthetic lifecycle fixture",
+            "version": "1"
+          },
+          "response": {
+            "channel": "synthetic-provider:13",
+            "id": "response:13:1",
+            "review_id": "review:652683dc-3252-4b1a-bcad-6fc683daf859",
+            "role": "agent",
+            "text": "select"
+          },
+          "review": {
+            "channel": "synthetic-provider:13",
+            "groups": [
+              {
+                "alternatives": [
+                  {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "causes",
+                          "role": "observations"
+                        },
+                        {
+                          "componentLocalKey": "checks",
+                          "role": "observations"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "items": [
+                              {
+                                "key": "missing",
+                                "meaning": "The expected input was not observed.",
+                                "title": "Input absent"
+                              },
+                              {
+                                "key": "transform",
+                                "meaning": "An input observation existed but disappeared after transformation.",
+                                "title": "Transformation failed"
+                              }
+                            ]
+                          },
+                          "localKey": "causes",
+                          "type": "candidate-set"
+                        },
+                        {
+                          "content": {
+                            "candidateSetLocalKey": "causes",
+                            "items": [
+                              {
+                                "contrasts": [
+                                  {
+                                    "candidateKey": "missing",
+                                    "criterion": "Input was absent before transformation."
+                                  },
+                                  {
+                                    "candidateKey": "transform",
+                                    "criterion": "Input existed before transformation but not after."
+                                  }
+                                ],
+                                "key": "boundary",
+                                "prompt": "At which boundary did the observation disappear?",
+                                "title": "Locate the boundary"
+                              }
+                            ]
+                          },
+                          "localKey": "checks",
+                          "type": "discriminator-set"
+                        }
+                      ],
+                      "method": {
+                        "term": "diagnostic-differential"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  {
+                    "localKey": "infer",
+                    "materialRefs": [
+                      "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "causes",
+                          "role": "observations"
+                        },
+                        {
+                          "componentLocalKey": "checks",
+                          "role": "observations"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "items": [
+                              {
+                                "key": "missing",
+                                "meaning": "The expected input was not observed.",
+                                "title": "Input absent"
+                              },
+                              {
+                                "key": "transform",
+                                "meaning": "An input observation existed but disappeared after transformation.",
+                                "title": "Transformation failed"
+                              }
+                            ]
+                          },
+                          "localKey": "causes",
+                          "type": "candidate-set"
+                        },
+                        {
+                          "content": {
+                            "candidateSetLocalKey": "causes",
+                            "items": [
+                              {
+                                "contrasts": [
+                                  {
+                                    "candidateKey": "missing",
+                                    "criterion": "Input was absent before transformation."
+                                  },
+                                  {
+                                    "candidateKey": "transform",
+                                    "criterion": "Input existed before transformation but not after."
+                                  }
+                                ],
+                                "key": "boundary",
+                                "prompt": "At which boundary did the observation disappear?",
+                                "title": "Locate the boundary"
+                              }
+                            ]
+                          },
+                          "localKey": "checks",
+                          "type": "discriminator-set"
+                        }
+                      ],
+                      "method": {
+                        "term": "diagnostic-differential"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Treat an absent observation as a negative result.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  }
+                ],
+                "localKey": "signal",
+                "revision": 1
+              }
+            ],
+            "kind": "delegated_agent_editorial",
+            "preview": null,
+            "review_id": "review:652683dc-3252-4b1a-bcad-6fc683daf859",
+            "revision": 3,
+            "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+          }
+        },
+        "digest": "sha256:d0f56503f7eafa38c649abbab2b982e7ebba34a5eb9ec22675f103eb181e0fcd",
+        "event": "selection",
+        "previous_digest": "sha256:ee970a753a8ae2452b6221fb16a770d047e4ddc21052722f075df9c55d40c90e",
+        "revision": 4,
+        "sequence": 4
+      }
+    ],
+    "materials": [
+      {
+        "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_13",
+        "content_digest": "sha256:7b5a61557d24b15b174d723324e47029b3e3d4ca555c5cd6116eb7bf31260d43",
+        "coordinate": "private:fixture:13",
+        "id": "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36",
+        "kind": "text",
+        "recorded_at": "2026-09-10T10:48:11.729Z",
+        "title": "Private input"
+      }
+    ],
+    "revision": 4,
+    "selected": [
+      {
+        "alternative": {
+          "localKey": "preserve",
+          "materialRefs": [
+            "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+          ],
+          "method": {
+            "bindings": [
+              {
+                "componentLocalKey": "causes",
+                "role": "observations"
+              },
+              {
+                "componentLocalKey": "checks",
+                "role": "observations"
+              }
+            ],
+            "components": [
+              {
+                "content": {
+                  "items": [
+                    {
+                      "key": "missing",
+                      "meaning": "The expected input was not observed.",
+                      "title": "Input absent"
+                    },
+                    {
+                      "key": "transform",
+                      "meaning": "An input observation existed but disappeared after transformation.",
+                      "title": "Transformation failed"
+                    }
+                  ]
+                },
+                "localKey": "causes",
+                "type": "candidate-set"
+              },
+              {
+                "content": {
+                  "candidateSetLocalKey": "causes",
+                  "items": [
+                    {
+                      "contrasts": [
+                        {
+                          "candidateKey": "missing",
+                          "criterion": "Input was absent before transformation."
+                        },
+                        {
+                          "candidateKey": "transform",
+                          "criterion": "Input existed before transformation but not after."
+                        }
+                      ],
+                      "key": "boundary",
+                      "prompt": "At which boundary did the observation disappear?",
+                      "title": "Locate the boundary"
+                    }
+                  ]
+                },
+                "localKey": "checks",
+                "type": "discriminator-set"
+              }
+            ],
+            "method": {
+              "term": "diagnostic-differential"
+            }
+          },
+          "rationale": "Missing input cannot establish a negative finding.",
+          "scope": "Only missing observations",
+          "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+          "subject": "A synthetic observation",
+          "title": "Preserve uncertainty é é 𝄞"
+        },
+        "judgmentLocalKey": "signal"
+      }
+    ],
+    "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2",
+    "synthetic_fixture": true
+  },
+  "decision": {
+    "actual_reply": {
+      "identity": "not_verified",
+      "interpretation": {
+        "kind": "confirm"
+      },
+      "interpreted_by": {
+        "name": "Synthetic lifecycle fixture",
+        "version": "1"
+      },
+      "response": {
+        "channel": "synthetic-provider:13",
+        "id": "response:13:2",
+        "review_id": "review:b3f0f70f-95d6-4ce4-8604-fb9cb6e86212",
+        "role": "agent",
+        "text": "confirm"
+      },
+      "review": {
+        "channel": "synthetic-provider:13",
+        "groups": [
+          {
+            "alternatives": [
+              {
+                "localKey": "preserve",
+                "materialRefs": [
+                  "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                ],
+                "method": {
+                  "bindings": [
+                    {
+                      "componentLocalKey": "causes",
+                      "role": "observations"
+                    },
+                    {
+                      "componentLocalKey": "checks",
+                      "role": "observations"
+                    }
+                  ],
+                  "components": [
+                    {
+                      "content": {
+                        "items": [
+                          {
+                            "key": "missing",
+                            "meaning": "The expected input was not observed.",
+                            "title": "Input absent"
+                          },
+                          {
+                            "key": "transform",
+                            "meaning": "An input observation existed but disappeared after transformation.",
+                            "title": "Transformation failed"
+                          }
+                        ]
+                      },
+                      "localKey": "causes",
+                      "type": "candidate-set"
+                    },
+                    {
+                      "content": {
+                        "candidateSetLocalKey": "causes",
+                        "items": [
+                          {
+                            "contrasts": [
+                              {
+                                "candidateKey": "missing",
+                                "criterion": "Input was absent before transformation."
+                              },
+                              {
+                                "candidateKey": "transform",
+                                "criterion": "Input existed before transformation but not after."
+                              }
+                            ],
+                            "key": "boundary",
+                            "prompt": "At which boundary did the observation disappear?",
+                            "title": "Locate the boundary"
+                          }
+                        ]
+                      },
+                      "localKey": "checks",
+                      "type": "discriminator-set"
+                    }
+                  ],
+                  "method": {
+                    "term": "diagnostic-differential"
+                  }
+                },
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              },
+              {
+                "localKey": "infer",
+                "materialRefs": [
+                  "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                ],
+                "method": {
+                  "bindings": [
+                    {
+                      "componentLocalKey": "causes",
+                      "role": "observations"
+                    },
+                    {
+                      "componentLocalKey": "checks",
+                      "role": "observations"
+                    }
+                  ],
+                  "components": [
+                    {
+                      "content": {
+                        "items": [
+                          {
+                            "key": "missing",
+                            "meaning": "The expected input was not observed.",
+                            "title": "Input absent"
+                          },
+                          {
+                            "key": "transform",
+                            "meaning": "An input observation existed but disappeared after transformation.",
+                            "title": "Transformation failed"
+                          }
+                        ]
+                      },
+                      "localKey": "causes",
+                      "type": "candidate-set"
+                    },
+                    {
+                      "content": {
+                        "candidateSetLocalKey": "causes",
+                        "items": [
+                          {
+                            "contrasts": [
+                              {
+                                "candidateKey": "missing",
+                                "criterion": "Input was absent before transformation."
+                              },
+                              {
+                                "candidateKey": "transform",
+                                "criterion": "Input existed before transformation but not after."
+                              }
+                            ],
+                            "key": "boundary",
+                            "prompt": "At which boundary did the observation disappear?",
+                            "title": "Locate the boundary"
+                          }
+                        ]
+                      },
+                      "localKey": "checks",
+                      "type": "discriminator-set"
+                    }
+                  ],
+                  "method": {
+                    "term": "diagnostic-differential"
+                  }
+                },
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Treat an absent observation as a negative result.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              }
+            ],
+            "localKey": "signal",
+            "revision": 1
+          }
+        ],
+        "kind": "delegated_agent_editorial",
+        "preview": {
+          "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+          "creation_accepted": "not_evaluated",
+          "expected_component_bindings": [
+            {
+              "bindings": [
+                {
+                  "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                  "role": "observations",
+                  "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                }
+              ],
+              "carrier": {
+                "adoption_proposal_digest": "sha256:9ff1a104abd8fb36e19688bb393577a547c1515965ad8cd0f697c724faf14050",
+                "bindings_digest": "sha256:aa21e7bb99db640ad1031a74286927510ed10e7650b9b2f68a5fdca961907561",
+                "component_declaration_digest": "sha256:589603ab00d534f02488c0ae66ad17f9dabf5f3aa5c1f40b0b6274c7199f8b3a",
+                "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                "component_type": "candidate-set",
+                "content": {
+                  "items": [
+                    {
+                      "key": "missing",
+                      "meaning": "The expected input was not observed.",
+                      "title": "Input absent"
+                    },
+                    {
+                      "key": "transform",
+                      "meaning": "An input observation existed but disappeared after transformation.",
+                      "title": "Transformation failed"
+                    }
+                  ]
+                },
+                "content_digest": "sha256:6e7c660ebdc8355b13bee83c64b47d26ce89937ed6fb667cb77a4d8dfcd857ce",
+                "contract_id": "kdna.component-semantics/1",
+                "contract_version": "1.0.0",
+                "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+                "profile_id": "candidate-set/1",
+                "statement_origin": "mechanical_content_representation"
+              },
+              "native_component": {
+                "id": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                "method": {
+                  "term": "candidate-set"
+                },
+                "statement": "{\"items\":[{\"key\":\"missing\",\"meaning\":\"The expected input was not observed.\",\"title\":\"Input absent\"},{\"key\":\"transform\",\"meaning\":\"An input observation existed but disappeared after transformation.\",\"title\":\"Transformation failed\"}]}"
+              },
+              "presence": {
+                "bindings_state": "declared",
+                "components_state": "declared",
+                "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+              },
+              "proposal": {
+                "alternativeLocalKey": "preserve",
+                "asset": {
+                  "asset_id": "asset:d2885558-463f-4e7c-95c9-b976c9b572ea",
+                  "asset_uid": "urn:uuid:88454a29-1783-47d0-9749-9a6baa354dc5",
+                  "version": "0.1.4"
+                },
+                "authored_candidate_digest": "sha256:f200d14d44419b6b110fe3dffd3baaf36cfc0cdb03524f5818429dadbdc576d0",
+                "bindings": [
+                  {
+                    "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                    "role": "observations",
+                    "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                  }
+                ],
+                "componentLocalKey": "causes",
+                "content": {
+                  "items": [
+                    {
+                      "key": "missing",
+                      "meaning": "The expected input was not observed.",
+                      "title": "Input absent"
+                    },
+                    {
+                      "key": "transform",
+                      "meaning": "An input observation existed but disappeared after transformation.",
+                      "title": "Transformation failed"
+                    }
+                  ]
+                },
+                "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+                "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                "judgmentLocalKey": "signal",
+                "native_component": {
+                  "id": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                  "method": {
+                    "term": "candidate-set"
+                  },
+                  "statement": "{\"items\":[{\"key\":\"missing\",\"meaning\":\"The expected input was not observed.\",\"title\":\"Input absent\"},{\"key\":\"transform\",\"meaning\":\"An input observation existed but disappeared after transformation.\",\"title\":\"Transformation failed\"}]}"
+                },
+                "presence": {
+                  "bindings_state": "declared",
+                  "components_state": "declared",
+                  "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                },
+                "profile": {
+                  "component_type": "candidate-set",
+                  "profile_id": "candidate-set/1"
+                },
+                "rule": "kdna.studio-materialization/2",
+                "statement_origin": "mechanical_content_representation"
+              }
+            },
+            {
+              "bindings": [
+                {
+                  "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                  "role": "observations",
+                  "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                }
+              ],
+              "carrier": {
+                "adoption_proposal_digest": "sha256:7b3d5d5c284703388b315723389435a5d191d71bcdcd800541d4da62ffc0db6f",
+                "bindings_digest": "sha256:54b015d9f6ae4c3322411862bc515bd4a1f0e1bd3c0bb48fab2ba40f826cc546",
+                "component_declaration_digest": "sha256:59ef6417fbcd600ad2ae52c2134946511d376ea81296657d2b3e1067587af494",
+                "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                "component_type": "discriminator-set",
+                "content": {
+                  "candidateSetRef": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                  "items": [
+                    {
+                      "contrasts": [
+                        {
+                          "candidateKey": "missing",
+                          "criterion": "Input was absent before transformation."
+                        },
+                        {
+                          "candidateKey": "transform",
+                          "criterion": "Input existed before transformation but not after."
+                        }
+                      ],
+                      "key": "boundary",
+                      "prompt": "At which boundary did the observation disappear?",
+                      "title": "Locate the boundary"
+                    }
+                  ]
+                },
+                "content_digest": "sha256:68b93c6d3f441e3c71243939c9777aee626737006649993ee62930746bcb0351",
+                "contract_id": "kdna.component-semantics/1",
+                "contract_version": "1.0.0",
+                "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+                "profile_id": "discriminator-set/1",
+                "statement_origin": "mechanical_content_representation"
+              },
+              "native_component": {
+                "id": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                "method": {
+                  "term": "discriminator-set"
+                },
+                "statement": "{\"candidateSetRef\":\"component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1\",\"items\":[{\"contrasts\":[{\"candidateKey\":\"missing\",\"criterion\":\"Input was absent before transformation.\"},{\"candidateKey\":\"transform\",\"criterion\":\"Input existed before transformation but not after.\"}],\"key\":\"boundary\",\"prompt\":\"At which boundary did the observation disappear?\",\"title\":\"Locate the boundary\"}]}"
+              },
+              "presence": {
+                "bindings_state": "declared",
+                "components_state": "declared",
+                "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+              },
+              "proposal": {
+                "alternativeLocalKey": "preserve",
+                "asset": {
+                  "asset_id": "asset:d2885558-463f-4e7c-95c9-b976c9b572ea",
+                  "asset_uid": "urn:uuid:88454a29-1783-47d0-9749-9a6baa354dc5",
+                  "version": "0.1.4"
+                },
+                "authored_candidate_digest": "sha256:f200d14d44419b6b110fe3dffd3baaf36cfc0cdb03524f5818429dadbdc576d0",
+                "bindings": [
+                  {
+                    "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                    "role": "observations",
+                    "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                  }
+                ],
+                "componentLocalKey": "checks",
+                "content": {
+                  "candidateSetRef": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                  "items": [
+                    {
+                      "contrasts": [
+                        {
+                          "candidateKey": "missing",
+                          "criterion": "Input was absent before transformation."
+                        },
+                        {
+                          "candidateKey": "transform",
+                          "criterion": "Input existed before transformation but not after."
+                        }
+                      ],
+                      "key": "boundary",
+                      "prompt": "At which boundary did the observation disappear?",
+                      "title": "Locate the boundary"
+                    }
+                  ]
+                },
+                "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+                "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                "judgmentLocalKey": "signal",
+                "native_component": {
+                  "id": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                  "method": {
+                    "term": "discriminator-set"
+                  },
+                  "statement": "{\"candidateSetRef\":\"component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1\",\"items\":[{\"contrasts\":[{\"candidateKey\":\"missing\",\"criterion\":\"Input was absent before transformation.\"},{\"candidateKey\":\"transform\",\"criterion\":\"Input existed before transformation but not after.\"}],\"key\":\"boundary\",\"prompt\":\"At which boundary did the observation disappear?\",\"title\":\"Locate the boundary\"}]}"
+                },
+                "presence": {
+                  "bindings_state": "declared",
+                  "components_state": "declared",
+                  "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                },
+                "profile": {
+                  "component_type": "discriminator-set",
+                  "profile_id": "discriminator-set/1"
+                },
+                "rule": "kdna.studio-materialization/2",
+                "statement_origin": "mechanical_content_representation"
+              }
+            }
+          ],
+          "kind": "pre_compiler_authoring_review",
+          "presence": [],
+          "preview_digest": "sha256:2bf13fed22226d3fc930f4c6538be596066914a3f3527af85106620b52dad5c1",
+          "proposal_digests": [
+            "sha256:7b3d5d5c284703388b315723389435a5d191d71bcdcd800541d4da62ffc0db6f",
+            "sha256:9ff1a104abd8fb36e19688bb393577a547c1515965ad8cd0f697c724faf14050"
+          ],
+          "revision": 4,
+          "selected": [
+            {
+              "alternative": {
+                "localKey": "preserve",
+                "materialRefs": [
+                  "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                ],
+                "method": {
+                  "bindings": [
+                    {
+                      "componentLocalKey": "causes",
+                      "role": "observations"
+                    },
+                    {
+                      "componentLocalKey": "checks",
+                      "role": "observations"
+                    }
+                  ],
+                  "components": [
+                    {
+                      "content": {
+                        "items": [
+                          {
+                            "key": "missing",
+                            "meaning": "The expected input was not observed.",
+                            "title": "Input absent"
+                          },
+                          {
+                            "key": "transform",
+                            "meaning": "An input observation existed but disappeared after transformation.",
+                            "title": "Transformation failed"
+                          }
+                        ]
+                      },
+                      "localKey": "causes",
+                      "type": "candidate-set"
+                    },
+                    {
+                      "content": {
+                        "candidateSetLocalKey": "causes",
+                        "items": [
+                          {
+                            "contrasts": [
+                              {
+                                "candidateKey": "missing",
+                                "criterion": "Input was absent before transformation."
+                              },
+                              {
+                                "candidateKey": "transform",
+                                "criterion": "Input existed before transformation but not after."
+                              }
+                            ],
+                            "key": "boundary",
+                            "prompt": "At which boundary did the observation disappear?",
+                            "title": "Locate the boundary"
+                          }
+                        ]
+                      },
+                      "localKey": "checks",
+                      "type": "discriminator-set"
+                    }
+                  ],
+                  "method": {
+                    "term": "diagnostic-differential"
+                  }
+                },
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              },
+              "judgmentLocalKey": "signal"
+            }
+          ],
+          "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+        },
+        "review_id": "review:b3f0f70f-95d6-4ce4-8604-fb9cb6e86212",
+        "revision": 4,
+        "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+      }
+    },
+    "adoption_kind": "delegated_agent_editorial",
+    "authorization": {
+      "coordinate": "fixture:local-only",
+      "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+    },
+    "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+    "format": "kdna.studio-decision/2",
+    "preview_digest": "sha256:2bf13fed22226d3fc930f4c6538be596066914a3f3527af85106620b52dad5c1",
+    "proposal_digests": [
+      "sha256:7b3d5d5c284703388b315723389435a5d191d71bcdcd800541d4da62ffc0db6f",
+      "sha256:9ff1a104abd8fb36e19688bb393577a547c1515965ad8cd0f697c724faf14050"
+    ],
+    "revision": 4,
+    "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+  },
+  "history": [
+    {
+      "at": "2026-09-10T10:48:11.728Z",
+      "detail": {
+        "scope": "Local test of authoring and saved readback.",
+        "title": "Synthetic signal fixture"
+      },
+      "digest": "sha256:96e40719186c243f0549d3e38a2e47f679b2efcab503d43a90da8aec34abec4b",
+      "event": "brief",
+      "previous_digest": null,
+      "revision": 1,
+      "sequence": 1
+    },
+    {
+      "at": "2026-09-10T10:48:11.729Z",
+      "detail": {
+        "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_13",
+        "content_digest": "sha256:7b5a61557d24b15b174d723324e47029b3e3d4ca555c5cd6116eb7bf31260d43",
+        "coordinate": "private:fixture:13",
+        "id": "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36",
+        "kind": "text",
+        "recorded_at": "2026-09-10T10:48:11.729Z",
+        "title": "Private input"
+      },
+      "digest": "sha256:9199da339fa3dcad4c5cacefb7e58cf9a4fee7b41ae9cf58b5a7b2670399c472",
+      "event": "material",
+      "previous_digest": "sha256:96e40719186c243f0549d3e38a2e47f679b2efcab503d43a90da8aec34abec4b",
+      "revision": 2,
+      "sequence": 2
+    },
+    {
+      "at": "2026-09-10T10:48:11.729Z",
+      "detail": {
+        "alternatives": [
+          {
+            "localKey": "preserve",
+            "materialRefs": [
+              "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "causes",
+                  "role": "observations"
+                },
+                {
+                  "componentLocalKey": "checks",
+                  "role": "observations"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "items": [
+                      {
+                        "key": "missing",
+                        "meaning": "The expected input was not observed.",
+                        "title": "Input absent"
+                      },
+                      {
+                        "key": "transform",
+                        "meaning": "An input observation existed but disappeared after transformation.",
+                        "title": "Transformation failed"
+                      }
+                    ]
+                  },
+                  "localKey": "causes",
+                  "type": "candidate-set"
+                },
+                {
+                  "content": {
+                    "candidateSetLocalKey": "causes",
+                    "items": [
+                      {
+                        "contrasts": [
+                          {
+                            "candidateKey": "missing",
+                            "criterion": "Input was absent before transformation."
+                          },
+                          {
+                            "candidateKey": "transform",
+                            "criterion": "Input existed before transformation but not after."
+                          }
+                        ],
+                        "key": "boundary",
+                        "prompt": "At which boundary did the observation disappear?",
+                        "title": "Locate the boundary"
+                      }
+                    ]
+                  },
+                  "localKey": "checks",
+                  "type": "discriminator-set"
+                }
+              ],
+              "method": {
+                "term": "diagnostic-differential"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          },
+          {
+            "localKey": "infer",
+            "materialRefs": [
+              "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+            ],
+            "method": {
+              "bindings": [
+                {
+                  "componentLocalKey": "causes",
+                  "role": "observations"
+                },
+                {
+                  "componentLocalKey": "checks",
+                  "role": "observations"
+                }
+              ],
+              "components": [
+                {
+                  "content": {
+                    "items": [
+                      {
+                        "key": "missing",
+                        "meaning": "The expected input was not observed.",
+                        "title": "Input absent"
+                      },
+                      {
+                        "key": "transform",
+                        "meaning": "An input observation existed but disappeared after transformation.",
+                        "title": "Transformation failed"
+                      }
+                    ]
+                  },
+                  "localKey": "causes",
+                  "type": "candidate-set"
+                },
+                {
+                  "content": {
+                    "candidateSetLocalKey": "causes",
+                    "items": [
+                      {
+                        "contrasts": [
+                          {
+                            "candidateKey": "missing",
+                            "criterion": "Input was absent before transformation."
+                          },
+                          {
+                            "candidateKey": "transform",
+                            "criterion": "Input existed before transformation but not after."
+                          }
+                        ],
+                        "key": "boundary",
+                        "prompt": "At which boundary did the observation disappear?",
+                        "title": "Locate the boundary"
+                      }
+                    ]
+                  },
+                  "localKey": "checks",
+                  "type": "discriminator-set"
+                }
+              ],
+              "method": {
+                "term": "diagnostic-differential"
+              }
+            },
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Treat an absent observation as a negative result.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          }
+        ],
+        "localKey": "signal",
+        "revision": 1
+      },
+      "digest": "sha256:ee970a753a8ae2452b6221fb16a770d047e4ddc21052722f075df9c55d40c90e",
+      "event": "proposal",
+      "previous_digest": "sha256:9199da339fa3dcad4c5cacefb7e58cf9a4fee7b41ae9cf58b5a7b2670399c472",
+      "revision": 3,
+      "sequence": 3
+    },
+    {
+      "at": "2026-09-10T10:48:11.729Z",
+      "detail": {
+        "identity": "not_verified",
+        "interpretation": {
+          "choices": [
+            {
+              "alternativeLocalKey": "preserve",
+              "judgmentLocalKey": "signal"
+            }
+          ],
+          "kind": "select"
+        },
+        "interpreted_by": {
+          "name": "Synthetic lifecycle fixture",
+          "version": "1"
+        },
+        "response": {
+          "channel": "synthetic-provider:13",
+          "id": "response:13:1",
+          "review_id": "review:652683dc-3252-4b1a-bcad-6fc683daf859",
+          "role": "agent",
+          "text": "select"
+        },
+        "review": {
+          "channel": "synthetic-provider:13",
+          "groups": [
+            {
+              "alternatives": [
+                {
+                  "localKey": "preserve",
+                  "materialRefs": [
+                    "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                  ],
+                  "method": {
+                    "bindings": [
+                      {
+                        "componentLocalKey": "causes",
+                        "role": "observations"
+                      },
+                      {
+                        "componentLocalKey": "checks",
+                        "role": "observations"
+                      }
+                    ],
+                    "components": [
+                      {
+                        "content": {
+                          "items": [
+                            {
+                              "key": "missing",
+                              "meaning": "The expected input was not observed.",
+                              "title": "Input absent"
+                            },
+                            {
+                              "key": "transform",
+                              "meaning": "An input observation existed but disappeared after transformation.",
+                              "title": "Transformation failed"
+                            }
+                          ]
+                        },
+                        "localKey": "causes",
+                        "type": "candidate-set"
+                      },
+                      {
+                        "content": {
+                          "candidateSetLocalKey": "causes",
+                          "items": [
+                            {
+                              "contrasts": [
+                                {
+                                  "candidateKey": "missing",
+                                  "criterion": "Input was absent before transformation."
+                                },
+                                {
+                                  "candidateKey": "transform",
+                                  "criterion": "Input existed before transformation but not after."
+                                }
+                              ],
+                              "key": "boundary",
+                              "prompt": "At which boundary did the observation disappear?",
+                              "title": "Locate the boundary"
+                            }
+                          ]
+                        },
+                        "localKey": "checks",
+                        "type": "discriminator-set"
+                      }
+                    ],
+                    "method": {
+                      "term": "diagnostic-differential"
+                    }
+                  },
+                  "rationale": "Missing input cannot establish a negative finding.",
+                  "scope": "Only missing observations",
+                  "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                  "subject": "A synthetic observation",
+                  "title": "Preserve uncertainty é é 𝄞"
+                },
+                {
+                  "localKey": "infer",
+                  "materialRefs": [
+                    "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                  ],
+                  "method": {
+                    "bindings": [
+                      {
+                        "componentLocalKey": "causes",
+                        "role": "observations"
+                      },
+                      {
+                        "componentLocalKey": "checks",
+                        "role": "observations"
+                      }
+                    ],
+                    "components": [
+                      {
+                        "content": {
+                          "items": [
+                            {
+                              "key": "missing",
+                              "meaning": "The expected input was not observed.",
+                              "title": "Input absent"
+                            },
+                            {
+                              "key": "transform",
+                              "meaning": "An input observation existed but disappeared after transformation.",
+                              "title": "Transformation failed"
+                            }
+                          ]
+                        },
+                        "localKey": "causes",
+                        "type": "candidate-set"
+                      },
+                      {
+                        "content": {
+                          "candidateSetLocalKey": "causes",
+                          "items": [
+                            {
+                              "contrasts": [
+                                {
+                                  "candidateKey": "missing",
+                                  "criterion": "Input was absent before transformation."
+                                },
+                                {
+                                  "candidateKey": "transform",
+                                  "criterion": "Input existed before transformation but not after."
+                                }
+                              ],
+                              "key": "boundary",
+                              "prompt": "At which boundary did the observation disappear?",
+                              "title": "Locate the boundary"
+                            }
+                          ]
+                        },
+                        "localKey": "checks",
+                        "type": "discriminator-set"
+                      }
+                    ],
+                    "method": {
+                      "term": "diagnostic-differential"
+                    }
+                  },
+                  "rationale": "Missing input cannot establish a negative finding.",
+                  "scope": "Only missing observations",
+                  "statement": "Treat an absent observation as a negative result.",
+                  "subject": "A synthetic observation",
+                  "title": "Preserve uncertainty é é 𝄞"
+                }
+              ],
+              "localKey": "signal",
+              "revision": 1
+            }
+          ],
+          "kind": "delegated_agent_editorial",
+          "preview": null,
+          "review_id": "review:652683dc-3252-4b1a-bcad-6fc683daf859",
+          "revision": 3,
+          "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+        }
+      },
+      "digest": "sha256:d0f56503f7eafa38c649abbab2b982e7ebba34a5eb9ec22675f103eb181e0fcd",
+      "event": "selection",
+      "previous_digest": "sha256:ee970a753a8ae2452b6221fb16a770d047e4ddc21052722f075df9c55d40c90e",
+      "revision": 4,
+      "sequence": 4
+    },
+    {
+      "at": "2026-09-10T10:48:11.732Z",
+      "detail": {
+        "actual_reply": {
+          "identity": "not_verified",
+          "interpretation": {
+            "kind": "confirm"
+          },
+          "interpreted_by": {
+            "name": "Synthetic lifecycle fixture",
+            "version": "1"
+          },
+          "response": {
+            "channel": "synthetic-provider:13",
+            "id": "response:13:2",
+            "review_id": "review:b3f0f70f-95d6-4ce4-8604-fb9cb6e86212",
+            "role": "agent",
+            "text": "confirm"
+          },
+          "review": {
+            "channel": "synthetic-provider:13",
+            "groups": [
+              {
+                "alternatives": [
+                  {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "causes",
+                          "role": "observations"
+                        },
+                        {
+                          "componentLocalKey": "checks",
+                          "role": "observations"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "items": [
+                              {
+                                "key": "missing",
+                                "meaning": "The expected input was not observed.",
+                                "title": "Input absent"
+                              },
+                              {
+                                "key": "transform",
+                                "meaning": "An input observation existed but disappeared after transformation.",
+                                "title": "Transformation failed"
+                              }
+                            ]
+                          },
+                          "localKey": "causes",
+                          "type": "candidate-set"
+                        },
+                        {
+                          "content": {
+                            "candidateSetLocalKey": "causes",
+                            "items": [
+                              {
+                                "contrasts": [
+                                  {
+                                    "candidateKey": "missing",
+                                    "criterion": "Input was absent before transformation."
+                                  },
+                                  {
+                                    "candidateKey": "transform",
+                                    "criterion": "Input existed before transformation but not after."
+                                  }
+                                ],
+                                "key": "boundary",
+                                "prompt": "At which boundary did the observation disappear?",
+                                "title": "Locate the boundary"
+                              }
+                            ]
+                          },
+                          "localKey": "checks",
+                          "type": "discriminator-set"
+                        }
+                      ],
+                      "method": {
+                        "term": "diagnostic-differential"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  {
+                    "localKey": "infer",
+                    "materialRefs": [
+                      "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "causes",
+                          "role": "observations"
+                        },
+                        {
+                          "componentLocalKey": "checks",
+                          "role": "observations"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "items": [
+                              {
+                                "key": "missing",
+                                "meaning": "The expected input was not observed.",
+                                "title": "Input absent"
+                              },
+                              {
+                                "key": "transform",
+                                "meaning": "An input observation existed but disappeared after transformation.",
+                                "title": "Transformation failed"
+                              }
+                            ]
+                          },
+                          "localKey": "causes",
+                          "type": "candidate-set"
+                        },
+                        {
+                          "content": {
+                            "candidateSetLocalKey": "causes",
+                            "items": [
+                              {
+                                "contrasts": [
+                                  {
+                                    "candidateKey": "missing",
+                                    "criterion": "Input was absent before transformation."
+                                  },
+                                  {
+                                    "candidateKey": "transform",
+                                    "criterion": "Input existed before transformation but not after."
+                                  }
+                                ],
+                                "key": "boundary",
+                                "prompt": "At which boundary did the observation disappear?",
+                                "title": "Locate the boundary"
+                              }
+                            ]
+                          },
+                          "localKey": "checks",
+                          "type": "discriminator-set"
+                        }
+                      ],
+                      "method": {
+                        "term": "diagnostic-differential"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Treat an absent observation as a negative result.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  }
+                ],
+                "localKey": "signal",
+                "revision": 1
+              }
+            ],
+            "kind": "delegated_agent_editorial",
+            "preview": {
+              "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+              "creation_accepted": "not_evaluated",
+              "expected_component_bindings": [
+                {
+                  "bindings": [
+                    {
+                      "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                      "role": "observations",
+                      "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                    }
+                  ],
+                  "carrier": {
+                    "adoption_proposal_digest": "sha256:9ff1a104abd8fb36e19688bb393577a547c1515965ad8cd0f697c724faf14050",
+                    "bindings_digest": "sha256:aa21e7bb99db640ad1031a74286927510ed10e7650b9b2f68a5fdca961907561",
+                    "component_declaration_digest": "sha256:589603ab00d534f02488c0ae66ad17f9dabf5f3aa5c1f40b0b6274c7199f8b3a",
+                    "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                    "component_type": "candidate-set",
+                    "content": {
+                      "items": [
+                        {
+                          "key": "missing",
+                          "meaning": "The expected input was not observed.",
+                          "title": "Input absent"
+                        },
+                        {
+                          "key": "transform",
+                          "meaning": "An input observation existed but disappeared after transformation.",
+                          "title": "Transformation failed"
+                        }
+                      ]
+                    },
+                    "content_digest": "sha256:6e7c660ebdc8355b13bee83c64b47d26ce89937ed6fb667cb77a4d8dfcd857ce",
+                    "contract_id": "kdna.component-semantics/1",
+                    "contract_version": "1.0.0",
+                    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                    "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+                    "profile_id": "candidate-set/1",
+                    "statement_origin": "mechanical_content_representation"
+                  },
+                  "native_component": {
+                    "id": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                    "method": {
+                      "term": "candidate-set"
+                    },
+                    "statement": "{\"items\":[{\"key\":\"missing\",\"meaning\":\"The expected input was not observed.\",\"title\":\"Input absent\"},{\"key\":\"transform\",\"meaning\":\"An input observation existed but disappeared after transformation.\",\"title\":\"Transformation failed\"}]}"
+                  },
+                  "presence": {
+                    "bindings_state": "declared",
+                    "components_state": "declared",
+                    "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                  },
+                  "proposal": {
+                    "alternativeLocalKey": "preserve",
+                    "asset": {
+                      "asset_id": "asset:d2885558-463f-4e7c-95c9-b976c9b572ea",
+                      "asset_uid": "urn:uuid:88454a29-1783-47d0-9749-9a6baa354dc5",
+                      "version": "0.1.4"
+                    },
+                    "authored_candidate_digest": "sha256:f200d14d44419b6b110fe3dffd3baaf36cfc0cdb03524f5818429dadbdc576d0",
+                    "bindings": [
+                      {
+                        "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                        "role": "observations",
+                        "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                      }
+                    ],
+                    "componentLocalKey": "causes",
+                    "content": {
+                      "items": [
+                        {
+                          "key": "missing",
+                          "meaning": "The expected input was not observed.",
+                          "title": "Input absent"
+                        },
+                        {
+                          "key": "transform",
+                          "meaning": "An input observation existed but disappeared after transformation.",
+                          "title": "Transformation failed"
+                        }
+                      ]
+                    },
+                    "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+                    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                    "judgmentLocalKey": "signal",
+                    "native_component": {
+                      "id": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                      "method": {
+                        "term": "candidate-set"
+                      },
+                      "statement": "{\"items\":[{\"key\":\"missing\",\"meaning\":\"The expected input was not observed.\",\"title\":\"Input absent\"},{\"key\":\"transform\",\"meaning\":\"An input observation existed but disappeared after transformation.\",\"title\":\"Transformation failed\"}]}"
+                    },
+                    "presence": {
+                      "bindings_state": "declared",
+                      "components_state": "declared",
+                      "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                    },
+                    "profile": {
+                      "component_type": "candidate-set",
+                      "profile_id": "candidate-set/1"
+                    },
+                    "rule": "kdna.studio-materialization/2",
+                    "statement_origin": "mechanical_content_representation"
+                  }
+                },
+                {
+                  "bindings": [
+                    {
+                      "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                      "role": "observations",
+                      "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                    }
+                  ],
+                  "carrier": {
+                    "adoption_proposal_digest": "sha256:7b3d5d5c284703388b315723389435a5d191d71bcdcd800541d4da62ffc0db6f",
+                    "bindings_digest": "sha256:54b015d9f6ae4c3322411862bc515bd4a1f0e1bd3c0bb48fab2ba40f826cc546",
+                    "component_declaration_digest": "sha256:59ef6417fbcd600ad2ae52c2134946511d376ea81296657d2b3e1067587af494",
+                    "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                    "component_type": "discriminator-set",
+                    "content": {
+                      "candidateSetRef": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                      "items": [
+                        {
+                          "contrasts": [
+                            {
+                              "candidateKey": "missing",
+                              "criterion": "Input was absent before transformation."
+                            },
+                            {
+                              "candidateKey": "transform",
+                              "criterion": "Input existed before transformation but not after."
+                            }
+                          ],
+                          "key": "boundary",
+                          "prompt": "At which boundary did the observation disappear?",
+                          "title": "Locate the boundary"
+                        }
+                      ]
+                    },
+                    "content_digest": "sha256:68b93c6d3f441e3c71243939c9777aee626737006649993ee62930746bcb0351",
+                    "contract_id": "kdna.component-semantics/1",
+                    "contract_version": "1.0.0",
+                    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                    "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+                    "profile_id": "discriminator-set/1",
+                    "statement_origin": "mechanical_content_representation"
+                  },
+                  "native_component": {
+                    "id": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                    "method": {
+                      "term": "discriminator-set"
+                    },
+                    "statement": "{\"candidateSetRef\":\"component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1\",\"items\":[{\"contrasts\":[{\"candidateKey\":\"missing\",\"criterion\":\"Input was absent before transformation.\"},{\"candidateKey\":\"transform\",\"criterion\":\"Input existed before transformation but not after.\"}],\"key\":\"boundary\",\"prompt\":\"At which boundary did the observation disappear?\",\"title\":\"Locate the boundary\"}]}"
+                  },
+                  "presence": {
+                    "bindings_state": "declared",
+                    "components_state": "declared",
+                    "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                  },
+                  "proposal": {
+                    "alternativeLocalKey": "preserve",
+                    "asset": {
+                      "asset_id": "asset:d2885558-463f-4e7c-95c9-b976c9b572ea",
+                      "asset_uid": "urn:uuid:88454a29-1783-47d0-9749-9a6baa354dc5",
+                      "version": "0.1.4"
+                    },
+                    "authored_candidate_digest": "sha256:f200d14d44419b6b110fe3dffd3baaf36cfc0cdb03524f5818429dadbdc576d0",
+                    "bindings": [
+                      {
+                        "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                        "role": "observations",
+                        "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                      }
+                    ],
+                    "componentLocalKey": "checks",
+                    "content": {
+                      "candidateSetRef": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+                      "items": [
+                        {
+                          "contrasts": [
+                            {
+                              "candidateKey": "missing",
+                              "criterion": "Input was absent before transformation."
+                            },
+                            {
+                              "candidateKey": "transform",
+                              "criterion": "Input existed before transformation but not after."
+                            }
+                          ],
+                          "key": "boundary",
+                          "prompt": "At which boundary did the observation disappear?",
+                          "title": "Locate the boundary"
+                        }
+                      ]
+                    },
+                    "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+                    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+                    "judgmentLocalKey": "signal",
+                    "native_component": {
+                      "id": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+                      "method": {
+                        "term": "discriminator-set"
+                      },
+                      "statement": "{\"candidateSetRef\":\"component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1\",\"items\":[{\"contrasts\":[{\"candidateKey\":\"missing\",\"criterion\":\"Input was absent before transformation.\"},{\"candidateKey\":\"transform\",\"criterion\":\"Input existed before transformation but not after.\"}],\"key\":\"boundary\",\"prompt\":\"At which boundary did the observation disappear?\",\"title\":\"Locate the boundary\"}]}"
+                    },
+                    "presence": {
+                      "bindings_state": "declared",
+                      "components_state": "declared",
+                      "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+                    },
+                    "profile": {
+                      "component_type": "discriminator-set",
+                      "profile_id": "discriminator-set/1"
+                    },
+                    "rule": "kdna.studio-materialization/2",
+                    "statement_origin": "mechanical_content_representation"
+                  }
+                }
+              ],
+              "kind": "pre_compiler_authoring_review",
+              "presence": [],
+              "preview_digest": "sha256:2bf13fed22226d3fc930f4c6538be596066914a3f3527af85106620b52dad5c1",
+              "proposal_digests": [
+                "sha256:7b3d5d5c284703388b315723389435a5d191d71bcdcd800541d4da62ffc0db6f",
+                "sha256:9ff1a104abd8fb36e19688bb393577a547c1515965ad8cd0f697c724faf14050"
+              ],
+              "revision": 4,
+              "selected": [
+                {
+                  "alternative": {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:7cd06367-c2bc-4b3f-a0c5-50e512d50b36"
+                    ],
+                    "method": {
+                      "bindings": [
+                        {
+                          "componentLocalKey": "causes",
+                          "role": "observations"
+                        },
+                        {
+                          "componentLocalKey": "checks",
+                          "role": "observations"
+                        }
+                      ],
+                      "components": [
+                        {
+                          "content": {
+                            "items": [
+                              {
+                                "key": "missing",
+                                "meaning": "The expected input was not observed.",
+                                "title": "Input absent"
+                              },
+                              {
+                                "key": "transform",
+                                "meaning": "An input observation existed but disappeared after transformation.",
+                                "title": "Transformation failed"
+                              }
+                            ]
+                          },
+                          "localKey": "causes",
+                          "type": "candidate-set"
+                        },
+                        {
+                          "content": {
+                            "candidateSetLocalKey": "causes",
+                            "items": [
+                              {
+                                "contrasts": [
+                                  {
+                                    "candidateKey": "missing",
+                                    "criterion": "Input was absent before transformation."
+                                  },
+                                  {
+                                    "candidateKey": "transform",
+                                    "criterion": "Input existed before transformation but not after."
+                                  }
+                                ],
+                                "key": "boundary",
+                                "prompt": "At which boundary did the observation disappear?",
+                                "title": "Locate the boundary"
+                              }
+                            ]
+                          },
+                          "localKey": "checks",
+                          "type": "discriminator-set"
+                        }
+                      ],
+                      "method": {
+                        "term": "diagnostic-differential"
+                      }
+                    },
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  "judgmentLocalKey": "signal"
+                }
+              ],
+              "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+            },
+            "review_id": "review:b3f0f70f-95d6-4ce4-8604-fb9cb6e86212",
+            "revision": 4,
+            "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+          }
+        },
+        "adoption_kind": "delegated_agent_editorial",
+        "authorization": {
+          "coordinate": "fixture:local-only",
+          "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+        },
+        "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+        "format": "kdna.studio-decision/2",
+        "preview_digest": "sha256:2bf13fed22226d3fc930f4c6538be596066914a3f3527af85106620b52dad5c1",
+        "proposal_digests": [
+          "sha256:7b3d5d5c284703388b315723389435a5d191d71bcdcd800541d4da62ffc0db6f",
+          "sha256:9ff1a104abd8fb36e19688bb393577a547c1515965ad8cd0f697c724faf14050"
+        ],
+        "revision": 4,
+        "session_id": "session:75ecdd0e-ba64-45c1-8eb3-9412412744e2"
+      },
+      "digest": "sha256:254aa7581dee66b648647d6b422c786baa8270194398aa8a295772ddeb3d8ba8",
+      "event": "final_adoption",
+      "previous_digest": "sha256:d0f56503f7eafa38c649abbab2b982e7ebba34a5eb9ec22675f103eb181e0fcd",
+      "revision": 4,
+      "sequence": 5
+    }
+  ],
+  "expected_component_bindings": [
+    {
+      "proposal": {
+        "rule": "kdna.studio-materialization/2",
+        "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+        "asset": {
+          "asset_id": "asset:d2885558-463f-4e7c-95c9-b976c9b572ea",
+          "asset_uid": "urn:uuid:88454a29-1783-47d0-9749-9a6baa354dc5",
+          "version": "0.1.4"
+        },
+        "judgmentLocalKey": "signal",
+        "alternativeLocalKey": "preserve",
+        "componentLocalKey": "causes",
+        "profile": {
+          "component_type": "candidate-set",
+          "profile_id": "candidate-set/1"
+        },
+        "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+        "authored_candidate_digest": "sha256:f200d14d44419b6b110fe3dffd3baaf36cfc0cdb03524f5818429dadbdc576d0",
+        "content": {
+          "items": [
+            {
+              "key": "missing",
+              "meaning": "The expected input was not observed.",
+              "title": "Input absent"
+            },
+            {
+              "key": "transform",
+              "meaning": "An input observation existed but disappeared after transformation.",
+              "title": "Transformation failed"
+            }
+          ]
+        },
+        "native_component": {
+          "id": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+          "method": {
+            "term": "candidate-set"
+          },
+          "statement": "{\"items\":[{\"key\":\"missing\",\"meaning\":\"The expected input was not observed.\",\"title\":\"Input absent\"},{\"key\":\"transform\",\"meaning\":\"An input observation existed but disappeared after transformation.\",\"title\":\"Transformation failed\"}]}"
+        },
+        "statement_origin": "mechanical_content_representation",
+        "bindings": [
+          {
+            "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+            "role": "observations",
+            "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+          }
+        ],
+        "presence": {
+          "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+          "components_state": "declared",
+          "bindings_state": "declared"
+        }
+      },
+      "carrier": {
+        "contract_id": "kdna.component-semantics/1",
+        "contract_version": "1.0.0",
+        "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+        "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+        "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+        "component_type": "candidate-set",
+        "profile_id": "candidate-set/1",
+        "content": {
+          "items": [
+            {
+              "key": "missing",
+              "meaning": "The expected input was not observed.",
+              "title": "Input absent"
+            },
+            {
+              "key": "transform",
+              "meaning": "An input observation existed but disappeared after transformation.",
+              "title": "Transformation failed"
+            }
+          ]
+        },
+        "content_digest": "sha256:6e7c660ebdc8355b13bee83c64b47d26ce89937ed6fb667cb77a4d8dfcd857ce",
+        "component_declaration_digest": "sha256:589603ab00d534f02488c0ae66ad17f9dabf5f3aa5c1f40b0b6274c7199f8b3a",
+        "statement_origin": "mechanical_content_representation",
+        "bindings_digest": "sha256:aa21e7bb99db640ad1031a74286927510ed10e7650b9b2f68a5fdca961907561",
+        "adoption_proposal_digest": "sha256:9ff1a104abd8fb36e19688bb393577a547c1515965ad8cd0f697c724faf14050"
+      },
+      "native_component": {
+        "id": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+        "method": {
+          "term": "candidate-set"
+        },
+        "statement": "{\"items\":[{\"key\":\"missing\",\"meaning\":\"The expected input was not observed.\",\"title\":\"Input absent\"},{\"key\":\"transform\",\"meaning\":\"An input observation existed but disappeared after transformation.\",\"title\":\"Transformation failed\"}]}"
+      },
+      "bindings": [
+        {
+          "component_ref": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1",
+          "role": "observations",
+          "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+        }
+      ],
+      "presence": {
+        "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+        "components_state": "declared",
+        "bindings_state": "declared"
+      }
+    },
+    {
+      "proposal": {
+        "rule": "kdna.studio-materialization/2",
+        "context_digest": "sha256:42b3758fff10a9f6fd8b7ab479d9a4fcc55ab8dd33474c0b6b3a07798ddbee7f",
+        "asset": {
+          "asset_id": "asset:d2885558-463f-4e7c-95c9-b976c9b572ea",
+          "asset_uid": "urn:uuid:88454a29-1783-47d0-9749-9a6baa354dc5",
+          "version": "0.1.4"
+        },
+        "judgmentLocalKey": "signal",
+        "alternativeLocalKey": "preserve",
+        "componentLocalKey": "checks",
+        "profile": {
+          "component_type": "discriminator-set",
+          "profile_id": "discriminator-set/1"
+        },
+        "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+        "authored_candidate_digest": "sha256:f200d14d44419b6b110fe3dffd3baaf36cfc0cdb03524f5818429dadbdc576d0",
+        "content": {
+          "items": [
+            {
+              "contrasts": [
+                {
+                  "candidateKey": "missing",
+                  "criterion": "Input was absent before transformation."
+                },
+                {
+                  "candidateKey": "transform",
+                  "criterion": "Input existed before transformation but not after."
+                }
+              ],
+              "key": "boundary",
+              "prompt": "At which boundary did the observation disappear?",
+              "title": "Locate the boundary"
+            }
+          ],
+          "candidateSetRef": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1"
+        },
+        "native_component": {
+          "id": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+          "method": {
+            "term": "discriminator-set"
+          },
+          "statement": "{\"candidateSetRef\":\"component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1\",\"items\":[{\"contrasts\":[{\"candidateKey\":\"missing\",\"criterion\":\"Input was absent before transformation.\"},{\"candidateKey\":\"transform\",\"criterion\":\"Input existed before transformation but not after.\"}],\"key\":\"boundary\",\"prompt\":\"At which boundary did the observation disappear?\",\"title\":\"Locate the boundary\"}]}"
+        },
+        "statement_origin": "mechanical_content_representation",
+        "bindings": [
+          {
+            "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+            "role": "observations",
+            "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+          }
+        ],
+        "presence": {
+          "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+          "components_state": "declared",
+          "bindings_state": "declared"
+        }
+      },
+      "carrier": {
+        "contract_id": "kdna.component-semantics/1",
+        "contract_version": "1.0.0",
+        "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+        "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+        "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+        "component_type": "discriminator-set",
+        "profile_id": "discriminator-set/1",
+        "content": {
+          "items": [
+            {
+              "contrasts": [
+                {
+                  "candidateKey": "missing",
+                  "criterion": "Input was absent before transformation."
+                },
+                {
+                  "candidateKey": "transform",
+                  "criterion": "Input existed before transformation but not after."
+                }
+              ],
+              "key": "boundary",
+              "prompt": "At which boundary did the observation disappear?",
+              "title": "Locate the boundary"
+            }
+          ],
+          "candidateSetRef": "component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1"
+        },
+        "content_digest": "sha256:68b93c6d3f441e3c71243939c9777aee626737006649993ee62930746bcb0351",
+        "component_declaration_digest": "sha256:59ef6417fbcd600ad2ae52c2134946511d376ea81296657d2b3e1067587af494",
+        "statement_origin": "mechanical_content_representation",
+        "bindings_digest": "sha256:54b015d9f6ae4c3322411862bc515bd4a1f0e1bd3c0bb48fab2ba40f826cc546",
+        "adoption_proposal_digest": "sha256:7b3d5d5c284703388b315723389435a5d191d71bcdcd800541d4da62ffc0db6f"
+      },
+      "native_component": {
+        "id": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+        "method": {
+          "term": "discriminator-set"
+        },
+        "statement": "{\"candidateSetRef\":\"component:7355362eade0f41ed032d4a55358541b52da70f133ca8ae8eaa0209b6e2b20e1\",\"items\":[{\"contrasts\":[{\"candidateKey\":\"missing\",\"criterion\":\"Input was absent before transformation.\"},{\"candidateKey\":\"transform\",\"criterion\":\"Input existed before transformation but not after.\"}],\"key\":\"boundary\",\"prompt\":\"At which boundary did the observation disappear?\",\"title\":\"Locate the boundary\"}]}"
+      },
+      "bindings": [
+        {
+          "component_ref": "component:898c0d102db959b048b55c6c9c371642f62b9391f0cedb6fe880e2baa9065d15",
+          "role": "observations",
+          "target_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f"
+        }
+      ],
+      "presence": {
+        "judgment_ref": "judgment:759c1907b44a3d964ee1b38a492137208879c8be17ef57f2c97b3937897de48f",
+        "components_state": "declared",
+        "bindings_state": "declared"
+      }
+    }
+  ],
+  "presence": [],
+  "adoption": {
+    "contract_id": "kdna.component-semantics/1",
+    "contract_version": "1.0.0",
+    "definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+    "declaration_set_digest": "sha256:006b6a0faac065834bdae26ec61c302778ef2d206043b861306a6cfc5492c495",
+    "proposal_set_digest": "sha256:da7fed07779c97c62148eeece0804b7bb97570cc35c229cff9df47ffa9be9fba",
+    "decision_digest": "sha256:49f652ce1da14026b561b3fdc01f470d4b35c26105c0717309e23789d8abb7d2",
+    "adoption_kind": "delegated_agent_editorial"
+  },
+  "artifact": {
+    "bytes": 8498,
+    "digest": "sha256:5d567bd284113c6e3041098e60136ec4c62b6cecee34ffb72096935ba8003f13"
+  },
+  "identity": "not_verified",
+  "action_authorization": "not_evaluated",
+  "creation_accepted": "not_evaluated"
+}

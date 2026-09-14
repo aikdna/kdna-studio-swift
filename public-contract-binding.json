@@ -1,0 +1,99 @@
+{
+  "package": "kdna-studio-swift",
+  "product": "KDNAStudioCore",
+  "version": "0.6.0-rc.components.1",
+  "publication": "source release candidate",
+  "reference_contract": {
+    "core": {
+      "package": "@aikdna/kdna-core",
+      "version": "0.24.0-rc.component-semantics.2",
+      "artifact_sha256": "a9cb3f08735b00657e4848766f0ac517abdcb256121a841f01e662525a0858ea"
+    },
+    "read": {
+      "package": "@aikdna/kdna-read",
+      "version": "0.3.0-rc.component-semantics.2",
+      "artifact_sha256": "43d0f12a1a63a88d26570bfff821919a5cd478fdbd0568bd9c819bc56078b0f0"
+    },
+    "tuple": {
+      "container": "0.2.0",
+      "core": "kdna.core/0.3.0",
+      "host": "kdna.agent-host/0.2.0",
+      "ir": "kdna.canonical-ir/0.2.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.2.0",
+      "plan": "kdna.consumption-plan/0.2.0",
+      "read": "kdna.read/0.2.0",
+      "runtime": "kdna.runtime-capsule/0.2.0",
+      "trace": "kdna.judgment-trace/0.2.0"
+    }
+  },
+  "actual_core_implementation": {
+    "provider": "swift",
+    "name": "KDNACore",
+    "version": "0.4.0-rc.component-semantics.1",
+    "artifact": {
+      "kind": "source-tar-gz",
+      "sha256": "d91844ba0c5b3262f63bc420a1d7a8ed0c47c1ad04dcee227827e4b6e90a493b"
+    }
+  },
+  "upstream_public_inputs": {
+    "semantic_source_sha256": "862cea95bdb3a634356ad729b95e0882cb0b75fdb80f103a11f4037783899110",
+    "generated_contract_sha256": "ec8a2616a768f5523e8852487e757f6f9560d1933ea3a9ee90ead69fe1120f4d",
+    "component_definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3"
+  },
+  "studio_evidence": {
+    "owner": "kdna-studio-core",
+    "format": {
+      "id": "kdna.studio-creation-evidence/2",
+      "version": "2.0.0"
+    },
+    "materialization_rule": "kdna.studio-materialization/2",
+    "specs": [
+      {
+        "name": "API.d.ts",
+        "bytes": 5385,
+        "sha256": "a6f3436152ea4b3c33454492918972b06503a764e6017703fb8a652230d85ce7"
+      },
+      {
+        "name": "ASSET-IDENTITY-GENERATION.md",
+        "bytes": 1857,
+        "sha256": "6469dd5c06b9143680012ba1cc1d765414621611f4256bc1a0e5a5759e617ef0"
+      },
+      {
+        "name": "CURRENT-CREATION-CONTRACT.md",
+        "bytes": 9592,
+        "sha256": "61d5912d791b16bba1b5af79369267d5da2659412becb6a8da1994f5f3ab128d"
+      },
+      {
+        "name": "SCHEMA-IDENTITY-DEPENDENCY-AMENDMENT.json",
+        "bytes": 1074,
+        "sha256": "0b19c4a5f48f9bbce2f1abbc4742f1a83b955416aa4ffec67f8c73251ae0e91b"
+      }
+    ],
+    "spec_precedence": "SCHEMA-IDENTITY-DEPENDENCY-AMENDMENT.json advances only the Core/Read RC coordinates in the original contract; original contract/API bytes are retained. ASSET-IDENTITY-GENERATION.md specifies compiler-managed session identities.",
+    "provider_assertion": "declared_not_authenticated",
+    "compiler_artifact_sha256": "UNKNOWN",
+    "historical_formats": "Format1 and absent-format evidence are not current; historical source and evidence stay separate, with no conversion or relabeling."
+  },
+  "dependency_layout": "SwiftPM resolves dependency_source at its exact public Git revision; actual_core_implementation.artifact records the original source archive provenance, not an alternate resolution path.",
+  "scope": {
+    "creation": "Explicit current alternatives, recorded adoption input, private one-use pre-compiler expectation and caller-captured saved-byte completion; three public component types and presence/formation/source mappings.",
+    "container_members": [
+      "mimetype",
+      "kdna.json",
+      "payload.kdnab"
+    ],
+    "static_creation_accepted": "not_evaluated",
+    "static_live_context": "unavailable",
+    "live_completion": "accepted_with_live_context only after the private pending save matches fresh public Core observations and exact pre-compiler bytes",
+    "identity": "not_verified",
+    "read_permission": "not_evaluated",
+    "action_authorization": "not_evaluated",
+    "filesystem_durability": "not_proven_by_library"
+  },
+  "validation_scope": "Repository checks cover source inventories, frozen contracts/fixtures, current native lifecycle and public consumption. Platform build results do not authenticate editorial identity or prove filesystem durability.",
+  "dependency_source": {
+    "url": "https://github.com/aikdna/kdna-core-swift.git",
+    "revision": "7f686046ce8bae968f9645420ff736f5a0aa2091"
+  }
+}
