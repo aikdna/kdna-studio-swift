@@ -1,206 +1,59 @@
 # KDNA Studio Swift
 
-[![CI](https://github.com/aikdna/kdna-studio-swift/actions/workflows/ci.yml/badge.svg)](https://github.com/aikdna/kdna-studio-swift/actions/workflows/ci.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+This source release candidate is a native Creation kernel with the public product `KDNAStudioCore`. It handles ordinary prose and explicit taxonomy, candidate-set and discriminator-set authoring through the same current lifecycle. The exact version and dependency coordinates are in `public-contract-binding.json`.
 
-**Native Swift authoring kernel for turning scattered notes, documents, works,
-and feedback into valid, testable `.kdna` judgment assets — for macOS and iOS
-apps.**
+`Package.swift` compiles `Sources/ComponentCreation` and tests `Tests/ComponentCreationTests`. Previous `Sources/BlankCreation`, earlier sources, tests and evidence remain historical files; they are not compiled into this product. Current evidence uses format 2. There are no compatibility aliases or automatic conversions from previous formats.
 
-KDNA Studio Swift is the authoring kernel for Apple platforms. It provides the
-native primitives for Studio-compatible apps: project model, evidence import,
-judgment cards, optional provenance, compile, and export. Full Domain-First
-distillation UI and candidate review live at the app layer; this package is the
-reusable Swift authoring kernel.
+## Build and test
 
-A `.kdna` asset is not created by writing JSON files. It is compiled by a
-Studio-compatible authoring pipeline that performs validation, canonicalization,
-identity generation, digest computation, and provenance recording.
+SwiftPM resolves KDNACore from the exact public Git revision in `Package.swift`
+and `public-contract-binding.json`. A sibling checkout or manually extracted
+SDK is no longer required. The retained source archive digest records the SDK
+baseline provenance; the Git revision is the installation coordinate. Core is
+the native admission implementation, with no AppShared or JavaScript runtime
+dependency. Reference Core/Read coordinates do not assert a Read invocation or
+permission.
 
-> New to KDNA? → [KDNA Core](https://github.com/aikdna/kdna)
->
-> Need the Swift runtime implementation? →
-> [kdna-core-swift](https://github.com/aikdna/kdna-core-swift)
->
-> Using this from an app? Shared presentation types come from →
-> [kdna-app-shared](https://github.com/aikdna/kdna-app-shared)
-
-## Apple Ecosystem Pair
-
-| Library | Language | Role |
-|---------|----------|------|
-| [`kdna-core-swift`](https://github.com/aikdna/kdna-core-swift) | Swift | **Use** KDNA — load, route, inject into LLM |
-| **`kdna-studio-swift`** | Swift | **Create** KDNA — author, optionally review/lock, compile, export |
-
-No Node.js dependency and no JavaScriptCore bridge. The package delegates the
-runtime wire contract, authorization, and encryption primitives to the
-official `kdna-core-swift` package.
-
----
-
-## Install
-
-Add via Swift Package Manager:
-
-```swift
-.package(url: "https://github.com/aikdna/kdna-studio-swift.git", from: "0.4.0")
+```sh
+swift package resolve
+python3 scripts/check-source-surface.py --swiftpm
+python3 scripts/test_source_surface.py
+swift build
+swift test
+swift build -c release
+swift test -c release
+python3 scripts/check-public-consumer.py --configuration debug
+python3 scripts/check-public-consumer.py --configuration release
 ```
 
-Requires macOS 13+ or iOS 16+.
+The separate consumer uses only public imports, actually saves and reopens an
+export, checks static/live proof boundaries and verifies that an old API symbol
+is unavailable. Its adoption input is synthetic. Use `--work-dir NEW_DIRECTORY`
+to retain its build and run logs. The 23 historical files, 15 current fixtures
+and four shared contract files have exact inventories; they cannot silently
+change or reenter the current compiled target. `surface-disposition.json`
+records their status. Original shared contract bytes are retained as pinned
+references; their historical acceptance markers do not describe current CI.
 
----
+## Public authoring lifecycle
 
-## Quick Start
+`KDNAStudio.createSession(options:adoptionInput:interpretReply:)` returns a `KDNAStudioSession` actor. Options contain `agent: {name, version}` and optional `syntheticFixture: Bool`. `KDNAStudioAdoptionInput(kind:channel:authorization:receive:)` captures an asynchronous input callback. Its kind is `.humanClaimUnverified` or `.delegatedAgentEditorial`; the latter requires the embedding's explicit `{coordinate, statement}` delegation record. These declarations do not authenticate a person, Agent or delegation.
 
-```swift
-import KDNAStudioCore
+The interpreter receives the actual reply text and the same captured review. Public entry points do not accept a Compiler callback, protocol IDs, asset identity setters or arbitrary runtime modules. The authoring values are documented in [the native API guide](docs/COMPONENT-CREATION.md); the pinned shared contract and its coordinate amendment are in [current-creation](docs/current-creation/CURRENT-CREATION-CONTRACT.md).
 
-let manager = KDNStudioProjectManager()
+1. Use `session.agent.setBrief`, `recordMaterial` and `propose` to record new materials and at least two semantically different alternatives per judgment group.
+2. `receiveAdoptionReply()` captures an actual channel message, then interprets it as select, reject, note or confirm. `revise` requires the exact current proposal revision. Select one alternative per group and call `compilePreview()` to inspect the complete pre-Compiler plan.
+3. A confirm reply must bind that exact preview. `exportAsset()` consumes the private live context before invoking Compiler. Public Core checks the expected materialization first; a changed Compiler output is rejected even if technically valid.
+4. Save the returned bytes, read the actual file again, then call `completeSave(readbackBytes)`. Both success and failure consume the pending save. The library checks captured bytes and fresh Core observations; the embedding owns the actual file operation and its durability.
 
-// 1. Create project
-var project = manager.createProject(
-    name: "writing_judgment",
-    author: KDNStudioAuthor(name: "Writing Expert", id: "writer_001")
-)
+Three component types, same-type instances, multiple role bindings, unbound components and explicit field absence are preserved. Missing component statements are marked mechanical content representations. An explicit `formationRule.conditions` array becomes the authored overall conditions; comparison criteria are never combined into an invented premise. Only explicitly authored public sources/notices enter the asset. Private source coordinates, raw materials and the private transcript do not enter the three-member container.
 
-// 2. Create judgment card
-var card = KDNStudioCards.createCard(
-    type: .axiom,
-    fields: [
-        "one_sentence": .string("Most writing problems are structural, not language-level."),
-        "full_statement": .string("Diagnose structure before language."),
-        "why": .string("Surface polishing on weak structure wastes effort."),
-        "applies_when": .array(["User asks to review content"]),
-        "does_not_apply_when": .array(["User asks for grammar check only"]),
-        "failure_risk": .string("May over-diagnose structural problems.")
-    ]
-)
+## Evidence and limits
 
-// 3. Revise. Human Lock is not required for ordinary compile/export.
-card = try KDNStudioCards.transitionCard(card, to: .revised, by: "writer_001")
-project.cards.append(card)
+`KDNAStudio.verifyCreationEvidence(bytes:evidence:expectedBinding:)` uses actual public Core admission and an independently supplied `{session_id, asset_digest, evidence_digest}` binding. It reconstructs the private history and complete materialization, then compares public Canonical IR across supported providers. A consistent transcript cannot recreate a private live session: static Creation remains `not_evaluated` and live context `unavailable`. Format1, absent or unknown formats, old Core graph coordinates, mixed providers, changed materials and unbound revisions are rejected.
 
-// 4. Compile and export the canonical runtime .kdna.
-let result = try KDNStudioCompiler.compile(project)
-let assetURL = try KDNStudioCompiler.exportAsset(result, to: outputURL)
-```
+Private JSON hashing uses exact UTF-16 key order, finite binary64 leaf spelling and the common depth-64/100000-value bound. It has no separate array-10000 limit. Asset/session identities are independent lowercase UUIDs, fixed within the session; public IDs follow the owner-qualified shared rule. Compiler artifact `UNKNOWN` and provider fields are bound declarations, not execution identity or signatures.
 
-### Reviewed-only workflow (optional)
+`accepted_with_live_context` establishes the captured saved-byte expectation within that live process. Identity stays `not_verified`, actions stay `not_evaluated`, and filesystem durability is `not_proven_by_library`. Read permission needs its own trusted host. Synthetic test callbacks are actual fixture executions; they are not actual human or Agent editorial adoption of a domain asset.
 
-```swift
-// Optional reviewed-only workflow: record a valid lock, then request the
-// explicit policy. A missing, incomplete, or stale recorded lock fails closed.
-project.cards[0] = try KDNStudioCards.lockCard(
-    project.cards[0],
-    by: "writer_001",
-    statement: "This represents my professional judgment.",
-    appliesWhen: true, doesNotApplyWhen: true, failureRisk: true
-)
-let reviewedResult = try KDNStudioCompiler.compile(project, requireHumanLock: true)
-```
-
----
-
-## What it does
-
-- **Project Model** — create, load, save, validate Studio projects
-- **Judgment Cards** — 9 card types (axiom, ontology, misunderstanding,
-  self_check, scenario, case, boundary, risk, aesthetic) with a 6-state machine
-- **Human Lock** — optional provenance for reviewed publishing flows; Studio
-  projects may use locked cards to mark confirmed judgment
-- **Authoring Provenance** — exported assets carry Studio-compatible compiler
-  metadata, asset/project/build identity, Human Lock count, confirmation status,
-  content digest, and project digest
-- **Fingerprint Detection** — SHA256 hash catches post-lock content changes
-- **Evidence Import** — text, markdown, interview records
-- **Domain-Scoped Authoring Boundary** — one exported `.kdna` should represent
-  one clear judgment domain; multi-asset use requires an explicit, separately
-  admitted Host contract rather than silently broadening or combining files
-- **Compiler** — non-deprecated cards → internal KDNA asset entries; review
-  provenance is reported separately
-- **Runtime Export** — write a canonical `.kdna` runtime asset; directory export
-  is dev-only
-- **Explicit File Inspection** — show identity, version, container digest,
-  creator declaration, declared applicability boundaries, access, encryption,
-  compatibility, and Core LoadPlan without attaching or loading the asset into
-  a task; protected payload boundaries remain unavailable until authorization
-- **Workspace Interface (macOS)** — read visible status and apply
-  enable/disable/rollback/relation-only remove through one exact Runtime CLI;
-  return terminal approval commands for attach and switch
-
-## Runtime Export Contract
-
-`KDNStudioCompiler.compile(_:)` is an authoring compile step. It may produce
-source/audit entries such as `KDNA_Core.json`, `KDNA_Patterns.json`, reports,
-and build receipts for review.
-
-`KDNStudioCompiler.exportAsset(_:to:project:)` is the user-facing runtime export
-step. It must emit only the canonical KDNA runtime container entries:
-
-```text
-mimetype
-kdna.json
-payload.kdnab
-checksums.json
-```
-
-`payload.kdnab` is CBOR. Password-protected export stores a CBOR encrypted
-envelope and can only be consumed after Core returns an authorized LoadPlan;
-the normal Agent-facing result is a Runtime Capsule.
-
-The exported manifest uses `format_version: 0.1.0` and identifies the judgment
-payload as `kdna.payload.judgment` with `profile_version: 0.1.0`.
-
-Top-level source entries such as `KDNA_Core.json`, `KDNA_Patterns.json`,
-`KDNA_CARD.json`, reports, and `source_cards` are not runtime distribution
-entries. Apple Studio apps must use this runtime export path and must not create
-app-private `.kdna` envelopes that KDNA Core or CLI cannot inspect.
-
-## Card Types
-
-| Type | Compiles to | Description |
-|------|------------|-------------|
-| `axiom` | KDNA_Core.json | Core judgment principle |
-| `ontology` | KDNA_Core.json | Concept boundaries |
-| `misunderstanding` | KDNA_Patterns.json | Common wrong interpretation |
-| `self_check` | KDNA_Patterns.json | Yes/no verification question |
-| `boundary` | KDNA_Patterns.json | Domain boundary |
-| `risk` | KDNA_Patterns.json | Risk assessment |
-| `aesthetic` | KDNA_Patterns.json | Aesthetic preference |
-| `scenario` | KDNA_Scenarios.json | Worked scenario or situational example |
-| `case` | KDNA_Cases.json | Concrete case study |
-
-## Card State Machine
-
-```
-draft → revised → locked → tested → published → deprecated
-```
-
-Ordinary compilation includes every non-deprecated card. `locked`, `tested`,
-and `published` states add review provenance; they are not creation, format, or
-ordinary export requirements. Workflows that require reviewed-only output can
-call `KDNStudioCompiler.compile(_:requireHumanLock:)` or
-`KDNStudioProjectManager.exportProject(_:requireHumanLock:force:forceReason:)`.
-Any card that claims Human Lock provenance is validated even in the ordinary
-path, so an incomplete or stale lock cannot be exported as a valid claim.
-
----
-
-## Status
-
-- **Pre-release.** The published `0.4.0` line is source-compatibility evidence
-  for the Swift authoring kernel.
-- The source candidate pins the published Swift Core `0.21.0` release. The
-  local workspace interface described above is an exact-coordinate source
-  candidate and requires the matching App Shared and Runtime CLI coordinates.
-
-
-## Official packages
-
-Official KDNA packages are published under the `@aikdna` npm scope and the
-`aikdna` name on PyPI. The unscoped npm package `kdna` is not affiliated with
-the KDNA project. Install only from the official coordinates shown in this
-README.
-
-## License
-
-Apache-2.0 — see [LICENSE](LICENSE).
+SwiftPM declares macOS 13 and iOS 16. CI builds and tests macOS debug/release, runs the separate public consumer, and builds a generic iOS target with code signing disabled. An iOS build is a compilation check, not device runtime, distribution signing or authenticated editorial acceptance.

@@ -1,0 +1,590 @@
+{
+  "format": {
+    "id": "kdna.studio-creation-evidence/2",
+    "version": "2.0.0"
+  },
+  "reference_contract": {
+    "container": "0.2.0",
+    "core": "kdna.core/0.3.0",
+    "host": "kdna.agent-host/0.2.0",
+    "ir": "kdna.canonical-ir/0.2.0",
+    "payload_profile": "kdna.payload.judgment",
+    "payload_version": "0.2.0",
+    "plan": "kdna.consumption-plan/0.2.0",
+    "read": "kdna.read/0.2.0",
+    "runtime": "kdna.runtime-capsule/0.2.0",
+    "trace": "kdna.judgment-trace/0.2.0"
+  },
+  "component_definition": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3",
+  "compiler": {
+    "name": "@aikdna/kdna-studio-core",
+    "version": "4.0.0-rc.components.1",
+    "provider": "javascript",
+    "artifact_sha256": "UNKNOWN"
+  },
+  "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4",
+  "revision": 4,
+  "context": {
+    "adoption_channel": {
+      "channel": "synthetic-provider:8",
+      "kind": "delegated_agent_editorial"
+    },
+    "agent": {
+      "name": "Synthetic lifecycle fixture",
+      "version": "1"
+    },
+    "asset": {
+      "asset_id": "asset:25e292b1-c506-4085-b733-fbb009734d8f",
+      "asset_uid": "urn:uuid:17aabdbd-a3e6-47cd-b528-07676810783f",
+      "version": "0.1.4"
+    },
+    "authorization": {
+      "coordinate": "fixture:local-only",
+      "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+    },
+    "brief": {
+      "scope": "Local test of authoring and saved readback.",
+      "title": "Synthetic signal fixture"
+    },
+    "corePackageVersion": "0.24.0-rc.component-semantics.2",
+    "createdAt": "2026-09-10T10:48:10.978Z",
+    "groups": [
+      {
+        "alternatives": [
+          {
+            "localKey": "preserve",
+            "materialRefs": [
+              "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+            ],
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          },
+          {
+            "localKey": "infer",
+            "materialRefs": [
+              "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+            ],
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Treat an absent observation as a negative result.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          }
+        ],
+        "localKey": "signal",
+        "revision": 1
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-10T10:48:10.980Z",
+        "detail": {
+          "scope": "Local test of authoring and saved readback.",
+          "title": "Synthetic signal fixture"
+        },
+        "digest": "sha256:4c3c1b8267a5add8f88f03699e74c4418015a654723a873360d5bc780604e3c9",
+        "event": "brief",
+        "previous_digest": null,
+        "revision": 1,
+        "sequence": 1
+      },
+      {
+        "at": "2026-09-10T10:48:10.980Z",
+        "detail": {
+          "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_8",
+          "content_digest": "sha256:1ce736b59c1f7d5d2b68660b4a459cd7d476235c80b8345d445c665aee72580f",
+          "coordinate": "private:fixture:8",
+          "id": "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df",
+          "kind": "text",
+          "recorded_at": "2026-09-10T10:48:10.980Z",
+          "title": "Private input"
+        },
+        "digest": "sha256:0208d754fe34d9988b8b2ce6e9e9f0eb3ae562cff3e34de5cb7253c13d70c252",
+        "event": "material",
+        "previous_digest": "sha256:4c3c1b8267a5add8f88f03699e74c4418015a654723a873360d5bc780604e3c9",
+        "revision": 2,
+        "sequence": 2
+      },
+      {
+        "at": "2026-09-10T10:48:10.980Z",
+        "detail": {
+          "alternatives": [
+            {
+              "localKey": "preserve",
+              "materialRefs": [
+                "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+              ],
+              "rationale": "Missing input cannot establish a negative finding.",
+              "scope": "Only missing observations",
+              "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+              "subject": "A synthetic observation",
+              "title": "Preserve uncertainty é é 𝄞"
+            },
+            {
+              "localKey": "infer",
+              "materialRefs": [
+                "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+              ],
+              "rationale": "Missing input cannot establish a negative finding.",
+              "scope": "Only missing observations",
+              "statement": "Treat an absent observation as a negative result.",
+              "subject": "A synthetic observation",
+              "title": "Preserve uncertainty é é 𝄞"
+            }
+          ],
+          "localKey": "signal",
+          "revision": 1
+        },
+        "digest": "sha256:c6c894fe929e1744463498b811ad1c25b390285463b945931de0dd3bbdd501a5",
+        "event": "proposal",
+        "previous_digest": "sha256:0208d754fe34d9988b8b2ce6e9e9f0eb3ae562cff3e34de5cb7253c13d70c252",
+        "revision": 3,
+        "sequence": 3
+      },
+      {
+        "at": "2026-09-10T10:48:10.981Z",
+        "detail": {
+          "identity": "not_verified",
+          "interpretation": {
+            "choices": [
+              {
+                "alternativeLocalKey": "preserve",
+                "judgmentLocalKey": "signal"
+              }
+            ],
+            "kind": "select"
+          },
+          "interpreted_by": {
+            "name": "Synthetic lifecycle fixture",
+            "version": "1"
+          },
+          "response": {
+            "channel": "synthetic-provider:8",
+            "id": "response:8:1",
+            "review_id": "review:70fc7c3d-cfe8-4b25-8322-f6e75cb5e593",
+            "role": "agent",
+            "text": "select"
+          },
+          "review": {
+            "channel": "synthetic-provider:8",
+            "groups": [
+              {
+                "alternatives": [
+                  {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                    ],
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  {
+                    "localKey": "infer",
+                    "materialRefs": [
+                      "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                    ],
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Treat an absent observation as a negative result.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  }
+                ],
+                "localKey": "signal",
+                "revision": 1
+              }
+            ],
+            "kind": "delegated_agent_editorial",
+            "preview": null,
+            "review_id": "review:70fc7c3d-cfe8-4b25-8322-f6e75cb5e593",
+            "revision": 3,
+            "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+          }
+        },
+        "digest": "sha256:4caf3a8e0246876175364ad235275e8ba0e1d31f23e51c0d9ef13cc8a83f6bcf",
+        "event": "selection",
+        "previous_digest": "sha256:c6c894fe929e1744463498b811ad1c25b390285463b945931de0dd3bbdd501a5",
+        "revision": 4,
+        "sequence": 4
+      }
+    ],
+    "materials": [
+      {
+        "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_8",
+        "content_digest": "sha256:1ce736b59c1f7d5d2b68660b4a459cd7d476235c80b8345d445c665aee72580f",
+        "coordinate": "private:fixture:8",
+        "id": "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df",
+        "kind": "text",
+        "recorded_at": "2026-09-10T10:48:10.980Z",
+        "title": "Private input"
+      }
+    ],
+    "revision": 4,
+    "selected": [
+      {
+        "alternative": {
+          "localKey": "preserve",
+          "materialRefs": [
+            "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+          ],
+          "rationale": "Missing input cannot establish a negative finding.",
+          "scope": "Only missing observations",
+          "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+          "subject": "A synthetic observation",
+          "title": "Preserve uncertainty é é 𝄞"
+        },
+        "judgmentLocalKey": "signal"
+      }
+    ],
+    "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4",
+    "synthetic_fixture": true
+  },
+  "decision": {
+    "actual_reply": {
+      "identity": "not_verified",
+      "interpretation": {
+        "kind": "confirm"
+      },
+      "interpreted_by": {
+        "name": "Synthetic lifecycle fixture",
+        "version": "1"
+      },
+      "response": {
+        "channel": "synthetic-provider:8",
+        "id": "response:8:2",
+        "review_id": "review:489572be-6460-421e-9d1b-3976111e8245",
+        "role": "agent",
+        "text": "confirm"
+      },
+      "review": {
+        "channel": "synthetic-provider:8",
+        "groups": [
+          {
+            "alternatives": [
+              {
+                "localKey": "preserve",
+                "materialRefs": [
+                  "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                ],
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              },
+              {
+                "localKey": "infer",
+                "materialRefs": [
+                  "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                ],
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Treat an absent observation as a negative result.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              }
+            ],
+            "localKey": "signal",
+            "revision": 1
+          }
+        ],
+        "kind": "delegated_agent_editorial",
+        "preview": {
+          "context_digest": "sha256:909a3f6aa3686494e03ff70451276472580e238ca1799e797f31be2b1653feab",
+          "creation_accepted": "not_evaluated",
+          "expected_component_bindings": [],
+          "kind": "pre_compiler_authoring_review",
+          "presence": [],
+          "preview_digest": "sha256:c1ea4575d62ecff068d4d832433f542c7595604946a5ff4ad66c364335fd1614",
+          "proposal_digests": [],
+          "revision": 4,
+          "selected": [
+            {
+              "alternative": {
+                "localKey": "preserve",
+                "materialRefs": [
+                  "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                ],
+                "rationale": "Missing input cannot establish a negative finding.",
+                "scope": "Only missing observations",
+                "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                "subject": "A synthetic observation",
+                "title": "Preserve uncertainty é é 𝄞"
+              },
+              "judgmentLocalKey": "signal"
+            }
+          ],
+          "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+        },
+        "review_id": "review:489572be-6460-421e-9d1b-3976111e8245",
+        "revision": 4,
+        "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+      }
+    },
+    "adoption_kind": "delegated_agent_editorial",
+    "authorization": {
+      "coordinate": "fixture:local-only",
+      "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+    },
+    "context_digest": "sha256:909a3f6aa3686494e03ff70451276472580e238ca1799e797f31be2b1653feab",
+    "format": "kdna.studio-decision/2",
+    "preview_digest": "sha256:c1ea4575d62ecff068d4d832433f542c7595604946a5ff4ad66c364335fd1614",
+    "proposal_digests": [],
+    "revision": 4,
+    "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+  },
+  "history": [
+    {
+      "at": "2026-09-10T10:48:10.980Z",
+      "detail": {
+        "scope": "Local test of authoring and saved readback.",
+        "title": "Synthetic signal fixture"
+      },
+      "digest": "sha256:4c3c1b8267a5add8f88f03699e74c4418015a654723a873360d5bc780604e3c9",
+      "event": "brief",
+      "previous_digest": null,
+      "revision": 1,
+      "sequence": 1
+    },
+    {
+      "at": "2026-09-10T10:48:10.980Z",
+      "detail": {
+        "content": "PRIVATE_MATERIAL_NEVER_RUNTIME_8",
+        "content_digest": "sha256:1ce736b59c1f7d5d2b68660b4a459cd7d476235c80b8345d445c665aee72580f",
+        "coordinate": "private:fixture:8",
+        "id": "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df",
+        "kind": "text",
+        "recorded_at": "2026-09-10T10:48:10.980Z",
+        "title": "Private input"
+      },
+      "digest": "sha256:0208d754fe34d9988b8b2ce6e9e9f0eb3ae562cff3e34de5cb7253c13d70c252",
+      "event": "material",
+      "previous_digest": "sha256:4c3c1b8267a5add8f88f03699e74c4418015a654723a873360d5bc780604e3c9",
+      "revision": 2,
+      "sequence": 2
+    },
+    {
+      "at": "2026-09-10T10:48:10.980Z",
+      "detail": {
+        "alternatives": [
+          {
+            "localKey": "preserve",
+            "materialRefs": [
+              "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+            ],
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          },
+          {
+            "localKey": "infer",
+            "materialRefs": [
+              "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+            ],
+            "rationale": "Missing input cannot establish a negative finding.",
+            "scope": "Only missing observations",
+            "statement": "Treat an absent observation as a negative result.",
+            "subject": "A synthetic observation",
+            "title": "Preserve uncertainty é é 𝄞"
+          }
+        ],
+        "localKey": "signal",
+        "revision": 1
+      },
+      "digest": "sha256:c6c894fe929e1744463498b811ad1c25b390285463b945931de0dd3bbdd501a5",
+      "event": "proposal",
+      "previous_digest": "sha256:0208d754fe34d9988b8b2ce6e9e9f0eb3ae562cff3e34de5cb7253c13d70c252",
+      "revision": 3,
+      "sequence": 3
+    },
+    {
+      "at": "2026-09-10T10:48:10.981Z",
+      "detail": {
+        "identity": "not_verified",
+        "interpretation": {
+          "choices": [
+            {
+              "alternativeLocalKey": "preserve",
+              "judgmentLocalKey": "signal"
+            }
+          ],
+          "kind": "select"
+        },
+        "interpreted_by": {
+          "name": "Synthetic lifecycle fixture",
+          "version": "1"
+        },
+        "response": {
+          "channel": "synthetic-provider:8",
+          "id": "response:8:1",
+          "review_id": "review:70fc7c3d-cfe8-4b25-8322-f6e75cb5e593",
+          "role": "agent",
+          "text": "select"
+        },
+        "review": {
+          "channel": "synthetic-provider:8",
+          "groups": [
+            {
+              "alternatives": [
+                {
+                  "localKey": "preserve",
+                  "materialRefs": [
+                    "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                  ],
+                  "rationale": "Missing input cannot establish a negative finding.",
+                  "scope": "Only missing observations",
+                  "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                  "subject": "A synthetic observation",
+                  "title": "Preserve uncertainty é é 𝄞"
+                },
+                {
+                  "localKey": "infer",
+                  "materialRefs": [
+                    "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                  ],
+                  "rationale": "Missing input cannot establish a negative finding.",
+                  "scope": "Only missing observations",
+                  "statement": "Treat an absent observation as a negative result.",
+                  "subject": "A synthetic observation",
+                  "title": "Preserve uncertainty é é 𝄞"
+                }
+              ],
+              "localKey": "signal",
+              "revision": 1
+            }
+          ],
+          "kind": "delegated_agent_editorial",
+          "preview": null,
+          "review_id": "review:70fc7c3d-cfe8-4b25-8322-f6e75cb5e593",
+          "revision": 3,
+          "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+        }
+      },
+      "digest": "sha256:4caf3a8e0246876175364ad235275e8ba0e1d31f23e51c0d9ef13cc8a83f6bcf",
+      "event": "selection",
+      "previous_digest": "sha256:c6c894fe929e1744463498b811ad1c25b390285463b945931de0dd3bbdd501a5",
+      "revision": 4,
+      "sequence": 4
+    },
+    {
+      "at": "2026-09-10T10:48:10.982Z",
+      "detail": {
+        "actual_reply": {
+          "identity": "not_verified",
+          "interpretation": {
+            "kind": "confirm"
+          },
+          "interpreted_by": {
+            "name": "Synthetic lifecycle fixture",
+            "version": "1"
+          },
+          "response": {
+            "channel": "synthetic-provider:8",
+            "id": "response:8:2",
+            "review_id": "review:489572be-6460-421e-9d1b-3976111e8245",
+            "role": "agent",
+            "text": "confirm"
+          },
+          "review": {
+            "channel": "synthetic-provider:8",
+            "groups": [
+              {
+                "alternatives": [
+                  {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                    ],
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  {
+                    "localKey": "infer",
+                    "materialRefs": [
+                      "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                    ],
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Treat an absent observation as a negative result.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  }
+                ],
+                "localKey": "signal",
+                "revision": 1
+              }
+            ],
+            "kind": "delegated_agent_editorial",
+            "preview": {
+              "context_digest": "sha256:909a3f6aa3686494e03ff70451276472580e238ca1799e797f31be2b1653feab",
+              "creation_accepted": "not_evaluated",
+              "expected_component_bindings": [],
+              "kind": "pre_compiler_authoring_review",
+              "presence": [],
+              "preview_digest": "sha256:c1ea4575d62ecff068d4d832433f542c7595604946a5ff4ad66c364335fd1614",
+              "proposal_digests": [],
+              "revision": 4,
+              "selected": [
+                {
+                  "alternative": {
+                    "localKey": "preserve",
+                    "materialRefs": [
+                      "material:c4ff481f-3d42-4c02-b3eb-3eaeb50ec5df"
+                    ],
+                    "rationale": "Missing input cannot establish a negative finding.",
+                    "scope": "Only missing observations",
+                    "statement": "Retain unknown when evidence is absent.\nQuoted \"unknown\" is not false.",
+                    "subject": "A synthetic observation",
+                    "title": "Preserve uncertainty é é 𝄞"
+                  },
+                  "judgmentLocalKey": "signal"
+                }
+              ],
+              "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+            },
+            "review_id": "review:489572be-6460-421e-9d1b-3976111e8245",
+            "revision": 4,
+            "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+          }
+        },
+        "adoption_kind": "delegated_agent_editorial",
+        "authorization": {
+          "coordinate": "fixture:local-only",
+          "statement": "Authorized synthetic implementation testing, no real editorial adoption."
+        },
+        "context_digest": "sha256:909a3f6aa3686494e03ff70451276472580e238ca1799e797f31be2b1653feab",
+        "format": "kdna.studio-decision/2",
+        "preview_digest": "sha256:c1ea4575d62ecff068d4d832433f542c7595604946a5ff4ad66c364335fd1614",
+        "proposal_digests": [],
+        "revision": 4,
+        "session_id": "session:ab97ef0e-84c0-456e-bffb-a20c456604f4"
+      },
+      "digest": "sha256:89afc79325ed2136afca7312d0a3805085ae5d49087ea48a44776dbea2fa9579",
+      "event": "final_adoption",
+      "previous_digest": "sha256:4caf3a8e0246876175364ad235275e8ba0e1d31f23e51c0d9ef13cc8a83f6bcf",
+      "revision": 4,
+      "sequence": 5
+    }
+  ],
+  "expected_component_bindings": [],
+  "presence": [],
+  "adoption": null,
+  "artifact": {
+    "bytes": 2199,
+    "digest": "sha256:ef87a298648fd3b028eae24e2298e103473a822eedd1c895f18ab66ffea1d060"
+  },
+  "identity": "not_verified",
+  "action_authorization": "not_evaluated",
+  "creation_accepted": "not_evaluated"
+}

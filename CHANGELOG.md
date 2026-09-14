@@ -1,6 +1,19 @@
 # Changelog
 
-## Unreleased
+## 0.6.0-rc.components.1
+
+- Introduce the current native authoring lifecycle for ordinary judgments and
+  taxonomy, candidate-set and discriminator-set components, with explicit
+  adoption input, current previews and one-use saved-readback completion.
+- Resolve the native Core dependency at an exact public Git revision. Retain
+  shared contract and fixture bytes and distinguish static consistency from
+  live creation, identity, read permission and action authorization.
+- Register former sources/tests as historical material outside the compiled
+  target, with exact integrity checks and no automatic format conversion.
+- Exercise debug/release native tests, a separate public consumer and generic
+  iOS compilation in CI; keep naming exceptions limited to tool-mandated syntax.
+
+## Earlier unreleased workspace implementation (historical)
 
 - Pin the corrective Swift Core candidate that closes password-plan,
   authorization, Schema, and compact-projection parity; the coordinated

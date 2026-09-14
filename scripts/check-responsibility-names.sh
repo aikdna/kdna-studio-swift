@@ -74,7 +74,10 @@ while IFS=: read -r path line token; do
   if [[ "$path" == "Package.swift" ]] &&
      { [[ "$source_line" =~ ^platforms:[[:space:]]*\[.*\.(macOS|iOS|tvOS|watchOS|visionOS)\(\.v[0-9]+\) ]] ||
        [[ "$source_line" =~ ^\.(macOS|iOS|tvOS|watchOS|visionOS)\(\.v[0-9]+\)[,]?$ ]]; }; then
-    continue
+    remainder="$(printf '%s\n' "$source_line" | sed -E 's/\.(macOS|iOS|tvOS|watchOS|visionOS)\(\.v[0-9]+\)//g')"
+    if [[ ! "$remainder" =~ $generation_pattern ]]; then
+      continue
+    fi
   fi
   if [[ "$path|$source_line" == ".github/workflows/ci.yml|- uses: actions/checkout@${checkout_token}" ]] ||
      [[ "$path|$source_line" == ".github/workflows/codeql-swift.yml|uses: actions/checkout@${checkout_token}" ]] ||
@@ -87,6 +90,13 @@ while IFS=: read -r path line token; do
   echo "blocked generation label: $path:$line:$token" >&2
   failures=$((failures + 1))
 done < "$findings"
+
+while IFS= read -r source_path; do
+  if [[ "$source_path" =~ $generation_pattern ]]; then
+    echo "blocked generation label in path: $source_path" >&2
+    failures=$((failures + 1))
+  fi
+done < <(cd "$scan_root" && rg --files --hidden --glob '!.git/**' --glob '!.build/**' --glob '!Package.resolved')
 
 # Build the retired vocabulary without embedding a blocked generation label in
 # the gate itself. These are exact protocol identifiers, not broad prose terms.
